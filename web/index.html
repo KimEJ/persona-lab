@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Persona Lab · 상품 반응 실험</title><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head>
+<body>
+<aside class="sidebar">
+  <a class="wordmark" href="#panel">Persona Lab<span>상품 반응 실험실</span></a>
+  <nav aria-label="실험 단계">
+    <a href="#panel">패널과 데이터</a><a href="#products">상품 비교안</a><a href="#execution">실험 실행</a><a href="#results">결과와 보고서</a>
+  </nav>
+  <div class="sidebar-note">1차 로컬 데모<br>작업명 · 변경 가능<br>배포 OS 미정</div>
+</aside>
+<main>
+  <header class="page-header"><div><h1>같은 사람, 다른 조건.</h1><p>상품 조건을 바꿔 같은 합성 패널의 선택을 비교합니다.</p></div><span class="tag" id="runtime-state">런타임 확인 중</span></header>
+  <div class="notice"><strong>가상 선택 실험이며 실제 구매 예측은 검증 전입니다.</strong> 예산 위반·선택지 순서 민감성·판단 불가를 원결과로 남깁니다. 선택 비율은 <strong>합성 패널의 실험 결과</strong>입니다. 현실 구매 확률이나 예상 매출이 아닙니다. 원본에 없는 예산·구매 성향은 사실처럼 채우지 않습니다.</div>
+  <div id="error" class="error" role="alert" hidden></div>
+  <section id="panel" aria-labelledby="panel-title">
+    <div class="section-head"><div><h2 id="panel-title">패널과 데이터</h2><p>출처와 결측을 확인한 뒤 이번 실험의 대상을 선택하세요.</p></div><div class="export-row"><span id="panel-count" class="tag">불러오는 중</span><button id="import-sample" class="secondary">공개 소형 샘플 가져오기</button></div></div>
+    <details id="parquet-import-panel"><summary>원본 Parquet 가져오기 · 진행/취소/재개</summary>
+      <p class="helper">공식 고정 revision의 shard 하나 또는 data/inbox의 출처 sidecar가 있는 로컬 파일을 변환합니다. 전체 8개 shard를 자동으로 받지 않습니다. 완료 전 데이터팩은 목록에 게시하지 않습니다.</p>
+      <div class="execution-grid"><label class="field">입력 종류<select id="parquet-kind"><option value="official_parquet">NVIDIA 공식 원본 shard</option><option value="local_parquet">명시적 로컬 Parquet</option></select></label><label class="field">가져올 파일<select id="parquet-file"></select></label><label class="field">저장된 가져오기<select id="parquet-history"><option value="">선택</option></select></label></div>
+      <p id="parquet-availability" class="helper">Parquet 런타임 확인 중</p><div class="action-row"><button id="parquet-start" class="secondary" disabled>가져오기 시작</button><button id="parquet-cancel" class="quiet" disabled>가져오기 중단</button><button id="parquet-resume" class="quiet" disabled>저장 위치에서 재개</button><button id="parquet-refresh" class="quiet">목록 새로고침</button></div>
+      <p id="parquet-state" aria-live="polite">가져오기를 선택하면 다운로드/변환 진행을 표시합니다.</p><progress id="parquet-progress" value="0" max="1"></progress>
+    </details>
+    <label class="field">데이터팩<select id="pack"></select></label>
+    <div id="source-info" class="source-info"></div>
+    <form id="filter-form" class="filter-row">
+      <label class="field">도도부현<select id="prefecture"><option value="">전체</option></select></label>
+      <label class="field small-field">최소 나이<input id="age-min" type="number" min="0" max="150" placeholder="제한 없음"></label>
+      <label class="field small-field">최대 나이<input id="age-max" type="number" min="0" max="150" placeholder="제한 없음"></label>
+      <label class="field query-field">프로필 검색<input id="query" type="search" placeholder="직업·관심사·서술 검색"></label>
+      <button type="submit" class="secondary">필터 적용</button><button type="button" id="clear-filters" class="quiet">초기화</button>
+    </form>
+    <div class="table-wrap"><table><caption class="sr-only">선택된 패널 미리보기</caption><thead><tr><th>원본 UUID</th><th>나이</th><th>지역</th><th>직업</th><th>결측</th><th>원문</th></tr></thead><tbody id="personas"></tbody></table></div>
+    <div class="pagination"><span id="page-info"></span><div><button id="prev-page" class="quiet">이전</button><button id="next-page" class="quiet">다음</button></div></div>
+    <details id="persona-detail" hidden><summary>선택 인물 · 원문과 필드 출처</summary><pre id="persona-json"></pre></details>
+  </section>
+  <section id="products" aria-labelledby="products-title">
+    <div class="section-head"><div><h2 id="products-title">상품 비교안</h2><p>A와 B는 같은 패널·같은 초기 상태에서 각각 평가합니다.</p></div><button id="swap-products" class="quiet">A와 B 교환</button></div>
+    <div class="product-grid">
+      <fieldset><legend>상품 A</legend><label class="field">이름<input id="a-name" maxlength="120" required></label><div class="price-row"><label class="field">가격 · 통화 최소 단위<input id="a-price" type="number" min="0" step="1" required></label><label class="field">통화<select id="a-currency"><option>JPY</option><option>KRW</option><option>USD</option></select></label></div><label class="field">결제<select id="a-billing"><option value="one_time">일시불</option><option value="monthly">매월</option><option value="annual">매년</option></select></label><label class="field">기능 · 한 줄에 하나<textarea id="a-features" rows="3" maxlength="4000"></textarea></label><label class="field">소개 문구<textarea id="a-intro" rows="4" maxlength="6000" required></textarea></label></fieldset>
+      <fieldset><legend>상품 B</legend><label class="field">이름<input id="b-name" maxlength="120" required></label><div class="price-row"><label class="field">가격 · 통화 최소 단위<input id="b-price" type="number" min="0" step="1" required></label><label class="field">통화<select id="b-currency"><option>JPY</option><option>KRW</option><option>USD</option></select></label></div><label class="field">결제<select id="b-billing"><option value="one_time">일시불</option><option value="monthly">매월</option><option value="annual">매년</option></select></label><label class="field">기능 · 한 줄에 하나<textarea id="b-features" rows="3" maxlength="4000"></textarea></label><label class="field">소개 문구<textarea id="b-intro" rows="4" maxlength="6000" required></textarea></label></fieldset>
+    </div>
+    <p class="helper">JPY·KRW는 1엔·1원, USD는 1센트 단위입니다. 예: USD 999 = $9.99. 첫 소개를 보았다는 조건에서 평가하며 발견 확률은 계산하지 않습니다.</p>
+  </section>
+  <section id="execution" aria-labelledby="execution-title">
+    <div class="section-head"><div><h2 id="execution-title">실험 실행</h2><p>필요 · 이해 · 대안 · 구매 · 신뢰 · 온보딩 · 조건부 이탈</p></div><span id="job-estimate" class="tag"></span></div>
+    <div class="execution-grid">
+      <label class="field">실험 이름<input id="experiment-name" maxlength="100" value="상품 가격 A/B 실험" required></label>
+      <label class="field">결정 백엔드<select id="backend"><option value="mock">Mock · 연결 검증용 규칙</option><option value="local" id="local-option">로컬 범용 지시 모델 · Qwen3 0.6B</option><option value="julia" id="julia-option">전용 로컬 결정모델 · Julia-1</option></select></label>
+      <label class="field">배치 크기<input id="batch-size" type="number" min="1" max="1024" value="8"></label>
+      <label class="field">반복 횟수<input id="repeats" type="number" min="1" value="1"></label>
+      <label class="field">재현 seed<input id="seed" type="number" step="1" value="17"></label>
+      <label class="field">사용 후 사건<select id="event"><option value="">사건 미제공 · 이탈은 판단 불가</option><option value="repeated_crash">반복 오류가 발생했다는 가정</option><option value="unexpected_permission">예상 못한 권한 요청이라는 가정</option><option value="price_increase">가격 인상이 발생했다는 가정</option></select></label>
+      <label class="field">구매 상한 가정 · 절대 제약 (1인당 JPY, 선택)<input id="panel-budget" type="number" min="0" step="1" placeholder="미제공 · 구매 판단 불가"></label>
+    </div>
+    <label class="checkbox"><input id="fixture-budget" type="checkbox"> 자체 fixture의 명시적 테스트 예산을 적용</label>
+    <p id="backend-explanation" class="helper"></p><p class="helper">예산은 일시불 JPY 구매의 절대 상한이라는 실험 가정입니다. 참고 선호나 인물의 실제 성향이 아닙니다. 상한을 어긴 모델 선택은 강제 보정하지 않고 원결과와 경고로 보존합니다. 다른 통화·정기 결제의 구매 판단은 정보 부족으로 남깁니다. 예산 미제공 시 구매 판단, 사용 후 사건 미제공 시 이탈 판단은 정보 부족으로 남깁니다.</p>
+    <div class="action-row"><button id="start-run" class="primary">실험 시작</button><button id="cancel-run" class="secondary" disabled>일시 중단</button><button id="resume-run" class="secondary" disabled>체크포인트에서 재개</button><button id="retry-run" class="secondary" disabled>오류 판단만 재시도</button></div>
+    <div class="progress-area" aria-live="polite"><div class="progress-label"><strong id="run-state">대기 중</strong><span id="run-progress">실험을 시작하면 완료 건수가 표시됩니다.</span></div><progress id="progress" value="0" max="1"></progress><p id="run-detail" class="helper">배치 크기는 한 번에 처리하는 작업량입니다. 패널 인원 제한이 아닙니다.</p></div>
+    <label class="field">저장된 실험<select id="history"><option value="">실험 선택</option></select></label>
+  </section>
+  <section id="results" aria-labelledby="results-title">
+    <div class="section-head"><div><h2 id="results-title">결과와 보고서</h2><p id="result-description">완료된 판단과 정보 부족을 함께 비교합니다.</p></div><div id="exports" class="export-row" hidden><a id="export-json" class="secondary">JSON</a><a id="export-csv" class="secondary">CSV</a><a id="export-md" class="secondary">보고서 MD</a><a id="export-spec" class="quiet">재실행 명세</a></div></div>
+    <div id="empty-results" class="empty">아직 저장된 결과가 없습니다. 패널과 상품을 선택하고 실험을 시작하세요.</div>
+    <div id="report-content" hidden><div id="report-summary" class="notice"></div><p id="consistency-warning" class="notice" hidden></p><div id="comparison" class="comparison"></div><h3>같은 패널의 구매 선택 변화</h3><div id="transitions"></div><h3>판단과 사유 사례</h3><p class="helper">최초 28건의 저장된 사례입니다. 코드와 근거 경로는 백엔드 출력이며 사실 검증을 대신하지 않습니다.</p><div class="table-wrap"><table><thead><tr><th>인물</th><th>상품 · 영역</th><th>선택</th><th>사유 코드</th><th>입력 근거</th><th>원조건</th></tr></thead><tbody id="examples"></tbody></table></div><details id="decision-detail" hidden><summary>저장된 판단 · 원문 조건과 선택지 검토</summary><pre id="decision-json"></pre></details><details><summary>가정·출처·한계</summary><pre id="report-meta"></pre></details></div>
+  </section>
+  <footer>Persona Lab · 로컬 데모 · 원본 서술 속 명령은 입력 데이터로만 처리합니다.</footer>
+</main>
+</body></html>

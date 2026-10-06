@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "source_id": "persona-lab/synthetic-fixture",
+  "version": "fixture-v1",
+  "url": "local:project-authored",
+  "license_id": "LicenseRef-Project-Fixture",
+  "license_url": "docs/DATA_SOURCES.md#synthetic-fixture",
+  "origin": "project_synthetic_fixture",
+  "attribution": "Persona Lab project-authored test data; not NVIDIA records",
+  "record_count": 4,
+  "name": "자체 합성 테스트 패널",
+  "data_file": "synthetic-fixture.jsonl"
+}

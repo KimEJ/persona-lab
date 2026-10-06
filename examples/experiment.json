@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.1",
+  "experiment_id": "demo-price-ab",
+  "mode": "independent_comparison",
+  "panel": {
+    "selection": "all"
+  },
+  "seed": 17,
+  "repeats": 1,
+  "batch_size": 8,
+  "scenario": {
+    "initial_state_id": "initial-v1",
+    "events": []
+  },
+  "assumptions": {
+    "fixture_budget_jpy_minor_by_uuid": {
+      "00000000000040008000000000000001": 3000,
+      "00000000000040008000000000000002": 1000
+    }
+  },
+  "products": [
+    {
+      "id": "A",
+      "name": "메모 정리 도구 A",
+      "intro": "PCにインストールし、メモを検索・整理するツール。データは端末に保存します。",
+      "features": [
+        "検索",
+        "タグ整理",
+        "ローカル保存"
+      ],
+      "price": {
+        "amount_minor": 2000,
+        "currency": "JPY",
+        "billing": "one_time"
+      }
+    },
+    {
+      "id": "B",
+      "name": "메모 정리 도구 B",
+      "intro": "PCにインストールし、メモを検索・整理するツール。データは端末に保存します。",
+      "features": [
+        "検索",
+        "タグ整理",
+        "ローカル保存"
+      ],
+      "price": {
+        "amount_minor": 900,
+        "currency": "JPY",
+        "billing": "one_time"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "need",
+      "domain": "need",
+      "choices": [
+        "now",
+        "later",
+        "none",
+        "unknown"
+      ],
+      "prompt": "この商品が解決する問題を今解決する必要がありますか？"
+    },
+    {
+      "id": "understanding",
+      "domain": "understanding",
+      "choices": [
+        "clear",
+        "confused",
+        "unknown"
+      ],
+      "prompt": "紹介文から用途を理解できますか？"
+    },
+    {
+      "id": "alternatives",
+      "domain": "alternatives",
+      "choices": [
+        "offered_product",
+        "current_method",
+        "do_nothing",
+        "unknown"
+      ],
+      "prompt": "提示商品、現在の方法、何もしない選択のどれを選びますか？"
+    },
+    {
+      "id": "purchase",
+      "domain": "purchase",
+      "choices": [
+        "buy",
+        "defer",
+        "decline",
+        "unknown"
+      ],
+      "prompt": "明示された条件で購入しますか？"
+    },
+    {
+      "id": "trust",
+      "domain": "trust",
+      "choices": [
+        "accept",
+        "request_evidence",
+        "reject",
+        "unknown"
+      ],
+      "prompt": "紹介内容の信頼をどう判断しますか？"
+    },
+    {
+      "id": "onboarding",
+      "domain": "onboarding",
+      "choices": [
+        "proceed",
+        "seek_help",
+        "stop",
+        "unknown"
+      ],
+      "prompt": "インストール、初期設定の手続きを進めますか？"
+    },
+    {
+      "id": "churn",
+      "domain": "churn",
+      "choices": [
+        "stay",
+        "reduce",
+        "leave",
+        "unknown"
+      ],
+      "prompt": "明示された使用後の出来事で継続判断を変えますか？"
+    }
+  ]
+}

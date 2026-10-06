@@ -1,0 +1,8 @@
+{
+  "name": "persona-lab-test-tools",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Development-only DOM regression for the stdlib local demo",
+  "scripts": {"test:dom": "node tests/test_dom.cjs", "check:js": "node --check web/app.js"},
+  "devDependencies": {"jsdom": "30.1.2"}
+}

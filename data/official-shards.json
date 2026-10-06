@@ -1,0 +1,55 @@
+{
+  "dataset": "nvidia/Nemotron-Personas-Japan",
+  "revision": "f1f37019d8497143c507b3deb547e65646de2ab7",
+  "license": "CC-BY-4.0",
+  "files": [
+    {
+      "filename": "train-00000-of-00008.parquet",
+      "path": "data/train-00000-of-00008.parquet",
+      "bytes": 216054745,
+      "sha256": "fa6b2fd3a2b32a9591685bedea693de44b3ad9154b259071e041b976bc222ba1"
+    },
+    {
+      "filename": "train-00001-of-00008.parquet",
+      "path": "data/train-00001-of-00008.parquet",
+      "bytes": 215666036,
+      "sha256": "61113f55ced728c7acc1fd86160cde554d872493ef56916e89662f848fc837db"
+    },
+    {
+      "filename": "train-00002-of-00008.parquet",
+      "path": "data/train-00002-of-00008.parquet",
+      "bytes": 215672486,
+      "sha256": "309dc1f951331e952e63e2d077d3167e35122665dcb20b8eacf805bec51a55e8"
+    },
+    {
+      "filename": "train-00003-of-00008.parquet",
+      "path": "data/train-00003-of-00008.parquet",
+      "bytes": 215660870,
+      "sha256": "ec77ee5cf1727f5e51bc124de030b77398cd76f24fe09ce23ae8fda436a97392"
+    },
+    {
+      "filename": "train-00004-of-00008.parquet",
+      "path": "data/train-00004-of-00008.parquet",
+      "bytes": 215635651,
+      "sha256": "069117e6c11249bc33960cbfdd8bf55a1549d86acd83ecacd988d597d96fa169"
+    },
+    {
+      "filename": "train-00005-of-00008.parquet",
+      "path": "data/train-00005-of-00008.parquet",
+      "bytes": 215607415,
+      "sha256": "810f3dc565f113a386037b97b3cd866179b66ac759a79db157ae37482cd13c66"
+    },
+    {
+      "filename": "train-00006-of-00008.parquet",
+      "path": "data/train-00006-of-00008.parquet",
+      "bytes": 215838460,
+      "sha256": "8cd2d9702906af8bced71863649d48d1385809a2f713dde3141efd080b3dd868"
+    },
+    {
+      "filename": "train-00007-of-00008.parquet",
+      "path": "data/train-00007-of-00008.parquet",
+      "bytes": 215736895,
+      "sha256": "12ad60ec4cf3f58970f43d7d1df258fc1f16b1a27a57a6e9fc4a14982b983476"
+    }
+  ]
+}
