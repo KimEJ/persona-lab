@@ -4,16 +4,20 @@ Single writer per run. Replays local input on resume; never expands all jobs.
 """
 
 import hashlib
+import heapq
+import fcntl
 import itertools
 import json
 import sqlite3
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 from collections.abc import Iterator, Callable
 
 from . import __version__
 from .adapter import read_personas
 from .backends import DecisionBackend
+from .scenarios import execution_record, context_gate, SCENARIO_IDS
+from .responses import RESPONSE_SCENARIO_IDS, LINKED_SCENARIO_IDS, FINITE_SCENARIO_IDS, SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, input_product
 from .contracts import Job, Persona, ContractError, canonical, digest, require, validate_decision, validate_experiment, validate_source
 
 
@@ -21,6 +25,8 @@ def matches(persona: Persona, panel: dict) -> bool:
     if panel["selection"] == "all":
         return True
     raw = persona.raw
+    if panel.get('sex') and sex_code(raw.get('sex'))!=panel['sex']:
+        return False
     if panel.get("prefecture") and raw.get("prefecture") != panel["prefecture"]:
         return False
     if "age_min" in panel or "age_max" in panel:
@@ -30,17 +36,41 @@ def matches(persona: Persona, panel: dict) -> bool:
     return not panel.get("query") or panel["query"].casefold() in canonical(raw).casefold()
 
 
+def sex_code(value):
+    value=str(value or '').strip().casefold()
+    if value in {'女','女性','female','woman','여성','여'}:return 'female'
+    if value in {'男','男性','male','man','남성','남'}:return 'male'
+    return 'unknown' if value in {'','unknown','미제공','不明'} else 'other'
+
+
+def selected_personas(people, panel):
+    """Sample once by stable hash rank; frozen UUIDs keep resume cohorts exact."""
+    eligible=(person for person in people if matches(person,panel))
+    if panel['selection']!='random':
+        yield from eligible
+    elif 'selected_uuids' in panel:
+        ids=panel['selected_uuids'];wanted=set(ids);found={}
+        for person in eligible:
+            if person.uuid in wanted:
+                require(person.uuid not in found, 'duplicate persona UUID in frozen sample')
+                found[person.uuid]=person
+        require(set(found)==wanted, 'frozen sample no longer matches its source or filters')
+        yield from (found[identifier] for identifier in ids)
+    else:
+        yield from heapq.nsmallest(panel['sample_size'],eligible,key=lambda person:(digest(['hash-rank-v1',panel['sample_seed'],person.persona_id]),person.uuid))
+
+
 def jobs(path: Path, source: dict, spec: dict) -> Iterator[Job]:
     ordinal = 0
-    for persona in read_personas(path, source):
-        if not matches(persona, spec["panel"]):
-            continue
+    for persona in selected_personas(read_personas(path, source),spec['panel']):
         for product in spec["products"]:
             for repeat in range(spec["repeats"]):
                 for question in spec["questions"]:
                     job_id = digest([spec["experiment_id"], persona.persona_id, product["id"], question["id"], repeat, spec["seed"]])
                     seed = int(digest([spec["seed"], persona.persona_id, repeat, question["id"]])[:8], 16) % 2147483647
-                    yield Job(ordinal, job_id, persona, product, question, repeat, seed, spec["scenario"], spec["assumptions"])
+                    domain='usage' if spec['scenario'].get('id') in {SURVEY_SCENARIO_ID,SURVEY_V2_SCENARIO_ID} and question['domain']!='purchase' else question['domain']
+                    supplied = input_product(product, domain) if spec['scenario'].get('id') in RESPONSE_SCENARIO_IDS else product
+                    yield Job(ordinal, job_id, persona, supplied, question, repeat, seed, spec["scenario"], spec["assumptions"])
                     ordinal += 1
 
 
@@ -72,6 +102,12 @@ def open_store(path: Path) -> sqlite3.Connection:
           choice TEXT NOT NULL, status TEXT NOT NULL, payload TEXT NOT NULL
         );
         CREATE INDEX IF NOT EXISTS result_comparison ON results(domain, persona_id, repeat, product_id);
+        CREATE INDEX IF NOT EXISTS result_case ON results(persona_id,question_id,repeat,product_id);
+        CREATE TABLE IF NOT EXISTS model_calls (
+          id INTEGER PRIMARY KEY, job_id TEXT NOT NULL, started_at TEXT NOT NULL,
+          request TEXT NOT NULL, response TEXT, error TEXT, finished_at TEXT
+        );
+        CREATE INDEX IF NOT EXISTS model_call_job ON model_calls(job_id,id);
     """)
     return db
 
@@ -80,6 +116,7 @@ def read_status(path: Path) -> dict:
     if not path.exists():
         raise ContractError("run does not exist")
     with sqlite3.connect(path) as db:
+        db.execute("BEGIN")
         db.row_factory = sqlite3.Row
         row = db.execute("SELECT cursor,total,status,backend_id,backend_kind,error FROM run WHERE id=1").fetchone()
         require(row is not None, "run has no metadata")
@@ -97,14 +134,19 @@ def batch_outcomes(backend: DecisionBackend, batch: list[Job], cancelled: Callab
         if cancelled():
             break
         chunk = batch[offset:offset + limit]
+        gated = {job.job_id: gate for job in chunk if job.scenario.get("id") in SCENARIO_IDS and (gate := context_gate(job)) is not None}
+        active = [job for job in chunk if job.job_id not in gated]
         try:
-            if callable(decide_batch):
-                outcomes = decide_batch(chunk)
-                require(isinstance(outcomes, dict) and set(outcomes) == {job.job_id for job in chunk}, "batch response IDs mismatch")
+            if not active:
+                outcomes = {}
+            elif callable(decide_batch):
+                outcomes = decide_batch(active)
+                require(isinstance(outcomes, dict) and set(outcomes) == {job.job_id for job in active}, "batch response IDs mismatch")
             else:
-                outcomes = {chunk[0].job_id: backend.decide(chunk[0])}
+                outcomes = {active[0].job_id: backend.decide(active[0])}
         except (ContractError, OSError, ValueError) as error:
-            outcomes = {job.job_id: error for job in chunk}
+            outcomes = {job.job_id: error for job in active}
+        outcomes.update(gated)
         for job in chunk:
             try:
                 decision = outcomes[job.job_id]
@@ -117,24 +159,41 @@ def batch_outcomes(backend: DecisionBackend, batch: list[Job], cancelled: Callab
 
 
 def run(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBackend, *, max_batches: int | None = None, retry_errors: bool = False, cancelled: Callable[[], bool] = lambda: False, progress: Callable[[dict], None] = lambda _: None) -> dict:
+    store.parent.mkdir(parents=True, exist_ok=True)
+    with store.with_suffix(store.suffix + ".lock").open("a") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise ContractError("another writer is active for this experiment") from error
+        return _run_locked(path, source, spec, store, backend, max_batches=max_batches, retry_errors=retry_errors, cancelled=cancelled, progress=progress)
+
+
+def _run_locked(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBackend, *, max_batches: int | None = None, retry_errors: bool = False, cancelled: Callable[[], bool] = lambda: False, progress: Callable[[dict], None] = lambda _: None) -> dict:
     validate_source(source)
     validate_experiment(spec)
     require(max_batches is None or type(max_batches) is int and max_batches > 0, "max_batches must be positive")
     fingerprint = digest({"engine": __version__, "input_sha256": input_digest(path), "source": source, "spec": spec, "backend_id": backend.backend_id, "backend_kind": backend.kind})
     db = open_store(store)
+    previous_audit=getattr(backend,'audit',None)
+    if hasattr(backend,'audit'):
+        def audit(event,identifier,value):
+            if event=='start':
+                row=db.execute('INSERT INTO model_calls(job_id,started_at,request) VALUES (?,?,?)',(identifier,value['time'],value.get('request_text',canonical(value['request']))))
+                db.commit();return row.lastrowid
+            db.execute('UPDATE model_calls SET response=COALESCE(?,response),error=?,finished_at=? WHERE id=?',(value.get('response'),value.get('error'),value['time'],identifier));db.commit()
+        backend.audit=audit
     try:
         row = db.execute("SELECT fingerprint,cursor,total FROM run WHERE id=1").fetchone()
         if row is None:
             # Counts and uniqueness remain on disk, not in a million-element set.
             db.execute("CREATE TEMP TABLE panel_ids (id TEXT PRIMARY KEY)")
             count = 0
-            for persona in read_personas(path, source):
-                if matches(persona, spec["panel"]):
-                    try:
-                        db.execute("INSERT INTO panel_ids VALUES (?)", (persona.persona_id,))
-                    except sqlite3.IntegrityError as error:
-                        raise ContractError(f"duplicate persona UUID: {persona.uuid}") from error
-                    count += 1
+            for persona in selected_personas(read_personas(path, source),spec['panel']):
+                try:
+                    db.execute("INSERT INTO panel_ids VALUES (?)", (persona.persona_id,))
+                except sqlite3.IntegrityError as error:
+                    raise ContractError(f"duplicate persona UUID: {persona.uuid}") from error
+                count += 1
             require(count > 0, "selected panel is empty; broaden the filters")
             total = count * len(spec["products"]) * len(spec["questions"]) * spec["repeats"]
             require(total <= 9223372036854775807, "planned job count exceeds SQLite's 64-bit checkpoint range")
@@ -151,6 +210,8 @@ def run(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBack
         db.commit()
         progress({"cursor": cursor, "total": total, "status": "running"})
         pending = itertools.islice(jobs(path, source, spec), 0 if retry_errors else cursor, None)
+        # Linked stages must commit before their dependent job is evaluated.
+        batch_size=1 if spec['scenario'].get('id') in LINKED_SCENARIO_IDS else spec['batch_size']
         batch_count = 0
         retry_ordinal = -1
         stream_ordinal = 0
@@ -158,7 +219,7 @@ def run(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBack
             if cancelled() or max_batches is not None and batch_count >= max_batches:
                 break
             if retry_errors:
-                targets = [row[0] for row in db.execute("SELECT ordinal FROM results WHERE status='backend_error' AND ordinal>? ORDER BY ordinal LIMIT ?", (retry_ordinal, spec["batch_size"]))]
+                targets = [row[0] for row in db.execute("SELECT ordinal FROM results WHERE status='backend_error' AND ordinal>? ORDER BY ordinal LIMIT ?", (retry_ordinal, batch_size))]
                 if not targets:
                     break
                 batch = []
@@ -169,8 +230,22 @@ def run(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBack
                     stream_ordinal = target + 1
                 retry_ordinal = targets[-1]
             else:
-                batch = list(itertools.islice(pending, spec["batch_size"]))
+                batch = list(itertools.islice(pending, batch_size))
                 require(bool(batch), "input ended before planned job count")
+            if spec['scenario'].get('id') in LINKED_SCENARIO_IDS:
+                enriched=[]
+                for job in batch:
+                    if job.question['domain']=='purchase':
+                        prior={}
+                        from .survey import PREDECESSOR_DOMAINS
+                        domains=PREDECESSOR_DOMAINS if spec['scenario'].get('id')==SURVEY_SCENARIO_ID else ('usage','fair_price')
+                        for domain,payload in db.execute("SELECT domain,payload FROM results WHERE persona_id=? AND product_id=? AND repeat=?",(job.persona.persona_id,job.product['id'],job.repeat)):
+                            if domain not in domains:continue
+                            record=json.loads(payload);decision=record['decision']
+                            prior[domain]={'job_id':record['job_id'],**{key:decision.get(key) for key in ('choice','reason','valuation','missing_information')}} if decision else {'job_id':record['job_id'],'choice':'error','error':record['backend_error']}
+                        job=replace(job,assessments=prior)
+                    enriched.append(job)
+                batch=enriched
             completed = list(batch_outcomes(backend, batch, cancelled))
             if not completed:
                 break
@@ -179,7 +254,13 @@ def run(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBack
             require(db.execute("SELECT cursor FROM run WHERE id=1").fetchone()[0] == cursor, "another writer advanced this checkpoint")
             for job, decision, backend_error in completed:
                 record = {"schema_version": "0.1", "job_id": job.job_id, "persona_id": job.persona.persona_id, "uuid": job.persona.uuid, "persona_content_hash": job.persona.content_hash, "source_id": source["source_id"], "source_version": source["version"], "license_id": source["license_id"], "product_id": job.product["id"], "question_id": job.question["id"], "domain": job.question["domain"], "repeat": job.repeat, "seed": job.seed, "initial_state_id": job.scenario["initial_state_id"], "backend_id": backend.backend_id, "backend_kind": backend.kind, "decision": asdict(decision) if decision else None, "backend_error": backend_error}
+                if job.scenario.get('id') in LINKED_SCENARIO_IDS:record['assessments']=job.assessments
+                elif decision:
+                    record['decision'].pop('evidence',None);record['decision'].pop('valuation',None)
+                if decision and job.scenario.get('id') not in FINITE_SCENARIO_IDS:
+                    record['decision'].pop('option_probabilities',None);record['decision'].pop('probability_semantics',None);record['decision'].pop('diagnostic_error',None)
                 choice, decision_status = (decision.choice, decision.status) if decision else ("__backend_error__", "backend_error")
+                record["execution"] = execution_record(job, decision, backend_error)
                 if retry_errors:
                     db.execute("UPDATE results SET choice=?,status=?,payload=? WHERE ordinal=? AND job_id=? AND status='backend_error'", (choice, decision_status, canonical(record), job.ordinal, job.job_id))
                 else:
@@ -203,4 +284,5 @@ def run(path: Path, source: dict, spec: dict, store: Path, backend: DecisionBack
             db.commit()
         raise
     finally:
+        if hasattr(backend,'audit'):backend.audit=previous_audit
         db.close()

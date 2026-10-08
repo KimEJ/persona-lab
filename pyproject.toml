@@ -1,13 +1,6 @@
 [project]
 name = "persona-lab"
-version = "0.3.0"
-description = "Offline contract prototype for a persona product experiment runner"
+version = "0.8.1"
+description = "Local macOS persona response workbench"
 requires-python = ">=3.12"
 dependencies = []
-
-[project.optional-dependencies]
-parquet = ["pyarrow==25.0.1"]
-
-[tool.persona-lab]
-working-name = true
-contract-version = "0.1"

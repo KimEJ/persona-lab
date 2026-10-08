@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "source_id": "nvidia/Nemotron-Personas-Japan",
+  "version": "viewer-sha256:1e395cb49ee6e5ad251f9ccfc9577e5a0a7046d62aeda29c1f2bbf02e6e98f40",
+  "url": "https://huggingface.co/datasets/nvidia/Nemotron-Personas-Japan",
+  "license_id": "CC-BY-4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "origin": "upstream_synthetic",
+  "attribution": "NVIDIA; Fujita, Gong, Ogushi, Yamamoto, Suhara, Corneil and Meyer (2025), Nemotron-Personas-Japan: Synthetic Personas Aligned to Real-World Distributions",
+  "name": "NVIDIA 일본 · 공개 소형 샘플",
+  "record_count": 53,
+  "data_file": "nemotron-japan-sample.jsonl",
+  "upstream_revision_observed": "f1f37019d8497143c507b3deb547e65646de2ab7",
+  "fetch_url": "https://datasets-server.huggingface.co/first-rows?dataset=nvidia%2FNemotron-Personas-Japan&config=default&split=train",
+  "retrieved_at": "2026-10-05T17:50:42.858378+00:00",
+  "upstream_record_count": 1000000,
+  "upstream_size_card_gb": 1.73,
+  "payload_bytes": 198291,
+  "local_sha256": "826d6afc3b33ada62445f3fe5bb0db38dce7719a32d826f9758018e4a35fbcb2",
+  "revision_binding": "Viewer endpoint is mutable main; local payload hash is pinned. Upstream main revision was observed separately.",
+  "modifications": "Converted returned row objects to JSONL, without altering field values; no truncated rows retained. Viewer preview is not a random or representative sample."
+}

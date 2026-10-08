@@ -1,0 +1,20 @@
+{
+  "scope": "stock output schema and actual upstream act function isolated with mock DecisionBackend; memory, rendering, retry and import initialization stubbed; no full runtime, no inference, no TinyWorld or batch benchmark",
+  "upstream_commit": "a6244b358a1fe1c71bf751f7ba0f8dfa368ec5a4",
+  "stock_schema_rejects_direct_decision": [
+    "action",
+    "cognitive_state"
+  ],
+  "custom_generator_single_mock_backend_call": 1,
+  "action_types": [
+    "DECIDE",
+    "DONE"
+  ],
+  "choice": "decline",
+  "cognitive_state_not_synthesized": true,
+  "missing_context_returns_unknown_without_backend_call": true,
+  "unlisted_choice_rejected_before_record": true,
+  "backend_error_not_replaced_with_unknown": true,
+  "dedicated_decision_model_integration": "not tested",
+  "full_tinytroupe_runtime": "not tested"
+}

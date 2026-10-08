@@ -1,0 +1,51 @@
+{
+  "scope": "isolated inspected helpers + current editor DOM + proposed SQLite query; no integration, no upstream package install, no model calls",
+  "tinytroupe": {
+    "randomizer_seed": 42,
+    "calls": 32,
+    "distinct_orders": 1,
+    "distinct_categories_mapped_to_same_numbers": [
+      {
+        "purchase": {
+          "buy": 0
+        }
+      },
+      {
+        "purchase": {
+          "decline": 0
+        }
+      }
+    ],
+    "shared_label_distribution_distance": 1.0
+  },
+  "editor": [
+    {
+      "case": "tilde fence",
+      "upstreamParserRecognizes": true,
+      "currentCodeRenderingCorrect": false,
+      "currentBlockPreservedAfterOtherEdit": false
+    },
+    {
+      "case": "four backticks",
+      "upstreamParserRecognizes": true,
+      "currentCodeRenderingCorrect": false,
+      "currentBlockPreservedAfterOtherEdit": false
+    },
+    {
+      "case": "fence info string",
+      "upstreamParserRecognizes": true,
+      "currentCodeRenderingCorrect": false,
+      "currentBlockPreservedAfterOtherEdit": false
+    }
+  ],
+  "sqlite": {
+    "rows": 299,
+    "changed_pairs": 2,
+    "unknown_pairs": 2,
+    "late_error_pairs": 2,
+    "incomplete_pair_excluded": true,
+    "pages_disjoint": true,
+    "global_rows_preserved": true
+  },
+  "evidence_files_verified": 37
+}

@@ -1,0 +1,101 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'web/index.html'),'utf8');
+assert(!/data-view=|panel-preview|panel-person/.test(html));
+assert.match(html,/id="panel-sample-size"[^>]*value="100"/);
+const ids=new Map();
+class Element {
+ constructor(){this.hidden=false;this.disabled=false;this.value='';this.textContent='';this.innerHTML='';this.dataset={};this.listeners={};this.valid=true;this.attributes={};this.classList={contains:()=>false,toggle:()=>{}};}
+ addEventListener(type,handler){(this.listeners[type]??=[]).push(handler);}
+ querySelectorAll(){return [];}
+ querySelector(){return new Element();}
+ setAttribute(key,value){this.attributes[key]=value;}
+ removeAttribute(key){delete this.attributes[key];}
+ checkValidity(){return this.valid;}
+ close(){this.open=false;}
+ focus(){}
+ contains(){return false;}
+ async dispatch(type){for(const handler of this.listeners[type]||[])await handler({target:this,preventDefault(){}});}
+}
+for(const match of html.matchAll(/id="([^"]+)"/g))ids.set(match[1],new Element());
+const $=id=>{assert(ids.has(id),'Unexpected element '+id);return ids.get(id);};
+const steps=['input','run','results'].map(step=>Object.assign(new Element(),{dataset:{step}}));
+const domains=['relevance','current_solution','clarity','benefit','differentiation','credibility','switching','usage','fair_price','purchase'];
+const options=[['relevant','partly_relevant','not_relevant','unknown'],['sufficient','partial','insufficient','no_current_method','unknown'],['clear','partly_clear','unclear','unknown'],['better','similar','worse','not_applicable','unknown'],['distinct','limited','not_distinct','not_applicable','unknown'],['supported','partly_supported','unsupported','unknown'],['low','moderate','high','not_applicable','unknown'],['use','consider','not_use','unknown'],['price_0','price_1','price_2','price_3','unknown','not_run'],['buy','defer','decline','unknown','not_run']];
+const titles=['문제 관련성','현재 해결 수준','설명 명확성','개선 효익','차별성','주장 신뢰성','전환 부담','사용 의향','적정가격','최종 선택'];
+const questions=domains.map((domain,i)=>({id:domain,domain,title:titles[i],prompt:titles[i]+'을 선택하세요.',choices:options[i],labels:Object.fromEntries(options[i].map(code=>[code,code==='unknown'?'판단 불가':code==='consider'?'고려':code]))}));
+const appState={model:{phase:'ready'},history:[],deleted:[],prefectures:[],survey_questions:questions};
+let savedDraft=null,sampleSeed=200,requests=[],deferredPanels=null,deferredReports=null;
+const ctx=vm.createContext({console,structuredClone,URLSearchParams,Intl,Map,Number,String,Uint32Array,
+ document:{body:{dataset:{token:'test'},classList:{contains:()=>false}},getElementById:$,querySelectorAll:selector=>selector==='[data-step]'?steps:[],addEventListener(){}},window:{},
+ crypto:{getRandomValues:array=>{array[0]=sampleSeed++;return array;}},setTimeout:()=>1,clearTimeout(){},setInterval(){},
+ MarkdownEditor:{Editor:class{constructor(){this.markdown='';}setHints(){}setMarkdown(markdown){this.markdown=markdown;}getMarkdown(){return this.markdown;}setEditable(){}captureHistory(){return {markdown:this.markdown};}restoreEditor(snapshot){this.markdown=snapshot.markdown;}}},
+ ResponseResults:class{constructor(){this.repeat=0;}reset(){this.repeat=0;}async load(id,data){this.data=data;}},
+ fetch:async(route,request)=>{
+  const body=request?.body?JSON.parse(request.body):undefined;requests.push({route,body});let data;
+  if(route==='/api/state')data=appState;
+  else if(route==='/api/panel'){
+   if(deferredPanels)data=await new Promise(resolve=>deferredPanels.push(resolve));
+   else data={count:Math.min(body.panel.sample_size||100,175),eligible_count:175,requested_size:body.panel.sample_size||100,items:[]};
+  }else if(route.endsWith('/save'))data=savedDraft={...body,revision:(body.revision||0)+1};
+  else if(route.endsWith('/start'))data=savedDraft={...savedDraft,run:{active:true,total:1000,cursor:0,status:'running',backend_errors:0}};
+  else if(route==='/api/experiments/test')data=savedDraft;
+  else if(route.includes('/report?repeat=')){if(deferredReports)data=await new Promise(resolve=>deferredReports.push({route,resolve}));else data={completed_jobs:10,planned_jobs:10,backend_errors:0,backend_kind:'clef',responses:{count:1,repeat:Number(route.split('=')[1])}};}
+  else if(route.endsWith('/export'))data={body:'<html>보고서</html>',filename:'report.pdf',mime:'text/html'};
+  else throw Error('Unexpected request '+route);
+  return {ok:true,json:async()=>structuredClone(data)};
+ }});
+vm.runInContext(fs.readFileSync(path.join(root,'web/app.js'),'utf8'),ctx);
+const exec=code=>vm.runInContext(code,ctx),tick=()=>new Promise(resolve=>setImmediate(resolve));
+async function appChecks(){
+ await tick();assert.equal($('empty-view').hidden,false);assert.equal(requests.filter(r=>r.route==='/api/panel').length,0);
+ savedDraft={id:'test',revision:1,title:'새 실험',workflow:'product-survey-v2',items:[{id:'item',name:'메모',document:'문서',pricing:{state:'free',amount:'',currency:'JPY',billing:'one_time'},valuation:{currency:'JPY',billing:'one_time',boundaries:['','','']}}],panel:{selection:'random',sample_size:100,sample_seed:123},settings:{repeats:1,seed:42},run:null};
+ ctx.testDraft=structuredClone(savedDraft);
+ exec("draft=testDraft;itemId='item';state="+JSON.stringify(appState)+";editor.setMarkdown('문서');fillItemFields();fillConditions();setView('input');renderRun();");
+ assert.equal($('primary-action').textContent,'다음');assert.equal($('previous-step').hidden,true);assert.equal($('panel-sample-size').value,100);assert.equal($('survey-outline').hidden,false);assert.equal(($('survey-questions').innerHTML.match(/<li>/g)||[]).length,10);
+ for(const field of ['name','document']){exec("draft.items[0]."+field+"=' ';editor.setMarkdown(draft.items[0].document);dirty=true;");await $('primary-action').dispatch('click');assert.equal(exec('view'),'input','Empty '+field+' must stay on product input');exec("draft.items[0]."+field+"="+JSON.stringify(savedDraft.items[0][field])+";");if(field==='name')exec("draft.items[0].name='메모';");else exec("draft.items[0].document='문서';editor.setMarkdown('문서');");}
+ exec("draft.items[0].document='## 해결할 문제\\n\\n## 주요 기능';editor.setMarkdown(draft.items[0].document);dirty=true;");await $('primary-action').dispatch('click');assert.equal(exec('view'),'input');exec("draft.items[0].document='문서';editor.setMarkdown('문서');");
+ exec("itemInputError=new Error('가격 오류');");await $('primary-action').dispatch('click');assert.equal(exec('view'),'input');assert.equal($('error').textContent,'가격 오류');
+ exec("itemInputError=null;dirty=true;");await $('primary-action').dispatch('click');assert.equal(exec('view'),'run');assert.equal($('primary-action').textContent,'실험 시작');assert.equal($('previous-step').hidden,false);assert.equal($('job-count').textContent,'1,000건');assert.equal($('panel-count').textContent,'100명');
+ assert.equal($('valuation-settings').hidden,false);assert.equal($('valuation-error').hidden,true);
+ const setBoundaries=values=>{ctx.boundaries=values;exec("draft.items[0].valuation.boundaries=boundaries;validateValuations();dirty=true;renderNavigation();");};
+ const beforeInvalid=requests.length;ctx.valuationTarget={value:'1000',dataset:{valuationBoundary:'0'},closest:()=>({dataset:{valuationItem:'item'},querySelectorAll:()=>[]})};assert.throws(()=>exec('collectValuation(valuationTarget)'),/경계값/);assert.equal(exec('draft.items[0].valuation.boundaries[0]'),'1000');setBoundaries(['1000','','3000']);assert.equal($('primary-action').disabled,true);await assert.rejects(exec('flushSave()'),/경계값/);assert.equal(requests.length,beforeInvalid);assert.equal(exec('draft.items[0].valuation.boundaries[1]'),'');
+ for(const values of [['0','2','3'],['1','1','3'],['3','2','1'],['1.5','2','3']]){setBoundaries(values);assert.equal($('primary-action').disabled,true);}
+ setBoundaries(['1000','2000','3000']);assert.equal($('primary-action').disabled,false);await exec('flushSave()');assert.deepEqual(savedDraft.items[0].valuation.boundaries,['1000','2000','3000']);
+ exec("draft.items[0].valuation.currency='USD';");setBoundaries(['1.01','2.02','3.03']);assert.equal($('primary-action').disabled,false);
+ setBoundaries(['','','']);await exec('flushSave()');assert.deepEqual(savedDraft.items[0].valuation.boundaries,['','','']);
+ const panel=requests.findLast(r=>r.route==='/api/panel');assert.equal(panel.body.experiment_id,'test');assert.equal(panel.body.panel.sample_seed,123);assert.equal(panel.body.panel.selection,'random');assert(requests.some(r=>r.route.endsWith('/save')));
+ // Native input values are strings. Sampling seed is independent of the repeat seed.
+ for(const id of ['panel-query','panel-prefecture','panel-age-min','panel-age-max','panel-sex'])$(id).value='';$('panel-sample-size').value='100';$('repeats').value='1';$('seed').value='42';
+ await $('resample-panel').dispatch('click');assert.equal(exec('draft.panel.sample_seed'),200);assert.equal(exec('draft.settings.seed'),42);assert.equal(exec('draft.panel.sample_size'),100);
+ $('panel-sample-size').value='150';await $('panel-sample-size').dispatch('input');await exec('refreshPanel()');assert.equal($('panel-count').textContent,'150명');assert.equal($('job-count').textContent,'1,500건');
+ // Replies for old filters cannot overwrite the latest draw count.
+ deferredPanels=[];const first=exec('refreshPanel()'),second=exec('refreshPanel()');await tick();assert.equal(deferredPanels.length,2);deferredPanels[1]({count:20,eligible_count:20});await second;deferredPanels[0]({count:10,eligible_count:10});await first;assert.equal($('panel-count').textContent,'20명');deferredPanels=null;
+ $('panel-sample-size').valid=false;await $('panel-sample-size').dispatch('input');assert.equal($('primary-action').disabled,true);$('panel-sample-size').valid=true;await $('panel-sample-size').dispatch('input');await exec('refreshPanel()');
+ await $('previous-step').dispatch('click');assert.equal(exec('view'),'input');await $('primary-action').dispatch('click');await $('primary-action').dispatch('click');assert.equal(exec('view'),'run');assert.equal($('primary-action').textContent,'실행 중');assert.equal($('primary-action').disabled,true);assert.equal($('resample-panel').disabled,true);
+ ctx.savedLoadReport=exec('loadReport');exec("loadReport=async()=>{$('results-content').hidden=false;renderNavigation();};draft.run={active:false,total:1000,cursor:1000,status:'completed',backend_errors:0};renderRun();");assert.equal($('primary-action').textContent,'결과 보기');await $('primary-action').dispatch('click');assert.equal(exec('view'),'results');assert.equal($('primary-action').textContent,'보고서 저장');await $('previous-step').dispatch('click');assert.equal(exec('view'),'run');
+ savedDraft={...savedDraft,run:{active:false,total:1000,cursor:1000,status:'completed',backend_errors:0}};await exec("selectExperiment('test')");assert.equal(exec('view'),'results');
+ savedDraft={...savedDraft,run:{active:false,total:1000,cursor:8,status:'paused',backend_errors:0}};await exec("selectExperiment('test')");assert.equal(exec('view'),'run');assert.equal($('primary-action').textContent,'이어 실행');assert.equal($('partial-results').hidden,false);assert.equal($('survey-outline').hidden,false);
+ exec("draft.question_catalog=[{domain:'need',title:'기존 질문',prompt:'기존 질문'}];fillConditions();");assert.equal(($('survey-questions').innerHTML.match(/<li>/g)||[]).length,1);assert.match($('survey-questions').innerHTML,/기존 질문/);
+ exec('loadReport=savedLoadReport;responseResults.repeat=0;');deferredReports=[];const oldReport=exec('loadReport()');exec('responseResults.repeat=2;');const newReport=exec('loadReport()');await tick();assert.equal(deferredReports.length,2);deferredReports[1].resolve({completed_jobs:10,planned_jobs:10,backend_errors:0,backend_kind:'clef',responses:{count:1,repeat:2}});await newReport;deferredReports[0].resolve({completed_jobs:10,planned_jobs:10,backend_errors:0,backend_kind:'clef',responses:{count:1,repeat:0}});await oldReport;assert.equal(exec('responseResults.data.repeat'),2);deferredReports=null;
+ assert.equal($('export-pdf').hidden,true);assert.equal($('export-format').value,'html');const nativeMessages=[];ctx.nativeMessages=nativeMessages;exec("window.webkit={messageHandlers:{native:{postMessage:message=>nativeMessages.push(message)}}};responseResults.repeat=2;");$('export-format').value='pdf';await exec('exportReport()');const exported=requests.findLast(r=>r.route.endsWith('/export'));assert.deepEqual(exported.body,{format:'pdf',repeat:2});assert.equal(nativeMessages[0].format,'pdf');
+ exec("draft.workflow='independent-choice-v1';fillConditions();");assert.equal($('export-pdf').hidden,true);assert.equal($('export-pdf').disabled,true);assert.equal($('export-html').hidden,true);assert.equal($('export-format').value,'md');$('export-format').value='html';exec('configureExportFormats();');assert.equal($('export-format').value,'md');exec("draft.workflow='product-survey-v2';fillConditions();");assert.equal($('export-pdf').disabled,false);assert.equal($('export-html').disabled,false);
+}
+async function resultChecks(){
+ const results=vm.createContext({window:{},Intl,Map,Number,String});vm.runInContext(fs.readFileSync(path.join(root,'web/results.js'),'utf8'),results);const View=results.window.ResponseResults,view=Object.create(View.prototype),parts={};
+ const cell=choice=>({choice,reason:'',missing_information:[],review:{marked:false,note:''},job_id:'job-'+choice,evidence:[],option_probabilities:null});
+ const item=(overrides={})=>Object.assign({product_id:'item'},Object.fromEntries(domains.map((kind,i)=>[kind,cell(options[i][0])])),overrides);
+ view.data={workflow:'product-survey-v2',questions,products:[{id:'item',name:'메모',price:{amount_minor:0,currency:'JPY',billing:'one_time'},valuation_unit:{currency:'JPY',billing:'one_time'},valuation_bands:[{low_minor:0,high_minor:999},{low_minor:1000,high_minor:1999},{low_minor:2000,high_minor:2999},{low_minor:3000,high_minor:null}]}],count:2,people:[{persona_id:'1',uuid:'1',name:'가',age:25,age_group:'18–29세',sex:'여성',items:[item()]},{persona_id:'2',uuid:'2',name:'나',age:45,age_group:'40–49세',sex:'남성',items:[item({credibility:cell('unknown'),relevance:cell('not_relevant')})]}]};
+ view.repeat=1;view.data.repeats=2;view.productId='item';view.personId='1';view.filters={mode:'all',query:''};view.el=name=>parts[name]??=(new Element());view.render=()=>{};
+ assert.equal(view.label('usage','consider'),'고려');assert.equal(view.extraQuestions().length,7);view.renderSurvey();assert.equal((parts.survey.innerHTML.match(/class="rr-survey-row"/g)||[]).length,7);assert.match(parts.survey.innerHTML,/data-filter="credibility"/);assert.match(parts.survey.innerHTML,/50\.0%/);assert.equal(view.label('purchase','buy'),'사용');
+ view.filters.credibility='unknown';assert.equal(view.filtered().length,1);assert.equal(view.filtered()[0].persona_id,'2');view.filters.credibility=null;view.filters.mode='unknown';assert.equal(view.filtered().length,1);view.filters.mode='all';view.data.people[1].items[0].switching=cell('error');view.filters.mode='errors';assert.equal(view.filtered().length,1);view.filters.mode='all';
+ view.renderDetail();assert.equal((parts.detail.innerHTML.match(/class="rr-assessment-head"/g)||[]).length,10);assert(parts.detail.innerHTML.indexOf('최종 선택')<parts.detail.innerHTML.indexOf('문제 관련성'));assert.equal((parts.detail.innerHTML.match(/data-record=/g)||[]).length,10);
+ view.data.people[0].items[0].relevance.reason='<img src=x onerror=bad()> 원문';view.renderDetail();assert(!parts.detail.innerHTML.includes('<img'));assert(parts.detail.innerHTML.includes('&lt;img'));
+ view.data.report_context={products:[{...view.data.products[0],name:'동결 상품',document:'## 상품 원문\n<script>위험</script>',summary:'원래 상품 <img>'}],panel:{selection:'random',sample_size:100,sex:'female',age_min:20,age_max:39,query:'학생'},selected_count:2,repeats:2,status:'completed',scenario:{id:'product-survey-v2'},source:{name:'고정 자료',record_count:10000},model:{backend_id:'clef-frozen'}};const context=view.contextHTML();assert.match(context,/동결 상품/);assert.match(context,/20–39세/);assert.match(context,/회차 2 \/ 2/);assert.match(context,/검색: 학생/);assert.match(context,/상품·실험 조건/);assert(!context.includes('<img>'));assert(!context.includes('<script>'));assert.match(context,/clef-frozen/);
+ assert.equal((view.comparisonHTML().match(/<tr>/g)||[]).length,11);assert.equal(view.pricePointsHTML(),'');view.data.price_points=[{name:'메모',currency:'JPY',billing:'one_time',points:[{product_id:'item',amount_minor:1000,share:.5,count:1,denominator:2}]}];assert.match(view.pricePointsHTML(),/50\.0%/);assert.match(view.pricePointsHTML(),/1,000 JPY/);assert(!view.pricePointsHTML().includes('<path'));
+ view.data.people[1].items[0].purchase=cell('decline');view.data.usage_purchase=[{product_id:'item',denominator:2,paired_count:2,excluded_count:0,cells:[{usage:'use',purchase:'buy',count:1},{usage:'use',purchase:'decline',count:1}]}];assert.match(view.crossHTML(),/data-cross-purchase="decline"/);const cross={dataset:{filter:'usage',value:'use',crossPurchase:'decline'},hasAttribute:()=>false};await view.click({target:{closest:()=>cross}});assert.equal(view.filters.usage,'use');assert.equal(view.filters.purchase,'decline');assert.equal(view.filtered().length,1);view.filters.usage=null;view.filters.purchase=null;
+ view.data.products[0].valuation_bands=[];view.data.products[0].valuation_unit=null;for(const person of view.data.people)person.items[0].fair_price=cell('not_run');assert.equal(view.hasPriceBands(),false);assert.equal(view.label('fair_price','not_run'),'미실시');assert.equal(view.label('benefit','not_applicable'),'해당 없음');view.drawPrice();view.renderHeatmap();assert.match(parts['price-status'].innerHTML,/미실시/);view.filters.mode='not_run';assert.equal(view.filtered().length,2);view.data.people[0].items[0].benefit=cell('not_applicable');view.filters.mode='na';assert.equal(view.filtered().length,1);view.filters.mode='all';
+ const legacyDomains=['need','understanding','usage','alternatives','trust','onboarding','fair_price','purchase'];view.data.questions=legacyDomains.map(domain=>({domain,title:domain,choices:['unknown']}));for(const person of view.data.people)for(const domain of legacyDomains)person.items[0][domain]??=cell('unknown');assert.equal(view.extraQuestions().length,5);view.renderDetail();assert.equal((parts.detail.innerHTML.match(/class="rr-assessment-head"/g)||[]).length,8);
+ delete view.data.questions;assert.equal(view.questions().length,3);view.renderDetail();assert.equal((parts.detail.innerHTML.match(/class="rr-assessment-head"/g)||[]).length,3);assert.equal(view.filtered().length,2);
+}
+appChecks().then(async()=>{await resultChecks();console.log('Survey V2 UI passed: valuation save/start guards, sequential default100/random controls, frozen catalogs, repeat export, ten details, seven diagnostics and legacy rendering.');}).catch(error=>{console.error(error.stack);process.exitCode=1;});

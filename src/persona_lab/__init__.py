@@ -1,3 +1,4 @@
-"""Demo contracts with optional local decision backends."""
+"""Persona Lab product execution core, derived from the preserved demo."""
 
-__version__ = "0.3.0"
+# Preserve the engine fingerprint of frozen runs; scenarios/backends version new judgments.
+__version__ = "0.4.0"

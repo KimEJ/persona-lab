@@ -1,0 +1,21 @@
+{
+  "name": "Clef-Flash Q4_K_M",
+  "model_id": "clef-flash-q4-k-m",
+  "file": "Clef-Flash-Q4_K_M.gguf",
+  "sha256": "fd3e90605e8103307dca37cb5a8cdb036267e2fe3cb2d908d80a8ceb9ec0638c",
+  "revision": "4a192915ef971886004b5b13294f2b4c7a7fc39d",
+  "license": "Apache-2.0",
+  "url": "https://huggingface.co/ggml-org/Clef-Flash-GGUF",
+  "upstream_url": "https://huggingface.co/Cloudflare/clef-flash",
+  "upstream_revision": "17f0b0ad64efb65d273590632833508766b2aae6",
+  "runtime": "llama.cpp b11429",
+  "architecture": "arm64",
+  "model_architecture": "clef",
+  "endpoint": "/v1/systemone",
+  "gpu_layers": 99,
+  "parallel": 1,
+  "context_size": 8192,
+  "batch_size": 8192,
+  "ubatch_size": 8192,
+  "source_claim": "The ggml-org card identifies Cloudflare/clef-flash as source; the independently pinned current upstream revision is not proof that this exact revision was the conversion input."
+}

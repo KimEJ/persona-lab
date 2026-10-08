@@ -1,0 +1,308 @@
+{
+  "retrieved_at": "2026-10-06T05:59:49.249725+00:00",
+  "purpose": "Read-only source inspection. No dependencies installed. Only selected inspected pure helpers were executed in isolated probes.",
+  "repositories": [
+    {
+      "name": "marktext",
+      "repository": "https://github.com/marktext/marktext",
+      "commit": "0d8dba02bb77efdf33198a3b197bf8fdb42bec79",
+      "commit_date": "2026-10-03T16:58:50Z",
+      "archive_sha256": "683b39cc0dc0ec27a3cc88505339ef887df16e58fe03d3f32316eb14bf73a07b",
+      "archive_bytes": 25291558,
+      "files": 2063,
+      "local_path": ".research/upstream/marktext",
+      "status": "downloaded",
+      "omissions": "links, non-files, files over 20 MiB",
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "sha256": "dcba6003d1e8ad62de2e166a2c80ec1ad08cef24f941543ccf8690da7cb89d04"
+        },
+        {
+          "path": "packages/muya/package.json",
+          "sha256": "2b4da0f5dff4a755cc67698007289c2387455dd7aaacb161c1ed112b7edbc011"
+        },
+        {
+          "path": "packages/muya/src/utils/index.ts",
+          "sha256": "b487514de7fbcf241ff45a2f4ac2d7736c1f550150b96e7fca246d1ca307f624"
+        },
+        {
+          "path": "packages/muya/src/state/markdownToState.ts",
+          "sha256": "d2aacd2b22117903b8bc62f8afd46d15d26e3566be5e13a6f1e8f5374a9a4e39"
+        },
+        {
+          "path": "packages/muya/src/state/stateToMarkdown.ts",
+          "sha256": "27c00985ac006df6d50aff9834d533c3a329e175335d7d651f946dbd7ba733af"
+        },
+        {
+          "path": "packages/muya/src/history/index.ts",
+          "sha256": "24160308a06e2801de988c7dbe74ee69be6f0495e29417a7a7da54aca40d4239"
+        },
+        {
+          "path": "packages/muya/src/muya.ts",
+          "sha256": "b8bb7bd8985ee38c2db8a957cf4a844d8d1d1a17348afd186ec33d3a5f653fda"
+        },
+        {
+          "path": "packages/muya/src/editor/index.ts",
+          "sha256": "6324919b994a8c78c22f5897c0132521805a97bd4fa4b8737d1e2cdf235c9357"
+        },
+        {
+          "path": "packages/muya/src/state/__tests__/codeFenceLength.spec.ts",
+          "sha256": "db6c95133ce69ce88a01ca171bdd6eaaf9edf69c7aa590bd60490cd7d1e99f94"
+        }
+      ]
+    },
+    {
+      "name": "tinytroupe",
+      "repository": "https://github.com/microsoft/TinyTroupe",
+      "commit": "a6244b358a1fe1c71bf751f7ba0f8dfa368ec5a4",
+      "commit_date": "2026-03-28T11:11:26Z",
+      "archive_sha256": "f997a126be5d29273377baeee67a77b3f60f3f8d1efe21ffebd3668a85a48543",
+      "archive_bytes": 97015846,
+      "files": 1527,
+      "local_path": ".research/upstream/tinytroupe",
+      "status": "downloaded",
+      "omissions": "links, non-files, files over 20 MiB"
+    },
+    {
+      "name": "genagents",
+      "repository": "https://github.com/StanfordHCI/genagents",
+      "commit": "96854071ef4c2d79c93144c973c7820722d52bab",
+      "commit_date": "2024-11-18T14:36:12Z",
+      "archive_sha256": "e37c1fb928c5407f4ce85f4751c6e4e2502b9f85e48da70a2feef19f51567e9f",
+      "archive_bytes": 4124736,
+      "files": 14052,
+      "local_path": ".research/upstream/genagents",
+      "status": "downloaded",
+      "omissions": "links, non-files, files over 20 MiB",
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "sha256": "0993b6d4da4ab68a802a1df98886b93fec17c2839b4df9775a12736561e0bcec"
+        },
+        {
+          "path": "requirements.txt",
+          "sha256": "bb5760b258e1f1d1361f182e93dda58a341103ab8a67a1383f07b9dade5ea7a3"
+        },
+        {
+          "path": "genagents/genagents.py",
+          "sha256": "aba1a32854e63983155164591dd21df337626e01a2094fbe838d2a1f61d49cac"
+        },
+        {
+          "path": "genagents/modules/interaction.py",
+          "sha256": "437f6d59145a8ace8c75fe715fe435c1a03e6167023b45c4a0e0c59455f9f8b8"
+        },
+        {
+          "path": "genagents/modules/memory_stream.py",
+          "sha256": "9e0cf67af6309104cf4aeff39fd87b12ba2fce534cb27290443ee2e9702c7447"
+        },
+        {
+          "path": "simulation_engine/gpt_structure.py",
+          "sha256": "547212d48e84249e33159f9b2a65aef13a1eacbb55c228d3cd742049a351ba8f"
+        }
+      ]
+    },
+    {
+      "name": "obsidian-api",
+      "repository": "https://github.com/obsidianmd/obsidian-api",
+      "commit": "9abd9605ce081383674aae1ed111c456edde0688",
+      "commit_date": "2026-10-05T19:06:20Z",
+      "archive_sha256": "520f3ad4a9c38c879c3b01eb77ef8e8c13259806e60977649736c9becf40a9e8",
+      "archive_bytes": 73488,
+      "files": 8,
+      "local_path": ".research/upstream/obsidian-api",
+      "status": "downloaded",
+      "omissions": "links, non-files, files over 20 MiB",
+      "reviewed_files": [
+        {
+          "path": "LICENSE.md",
+          "sha256": "c7e9eeb6640ebb1c22d8888f6d2c771b1f058a54e6216d69c7e2224b3cbad394"
+        },
+        {
+          "path": "package.json",
+          "sha256": "327e9c193b0e70e9fc1dcc9d3d85e916037f04606a4fadb53639be318161e41e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "89b06377b8bb16019f959237ef64db04f257c11898450853858fbb711d5b3b90"
+        },
+        {
+          "path": "obsidian.d.ts",
+          "sha256": "97c86417c893db691e401fdffd9026e348dc96da6bfcfa5d49a301d7fe7542a0"
+        }
+      ]
+    },
+    {
+      "name": "syntheticusers-sdk",
+      "repository": "https://github.com/syntheticusers/sdk-typescript",
+      "status": "advertised-repository-unavailable",
+      "error": "HTTP Error 404: Not Found",
+      "note": "GitHub returned 404. Python sdist was inspected separately."
+    },
+    {
+      "name": "promptfoo",
+      "repository": "https://github.com/promptfoo/promptfoo",
+      "commit": "4415bcb630155ffe40b31ec3feb038240ce33938",
+      "commit_date": "2026-10-06T04:05:55Z",
+      "local_path": ".research/upstream/promptfoo",
+      "status": "selected-source-snapshot",
+      "scope": "Relevant source modules and their tests; full tree index retained, unrelated assets omitted",
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "sha256": "bf813686553f451e1b833fbd827488aee49b60b189626915bf3108d10b754e44"
+        },
+        {
+          "path": "src/app/package.json",
+          "sha256": "664e478638304b39b41fa47f7c808c95ec7bb2591dadef39444968e0c2ee94f3"
+        },
+        {
+          "path": "src/models/eval.ts",
+          "sha256": "ed6f8e059e5229c22384b88afc58b6d0056a0a7295546d1ac250658506396805"
+        },
+        {
+          "path": "src/app/src/pages/eval/components/FilterModeProvider.tsx",
+          "sha256": "43dd957ac08e5fd415938d3a15e7c1cfa7df91291fa7d42a9f3998587f402098"
+        },
+        {
+          "path": "src/app/src/pages/eval/components/ResultsTable.tsx",
+          "sha256": "ae94125925f25b5c68fa41eb29ba68435e554c92a943048eb5e8d0ffa005747f"
+        },
+        {
+          "path": "src/app/src/pages/eval/components/store.ts",
+          "sha256": "57f8afa9c1c1699908f5afb97594d3e068c87e47a46f7ba7e5578e9519aecb70"
+        },
+        {
+          "path": "src/util/convertEvalResultsToTable.ts",
+          "sha256": "61378b76886cebe570565b7c99f32f5ec6642bd4bd9b5d654d959d20fc12dece"
+        }
+      ],
+      "file_count": 152
+    },
+    {
+      "name": "agentsociety",
+      "repository": "https://github.com/tsinghua-fib-lab/AgentSociety",
+      "commit": "8cc5bb9a9c27d039ec5519375db9d73ccf508cba",
+      "commit_date": "2026-09-24T07:10:32Z",
+      "local_path": ".research/upstream/agentsociety",
+      "status": "selected-source-snapshot",
+      "scope": "Relevant source modules and their tests; full tree index retained, unrelated assets omitted",
+      "reviewed_files": [
+        {
+          "path": "packages/agentsociety2/LICENSE",
+          "sha256": "b65b784ed7e4318dc1c3e8944046d867edcc272c7f237ea99dcf0c0ce3a1e75d"
+        },
+        {
+          "path": "packages/agentsociety2/pyproject.toml",
+          "sha256": "fe115cee21af2529b4c6e4398ef7a7eda9ba88e212830fa6089a204b08011da6"
+        },
+        {
+          "path": "packages/agentsociety2/agentsociety2/storage/replay_sink.py",
+          "sha256": "25a3745321a1f6800a822210b9feb766f58bbd3441af3e35624d41478bd3bda3"
+        },
+        {
+          "path": "packages/agentsociety2/agentsociety2/storage/replay_reader.py",
+          "sha256": "81c370834fd225e90c8405d8c224975eb6f07197ae33435e2f111067e3938b73"
+        },
+        {
+          "path": "packages/agentsociety2/agentsociety2/storage/replay_metadata.py",
+          "sha256": "4b1b91bef2c40439e32e8a5eaaa18a013581e9a999d751274074aaab9fdc061c"
+        },
+        {
+          "path": "packages/agentsociety2/agentsociety2/storage/workspace_state.py",
+          "sha256": "b61b23aeda56cc568d455654737dbd9b75d45c13b01237567146ac7ba144f1a8"
+        },
+        {
+          "path": "packages/agentsociety2/agentsociety2/trace/span.py",
+          "sha256": "3e5db3e1d4a10d20b15fb38f5929dfb0ae7f649cae1938d40d858c7bff54f30c"
+        }
+      ],
+      "file_count": 62
+    },
+    {
+      "name": "syntheticusers-python-sdk",
+      "source": "https://files.pythonhosted.org/packages/7c/97/d6d3b3219a623ff1d8a771486f4ac38e451ec2d849f77937c380ae5b7186/syntheticusers-1.0.0.tar.gz",
+      "version": "1.0.0",
+      "sha256": "d27f961884030065cde5e75c70b92f2757b15821580c8ef4442aec1a67f36c57",
+      "local_path": ".research/upstream/syntheticusers-python-sdk",
+      "status": "downloaded-sdk-only",
+      "files": 278,
+      "license_metadata": "Proprietary",
+      "reviewed_files": [
+        {
+          "path": "PKG-INFO",
+          "sha256": "ec4e8b6974633c3a6924902924a398c4c4b9f7ce8c4d4640d2de205d7fbd508e"
+        },
+        {
+          "path": "syntheticusers/models/study_create.py",
+          "sha256": "4a27c3557510ef46eb7b5336e738861693b35b761faf40b5850b2b49b6b4f033"
+        },
+        {
+          "path": "syntheticusers/api/studies_api.py",
+          "sha256": "a92fdf4af3d9c6ee76aebeea60de254a07081adbfa043c6ac5803a8ec887e71e"
+        },
+        {
+          "path": "syntheticusers/api_client.py",
+          "sha256": "f3162e0d9db12e127a7d7362329c1921551bdb6dfb2b980458a4c591339153eb"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/awlevin/typesafe-computer-use",
+      "commit": "44ca11f0935b021b73020825da054b5c92cc1288",
+      "commit_date": "2026-09-29T22:47:14Z",
+      "archive_sha256": "5bcea1755f8a5d90571e6f9bed891405089273326aeefefe71891a5aab56f1ec",
+      "local_path": ".research/upstream/typesafe-computer-use",
+      "files": 129,
+      "scope": "read only; no computer control or external model calls",
+      "name": "typesafe-computer-use",
+      "status": "downloaded-read-only",
+      "license": "MIT",
+      "reviewed_files": [
+        {
+          "path": "LICENSE",
+          "sha256": "fb99135e22841bb564b275b5c0755ce1e5418faff2c806f25d4a11696214c87c"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "cd0bb7adb46f77e0889b166e7ecc2490e5cf200396a7b7b446a446b14745b920"
+        },
+        {
+          "path": "typesafe_computer_use/decide.py",
+          "sha256": "82aaf2f6633f15b257ae2e1ea9ca91d8888de198a64d8d9ef21fcbe7ba962f00"
+        },
+        {
+          "path": "typesafe_computer_use/actions.py",
+          "sha256": "72f149792289be8c44a37f2a223f166a659ba5be58eed87f232f6d22214733bd"
+        },
+        {
+          "path": "typesafe_computer_use/runner.py",
+          "sha256": "3c4d1c66fa16ec7cc24a25ec8f4b35a3576d00b9529d4787f4a54d098ab14ee3"
+        },
+        {
+          "path": "docs/how-a-step-works.md",
+          "sha256": "5c555cdb41d86ccfb2a852d15b8de5f01625cb811e02029616d9a65a673485ab"
+        },
+        {
+          "path": "tests/test_decide.py",
+          "sha256": "80a43367412cfc340f38c41c50e523194e493382299896d71804668f5ea39766"
+        },
+        {
+          "path": "tests/test_scenarios.py",
+          "sha256": "eb114396d55838900c45487a87515c4050bc9a6512c6c3299fef692bffa8c8f3"
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "name": "LM Studio",
+      "reason": "Removed at the user request."
+    },
+    {
+      "name": "Aaru simulation engine",
+      "status": "no publicly retrievable official engine located",
+      "note": "aaru-dps is a different disk imaging project and was excluded."
+    }
+  ]
+}
