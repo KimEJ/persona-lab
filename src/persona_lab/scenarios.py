@@ -71,6 +71,9 @@ def budget_context(assumptions, uuid, scenario):
 def context_gate(job: Job) -> Decision | None:
     if job.scenario.get('id') in RESPONSE_SCENARIO_IDS:
         if job.scenario.get('id')==SURVEY_V2_SCENARIO_ID and job.question['domain']=='fair_price' and job.product.get('valuation_bands')==[]:
+            calibration=job.product.get('valuation_calibration',{})
+            if calibration.get('status')=='unavailable':
+                return Decision('not_run','not_run',('auto_price_unavailable',),(),reason=calibration.get('reason') or '자동 가격대를 확정할 근거가 부족합니다.',evidence_semantics='supplied_input_only')
             return Decision('not_run','not_run',('missing_valuation_grid',),(),reason='평가 가격대가 입력되지 않았습니다.',missing_information=('평가 가격대',),evidence_semantics='supplied_input_only')
         if job.question['domain']=='purchase' and job.product.get('price') is None:
             return Decision('not_run','not_run',('missing_price_context',),(),reason='판매가격이 입력되지 않았습니다.',missing_information=('판매가격',),evidence_semantics='supplied_input_only' if job.scenario.get('id') in FINITE_SCENARIO_IDS else 'backend_cited_input')

@@ -42,14 +42,18 @@ def _context(spec, source, backend_id, backend_kind, count, status, repeat, snap
                       'name': backend_id.split(':')[1] if backend_id.startswith('llama-cpp:') else backend_id},
             'scenario': spec['scenario'], 'scenario_id': spec['scenario'].get('id'),
             'repeat': repeat, 'repeats': spec['repeats'], 'selected_count': count,
-            'status': status, 'run_status': status, 'products': products}
+            'status': status, 'run_status': status, 'products': products,
+            **({'price_calibration': frozen['price_calibration']} if 'price_calibration' in frozen else {})}
 
 
 def _empty_cell(domain, product, scenario_id):
     missing = '판매가격' if domain == 'purchase' and product.get('price') is None else '평가 가격대' if domain == 'fair_price' and scenario_id == SURVEY_V2_SCENARIO_ID and not product.get('valuation_bands') else None
+    calibration = product.get('valuation_calibration', {})
+    automatic_unavailable = missing == '평가 가격대' and calibration.get('mode') == 'auto'
+    reason = (calibration.get('reason') or '가격대 탐색에서 평가 구간을 확정하지 못했습니다.') if automatic_unavailable else missing + '이 입력되지 않았습니다.' if missing else ''
     return {'job_id': None, 'choice': 'not_run' if missing else 'pending',
-            'status': 'not_run' if missing else 'pending', 'reason': missing + '이 입력되지 않았습니다.' if missing else '',
-            'missing_information': [missing] if missing else [], 'diagnostic_error': None,
+            'status': 'not_run' if missing else 'pending', 'reason': reason,
+            'missing_information': [missing] if missing and not automatic_unavailable else [], 'diagnostic_error': None,
             'evidence': [], 'evidence_semantics': None, 'option_probabilities': None,
             'probability_semantics': 'not_provided', 'valuation': None, 'error': None,
             'review': {'marked': False, 'note': '', 'revision': 0}}
@@ -86,7 +90,7 @@ def _response_report(db, people, repeat=0, reviews=None, snapshot=None):
                   domain: cells.get((person.persona_id, product['id'], domain), _empty_cell(domain, product, scenario_id))
                   for domain in domains}} for product in spec['products']]}
              for index, person in enumerate(selected)]
-    products = [{key: product[key] for key in ('id', 'name', 'price', 'price_state', 'valuation_unit', 'valuation_bands', 'document') if key in product} for product in spec['products']]
+    products = [{key: product[key] for key in ('id', 'name', 'price', 'price_state', 'valuation_unit', 'valuation_bands', 'valuation_calibration', 'document') if key in product} for product in spec['products']]
     for product in products:
         product['summary'] = document_summary(product.get('document', ''))
         product['description'] = product['summary']
@@ -122,9 +126,13 @@ def _statistics(response):
             pairs = Counter((items[first['id']][domain]['choice'], items[second['id']][domain]['choice']) for items in by_person.values()
                             if items[first['id']][domain]['choice'] not in invalid and items[second['id']][domain]['choice'] not in invalid)
             included = sum(pairs.values())
+            price_context = {'comparison_semantics': 'product_specific_price_bands',
+                             'comparable_price_grid': first.get('valuation_unit') == second.get('valuation_unit') and first.get('valuation_bands') == second.get('valuation_bands'),
+                             'from_price_grid': {'unit': first.get('valuation_unit'), 'bands': first.get('valuation_bands', [])},
+                             'to_price_grid': {'unit': second.get('valuation_unit'), 'bands': second.get('valuation_bands', [])}} if domain == 'fair_price' else {}
             paired.append({'from_product': first['id'], 'to_product': second['id'], 'domain': domain,
                            'denominator': n, 'paired_count': included, 'excluded_count': n - included,
-                           'transitions': [{'from': a, 'to': b, 'count': value} for (a, b), value in sorted(pairs.items())]})
+                           'transitions': [{'from': a, 'to': b, 'count': value} for (a, b), value in sorted(pairs.items())], **price_context})
     joint = []
     domains = {question['domain'] for question in questions}
     if {'usage', 'purchase'} <= domains:
@@ -140,7 +148,7 @@ def _statistics(response):
         price = product.get('price')
         if price is None:
             continue
-        key = json.dumps({k: v for k, v in original.items() if k not in {'id', 'price', 'price_state', 'price_origin', 'summary'}}, sort_keys=True, ensure_ascii=False)
+        key = json.dumps({k: v for k, v in original.items() if k not in {'id', 'price', 'price_state', 'price_origin', 'summary', 'valuation_calibration'}}, sort_keys=True, ensure_ascii=False)
         groups.setdefault(key, []).append(product)
     price_points = []
     stats = {(item['product_id'], item['domain']): item for item in statistics}

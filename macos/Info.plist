@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>Persona Lab</string>
+	<string>Paneloom</string>
 	<key>CFBundleExecutable</key>
 	<string>PersonaLab</string>
 	<key>CFBundleIconFile</key>
@@ -11,7 +11,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>io.personalab.desktop</string>
 	<key>CFBundleName</key>
-	<string>Persona Lab</string>
+	<string>Paneloom</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

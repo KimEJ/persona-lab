@@ -46,15 +46,19 @@ def valuation_fields(product=None):
     unit=product.get('valuation_unit') or product.get('price') or {'currency':'JPY','billing':'one_time'}
     divisor=10**CURRENCIES[unit['currency']]
     bands=product.get('valuation_bands') or []
-    return {**{key:unit[key] for key in ('currency','billing')},'boundaries':[str(Decimal(band['low_minor'])/divisor) for band in bands[1:]] if bands else ['','','']}
+    mode=product.get('valuation_mode','manual' if 'valuation_bands' in product else 'auto')
+    return {'mode':mode,**{key:unit[key] for key in ('currency','billing')},'boundaries':[str(Decimal(band['low_minor'])/divisor) for band in bands[1:]] if bands else ['','','']}
 
 
 def valuation_from_fields(value):
-    require(isinstance(value,dict) and set(value)=={'currency','billing','boundaries'}, '평가 가격대 형식을 확인하세요.')
+    require(isinstance(value,dict) and set(value) in ({'currency','billing','boundaries'},{'mode','currency','billing','boundaries'}), '평가 가격대 형식을 확인하세요.')
+    mode=value.get('mode','manual')
+    require(isinstance(mode,str) and mode in {'auto','manual'}, '평가 가격대 방식을 확인하세요.')
     boundaries=value['boundaries']
-    require(isinstance(boundaries,list) and len(boundaries)==3 and all(isinstance(amount,str) for amount in boundaries), '평가 가격대 경계값 3개를 확인하세요.')
+    require(isinstance(boundaries,list) and len(boundaries)==3 and all(isinstance(amount,str) and len(amount)<=24 for amount in boundaries), '평가 가격대 경계값 3개를 확인하세요.')
     unit={key:value[key] for key in ('currency','billing')}
     money_from_fields({**unit,'amount':'0'})
+    if mode=='auto':return unit,[]
     if not any(amount.strip() for amount in boundaries):return unit,[]
     require(all(amount.strip() for amount in boundaries), '평가 가격대 경계값 3개를 모두 입력하세요.')
     amounts=[money_from_fields({**unit,'amount':amount})['amount_minor'] for amount in boundaries]

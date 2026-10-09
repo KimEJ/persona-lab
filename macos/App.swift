@@ -114,7 +114,7 @@ final class NativePDFExporter: NSObject, WKNavigationDelegate {
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) { finish(error("보고서 변환기가 종료되었습니다.")) }
 }
 
-final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
     var window: NSWindow!
     var webView: WKWebView!
     var worker: Process?
@@ -134,11 +134,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         webView.uiDelegate = self
         webView.setValue(false, forKey: "drawsBackground")
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1220, height: 860), styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView], backing: .buffered, defer: false)
-        window.title = "Persona Lab"
+        window.title = "Paneloom"
+        window.backgroundColor = NSColor(name: nil) { appearance in
+            appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+                ? NSColor(srgbRed: 16.0 / 255, green: 29.0 / 255, blue: 37.0 / 255, alpha: 1)
+                : NSColor(srgbRed: 244.0 / 255, green: 243.0 / 255, blue: 239.0 / 255, alpha: 1)
+        }
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
         window.minSize = NSSize(width: 900, height: 650)
         window.isReleasedWhenClosed = false
+        window.delegate = self
         window.contentView = webView
         window.center()
         makeMenus()
@@ -151,10 +157,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         let menu = NSMenu()
         let appItem = NSMenuItem(); menu.addItem(appItem)
         let appMenu = NSMenu(); appItem.submenu = appMenu
-        appMenu.addItem(withTitle: "Persona Lab 정보", action: #selector(about), keyEquivalent: "")
+        appMenu.addItem(withTitle: "Paneloom 정보", action: #selector(about), keyEquivalent: "")
         appMenu.addItem(withTitle: "설정…", action: #selector(settings), keyEquivalent: ",")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Persona Lab 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "Paneloom 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         let fileItem=NSMenuItem();menu.addItem(fileItem)
         let fileMenu=NSMenu(title:"파일");fileItem.submenu=fileMenu
         fileMenu.addItem(withTitle:"새 실험",action:#selector(newExperiment),keyEquivalent:"n")
@@ -182,10 +188,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
     @objc func undo(){command("undo")}
     @objc func redo(){command("redo")}
     @objc func settings(){command("settings")}
-    @objc func about(){NSApp.orderFrontStandardAboutPanel(options:[.applicationName:"Persona Lab",.applicationVersion:Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.5.0"])}
+    @objc func about(){NSApp.orderFrontStandardAboutPanel(options:[.applicationName:"Paneloom",.applicationVersion:Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.8.1"])}
 
     func startService() {
         guard let resources=Bundle.main.resourceURL else { fail("앱 실행 파일을 찾을 수 없습니다."); return }
+        // Keep the established directory so the new visible name retains saved experiments.
         let home = ProcessInfo.processInfo.environment["PERSONA_LAB_HOME"].map { URL(fileURLWithPath:$0,isDirectory:true) } ?? FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask)[0].appendingPathComponent("Persona Lab",isDirectory:true)
         do {
             try FileManager.default.createDirectory(at:home,withIntermediateDirectories:true)
@@ -229,7 +236,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
     }
 
     func fail(_ message:String) {
-        let alert=NSAlert();alert.messageText="Persona Lab";alert.informativeText=message
+        let alert=NSAlert();alert.messageText="Paneloom";alert.informativeText=message
         alert.addButton(withTitle:"확인");alert.runModal()
     }
 
@@ -276,6 +283,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         }
     }
 
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        guard sender === window else { return true }
+        // Keep the editor open until the existing save-and-quit handshake succeeds.
+        NSApp.terminate(sender)
+        return false
+    }
+
     func applicationShouldTerminate(_ sender:NSApplication)->NSApplication.TerminateReply {
         if waitingToQuit{return .terminateCancel}
         guard endpoint != nil else {waitingToQuit=true;return .terminateNow}
@@ -296,6 +310,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
 
 #if NATIVE_PDF_PROBE
 NativePDFProbe.main()
+#elseif NATIVE_LIFECYCLE_PROBE
+NativeLifecycleProbe.main()
 #else
 let application=NSApplication.shared
 let delegate=AppDelegate()

@@ -40,11 +40,11 @@ def make_server(app, port=0):
             try:
                 self.host()
                 parsed=urlparse(self.path);parts=parsed.path.strip('/').split('/');query=parse_qs(parsed.query,keep_blank_values=True)
-                if parsed.path in {'/','/app.js','/editor.js','/results.js','/style.css','/results.css'}:
+                if parsed.path in {'/','/app.js','/editor.js','/results.js','/style.css','/results.css','/brand-mark.svg'}:
                     name='index.html' if parsed.path=='/' else parsed.path[1:]
                     body=(app.root/'web'/name).read_bytes()
                     if name=='index.html':body=body.replace(b'__APP_TOKEN__',token.encode())
-                    mime='text/html; charset=utf-8' if name=='index.html' else 'application/javascript; charset=utf-8' if name.endswith('.js') else 'text/css; charset=utf-8'
+                    mime='text/html; charset=utf-8' if name=='index.html' else 'application/javascript; charset=utf-8' if name.endswith('.js') else 'image/svg+xml' if name.endswith('.svg') else 'text/css; charset=utf-8'
                     self.send(200,body,mime);return
                 self.auth()
                 if parsed.path=='/api/state':self.json(app.state())
@@ -117,11 +117,12 @@ def main():
     app=Application(args.root,args.home)
     server=make_server(app)
     origin=f'http://127.0.0.1:{server.server_address[1]}'
-    app.model.start(origin)
     def stop(*_):threading.Thread(target=server.shutdown,daemon=True).start()
     signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
-    print(canonical({'url':origin}),flush=True)
-    try:server.serve_forever(poll_interval=.25)
+    try:
+        app.model.start(origin)
+        print(canonical({'url':origin}),flush=True)
+        server.serve_forever(poll_interval=.25)
     finally:server.server_close();app.close()
 
 if __name__=='__main__':main()

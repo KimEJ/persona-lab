@@ -1,323 +1,319 @@
 ---
-name: Persona Lab
-description: macOS 상품 설문 작업면과 저장된 실행의 독립 HTML·PDF 보고서
+name: "Paneloom · 패널룸"
+description: "상품 문서와 고정 표본의 응답을 함께 읽는 macOS 작업 화면과 독립 보고서"
 colors:
-  work: '#f9fafb'
-  sidebar: '#edf1f3'
-  paper: '#fff'
-  ink: '#243339'
-  muted: '#52646b'
-  line: '#cbd3d7'
-  accent: '#176f68'
-  selected: '#dce9e6'
-  danger: '#aa3532'
-  warning: '#755112'
-  work-dark: '#1d2428'
-  sidebar-dark: '#181e22'
-  paper-dark: '#252d32'
-  ink-dark: '#edf2f4'
-  muted-dark: '#b5c2c8'
-  line-dark: '#47545b'
-  accent-dark: '#83d5c7'
-  selected-dark: '#263f3d'
-  danger-dark: '#ffaaa3'
-  warning-dark: '#f0cb80'
-  dialog-backdrop: rgba(20,30,35,.25)
-  rr-negative: '#809b96'
-  rr-unknown: '#cbd3d7'
-  rr-hold: '#af8b48'
-  rr-band0: '#d5e4df'
-  rr-band1: '#8ab8ad'
-  rr-band3: '#0e4b46'
-  rr-negative-dark: '#526e67'
-  rr-unknown-dark: '#65747c'
-  rr-hold-dark: '#c8ae7b'
-  rr-band0-dark: '#344a45'
-  rr-band1-dark: '#426e65'
-  rr-band3-dark: '#bbdfd6'
-  rr-na: '#b5c2ad'
-  rr-not-run: '#ddd8cb'
-  rr-na-dark: '#75816b'
-  rr-not-run-dark: '#8d8776'
-  report-accent: '#167d79'
-  report-series-2: '#73aaa3'
-  report-series-3: '#b8d4ca'
-  report-series-4: '#d9c6a3'
-  report-bg: '#f3f5f5'
-  report-ink: '#202c32'
-  report-muted: '#66747b'
-  report-rule: '#d8e0e1'
-  report-table-rule: '#e1e7e8'
-  report-chart-ink: '#33444c'
-  report-header-ink: '#50626b'
-  report-unknown: '#a8afb5'
-  report-error: '#b85a50'
-  report-pending: '#e4e8eb'
-  report-not-run: '#c7cdd1'
-  report-not-applicable: '#a8a39a'
+  work: "#F4F3EF"
+  sidebar: "#ECEFEB"
+  paper: "#FFFEFA"
+  ink: "#182B38"
+  muted: "#586874"
+  line: "#CAD3D7"
+  accent: "#245C7A"
+  accent-ink: "#FFFEFA"
+  accent-hover: "#1C4D68"
+  selected: "#DFE8ED"
+  hover: "#D3E2EA"
+  scrollbar-thumb: "#9AAEB9"
+  positive: "#2F6E63"
+  negative: "#647487"
+  hold: "#AC792A"
+  unknown: "#9298A1"
+  danger: "#B24338"
+  warning: "#805A1D"
+  not-applicable: "#9B8C7A"
+  not-run: "#CED2D1"
+  pending: "#ACAFC1"
+  work-dark: "#101D25"
+  sidebar-dark: "#132530"
+  paper-dark: "#172A36"
+  ink-dark: "#EFF3F2"
+  muted-dark: "#B6C5CE"
+  line-dark: "#405563"
+  accent-dark: "#91C2DC"
+  accent-ink-dark: "#172A36"
+  accent-hover-dark: "#AACFE2"
+  selected-dark: "#263F4F"
+  hover-dark: "#304B5C"
+  scrollbar-thumb-dark: "#627889"
+  positive-dark: "#78B6A3"
+  negative-dark: "#9BAAB8"
+  hold-dark: "#D3AB68"
+  unknown-dark: "#8F929B"
+  danger-dark: "#F3A196"
+  warning-dark: "#D3AB68"
+  not-applicable-dark: "#B5A38A"
+  not-run-dark: "#525B5F"
+  pending-dark: "#747C98"
+  rr-band0: "#CBDCE6"
+  rr-band1: "#88B0C6"
+  rr-band2: "#4D85A4"
+  rr-band3: "#245C7A"
+  rr-band0-dark: "#385C73"
+  rr-band1-dark: "#5686A2"
+  rr-band2-dark: "#8EBBD2"
+  rr-band3-dark: "#C5DFED"
+  dialog-backdrop: "rgba(20,30,35,.25)"
 typography:
   body:
-    fontFamily: -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif
-    fontSize: 14px
+    fontFamily: "-apple-system,BlinkMacSystemFont,\"Apple SD Gothic Neo\",sans-serif"
+    fontSize: "14px"
     lineHeight: 1.45
-  title:
-    fontSize: 22px
+  brand:
+    fontFamily: "-apple-system,BlinkMacSystemFont,\"Apple SD Gothic Neo\",sans-serif"
+    fontSize: "18px"
     fontWeight: 600
-    letterSpacing: -.025em
+    letterSpacing: "-.02em"
+  title:
+    fontSize: "22px"
+    fontWeight: 600
+    letterSpacing: "-.025em"
   document-body:
-    fontSize: 16px
+    fontSize: "16px"
     lineHeight: 1.65
   document-heading:
-    fontSize: 28px
+    fontSize: "28px"
     fontWeight: 600
     lineHeight: 1.3
-    letterSpacing: -.025em
+    letterSpacing: "-.025em"
   document-section:
-    fontSize: 21px
+    fontSize: "21px"
     fontWeight: 600
     lineHeight: 1.4
   document-subheading:
-    fontSize: 18px
-  settings-title:
-    fontSize: 24px
-    fontWeight: 600
+    fontSize: "18px"
   field-label:
-    fontSize: 13px
+    fontSize: "13px"
   label:
-    fontSize: 12px
-  table:
-    fontSize: 13px
+    fontSize: "12px"
   document-diff:
-    fontFamily: ui-monospace,SFMono-Regular,monospace
-    fontSize: 13px
+    fontFamily: "ui-monospace,SFMono-Regular,monospace"
+    fontSize: "13px"
     lineHeight: 1.6
-  code:
-    fontFamily: ui-monospace,SFMono-Regular,monospace
-    fontSize: .9em
   results-title:
-    fontSize: 17px
+    fontSize: "17px"
     fontWeight: 500
   results-section:
-    fontSize: 15px
+    fontSize: "15px"
     fontWeight: 500
   results-assessment:
-    fontSize: 13px
+    fontSize: "13px"
     fontWeight: 500
   result-summary:
-    fontSize: 13px
+    fontSize: "13px"
     lineHeight: 1.6
   report-body:
-    fontFamily: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif
-    fontSize: 13px
+    fontFamily: "-apple-system,BlinkMacSystemFont,\"Apple SD Gothic Neo\",sans-serif"
+    fontSize: "13px"
     lineHeight: 1.6
   report-title:
-    fontSize: 30px
+    fontSize: "30px"
     lineHeight: 1.25
-    letterSpacing: -.7px
+    letterSpacing: "-.7px"
   report-section:
-    fontSize: 23px
+    fontSize: "23px"
     lineHeight: 1.3
   report-subheading:
-    fontSize: 16px
+    fontSize: "16px"
   report-note:
-    fontSize: 11px
+    fontSize: "11px"
   report-print-body:
-    fontSize: 10.5pt
+    fontSize: "10.5pt"
     lineHeight: 1.5
   report-print-table:
-    fontSize: 9pt
+    fontSize: "9pt"
 rounded:
-  navigation: '0'
-  progress: 4px
-  field: 6px
-  control: 7px
-  editor: 9px
-  dialog: 12px
+  flat: "0"
+  progress: "4px"
+  field: "6px"
+  control: "7px"
+  editor: "9px"
+  dialog: "12px"
 spacing:
-  label-gap: 6px
-  compact-gap: 8px
-  control-gap: 12px
-  row-padding: 14px
-  group-gap: 18px
-  section-gap: 24px
-  heading-gap: 28px
-  page-inline: 32px
-  window-top: 45px
-  chart-gap: 30px
+  label-gap: "6px"
+  compact-gap: "8px"
+  control-gap: "12px"
+  row-padding: "14px"
+  group-gap: "18px"
+  section-gap: "24px"
+  heading-gap: "28px"
+  chart-gap: "30px"
+  page-inline: "32px"
+  window-top: "45px"
 components:
   button-primary:
-    backgroundColor: '{colors.accent}'
-    textColor: '{colors.paper}'
-    typography: '{typography.body}'
-    rounded: '{rounded.control}'
-    padding: 7px 12px
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.accent-ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "7px 12px"
+  button-primary-hover:
+    backgroundColor: "{colors.accent-hover}"
   button-secondary:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.ink}'
-    typography: '{typography.body}'
-    rounded: '{rounded.control}'
-    padding: 7px 12px
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "7px 12px"
   button-quiet:
-    textColor: '{colors.muted}'
-    typography: '{typography.body}'
-    rounded: '{rounded.control}'
-    padding: 7px 12px
-  field:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.ink}'
-    typography: '{typography.body}'
-    rounded: '{rounded.field}'
-    padding: 7px 9px
-  item-tab-selected:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.accent}'
-    typography: '{typography.body}'
-    rounded: '{rounded.control}'
-    padding: 7px 12px
-  editor:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.ink}'
-    typography: '{typography.document-body}'
-    rounded: '{rounded.editor}'
-    padding: 24px 30px
-  format-control:
-    textColor: '{colors.ink}'
-    typography: '{typography.field-label}'
-    rounded: '{rounded.control}'
-    padding: 6px 9px
-  document-diff:
-    typography: '{typography.document-diff}'
-  detail-current:
-    backgroundColor: '{colors.selected}'
-    textColor: '{colors.ink}'
-    typography: '{typography.body}'
-    rounded: '{rounded.control}'
-    padding: 7px 12px
-  review-note:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.ink}'
-    typography: '{typography.body}'
-    rounded: '{rounded.field}'
-    padding: 9px 12px
+    textColor: "{colors.muted}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "7px 12px"
   product-field:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.ink}'
-    typography: '{typography.body}'
-    rounded: '{rounded.field}'
-    padding: 7px 9px
-    height: 36px
-  response-person-selected:
-    backgroundColor: '{colors.selected}'
-    textColor: '{colors.ink}'
-    typography: '{typography.label}'
-    rounded: '{rounded.navigation}'
-    padding: 12px 3px
-  response-heat-cell:
-    textColor: '{colors.ink}'
-    typography: '{typography.label}'
-    rounded: '{rounded.navigation}'
-    padding: 4px 0
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.field}"
+    padding: "7px 9px"
+    height: "36px"
+  item-tab-selected:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.accent}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "7px 12px"
   workflow-step-current:
-    textColor: '{colors.accent}'
-    typography: '{typography.field-label}'
-    rounded: '{rounded.navigation}'
-    padding: 12px 0
+    textColor: "{colors.accent}"
+    typography: "{typography.field-label}"
+    rounded: "{rounded.flat}"
+    padding: "12px 0"
+  editor:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.document-body}"
+    rounded: "{rounded.editor}"
+    padding: "24px 30px"
+  response-person-selected:
+    backgroundColor: "{colors.selected}"
+    textColor: "{colors.ink}"
+    typography: "{typography.label}"
+    rounded: "{rounded.flat}"
+    padding: "12px 3px"
   response-distribution-strip:
-    backgroundColor: '{colors.line}'
-    rounded: '{rounded.navigation}'
-    height: 14px
-    width: 100%
-  frozen-result-context:
-    textColor: '{colors.ink}'
-    typography: '{typography.result-summary}'
+    backgroundColor: "{colors.line}"
+    rounded: "{rounded.flat}"
+    height: "14px"
+    width: "100%"
   report-page:
-    backgroundColor: '{colors.paper}'
-    textColor: '{colors.report-ink}'
-    typography: '{typography.report-body}'
-    rounded: '{rounded.navigation}'
-    padding: 42px 50px
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.report-body}"
+    rounded: "{rounded.flat}"
+    padding: "42px 50px"
 ---
 
-# Persona Lab 앱·보고서 디자인
+# Design System: Paneloom · 패널룸
 
 ## Overview
 
-기존 Operate 작업면의 시스템 글꼴·회백색 면·청록색 주요 동작을 유지한다. 0.8 기본 흐름은 `product-survey-v2`의 독립 질문 열 개이며, 상품 입력 → 대상·실행 → 결과의 비대화형 진행 표시와 상단 이전·주요 동작으로 이동한다. 독립 HTML 보고서는 저장한 실행을 읽는 문서로, 고정된 흰 면·청록색·인라인 CSS/SVG를 사용한다.
+**Creative North Star: "같은 표본을 겹쳐 읽는 판"**
 
-기존 0.4–0.7 검증 기록은 현재 규칙 안에 반복하지 않는다. `.impeccable/`과 `verification/`은 Git에 포함하지 않는 로컬 작업 기록이다. 로컬 `.impeccable/archive/DESIGN-0.7.md`과 로컬 `.impeccable/archive/design-0.7.json`에 전체 이전 기록을 보존했다. 알려진 이전 조건 검사 16개 중 4개 미충족 이력은 남아 있다. 현재 실행에서도 전환 부담의 동일 입력이 `not_applicable`과 `low`로 달라졌으며 가격 비공개 입력 쌍 9개 중 8개만 선택이 같았다. 실행 성공과 모델 선택의 안정성을 구분하고, 새로운 질문·보고서를 정확도나 소비자 확률 검증으로 표현하지 않는다. 최종 `verification/survey-report.json`은 1명 × 2조건 × 10질문의 20건·실제 21요청·출력 토큰 0·실행 오류 0을 기록한다. 최종 브라우저 UI와 대표 PDF의 독립 마감 판정은 `ship`이다. 네이티브 비동기 인쇄 PDF는 12개 A4 페이지이며 primary가 PDFKit으로 전부 확인했다. 네이티브 저장 패널과 앱 전체·macOS 14·한글 IME는 검증 완료로 확대하지 않는다. 브라우저 다운로드 이벤트는 시간 초과였고 HTML API 성공과 구분한다.
+Paneloom(패널룸)은 상품 문서를 작성하고 같은 합성 인물 표본의 응답을 비교하는 작업 도구다. 겹친 두 판과 그 사이의 열린 통로를 브랜드 심벌로 사용한다. 광물청색(Field)은 작업의 시작·현재 위치·선택을 짚고, 밝은 종이 면과 짙은 청색 다크 면은 긴 문서와 밀도 높은 데이터를 받친다.
+
+시스템 글꼴, 얇은 경계, 평면 도형을 유지한다. 시선은 상단의 다음 동작에서 입력·결과로 이어진다. 장식보다 고정한 상품·판매조건·표본·회차가 먼저 읽혀야 한다. 독립 보고서는 같은 내용을 읽고 인쇄하는 고정 라이트 문서다.
 
 **Key Characteristics:**
 
-- 문서·판매조건·평가 가격대·대상을 한 흐름에서 고정한다.
-- 같은 회차와 같은 코호트의 결과·상태·원문을 함께 읽는다.
-- 화면 조작과 독립 보고서의 읽기·인쇄 표현을 구분한다.
+- 겹친 판 심벌과 광물청색을 일관되게 사용한다.
+- 브랜드, 응답 범주, 실행 상태를 서로 다른 역할로 표현한다.
+- 문서·그래프·인물 데이터에 필요한 밀도와 여백을 구분한다.
+
+프런트매터의 값이 규범이다. 색은 `web/style.css`·`web/results.css`, 보고서는 `src/persona_desktop/reporting.py`에 대응한다. 글꼴·간격·모서리 값은 현재 컴포넌트에서 추출한 공통 기준이며 CSS 변수로 존재한다는 뜻은 아니다. 도구용 확장은 `.impeccable/design.json`에 둔다.
 
 ## Colors
 
-Operate 기본 팔레트와 다크 대응값은 유지한다. `accent`·`selected`는 주요 동작·선택, `work`·`sidebar`·`paper`는 면, `ink`·`muted`·`line`은 본문·보조 글자·경계다. 오류는 `danger`다.
+### Primary
 
-결과의 긍정·중간·부정과 네 가격대는 기존 `rr-*` 색을 쓴다. 판단 불가, 해당 없음, 미실시, 오류, 대기는 각각 라벨·별도 상태색으로 보존한다. `rr-na`와 `rr-not-run`은 해당 없음·미실시 전용이며 판단 불가와 섞지 않는다.
+광물청색(Field)의 `accent`는 심벌·주요 동작·현재 진행·링크에 쓴다. `accent-ink`는 주요 버튼 위의 글자, `accent-hover`는 그 버튼의 호버다. `selected`와 `hover`는 선택·호버 면을 구분한다. 가격대의 마지막 색과 같은 값이어도 두 역할을 합치지 않는다.
 
-`report-*`는 독립 보고서 전용이다. 흰 페이지와 `report-bg`, `report-ink`, `report-muted`, `report-accent` 및 네 범주·다섯 상태 색을 사용한다. 앱의 다크 팔레트를 보고서에 상속하지 않는다. 값의 기준은 frontmatter다.
+### Neutral
+
+`work`는 작업 배경, `sidebar`는 실험 목록, `paper`는 입력·문서 면이다. `ink`는 본문, `muted`는 보조 정보와 입력 안내, `line`은 경계다. `scrollbar-thumb`는 스크롤 위치를 표시한다. 앱은 시스템의 `prefers-color-scheme`을 따라 같은 이름의 `-dark` 대응값을 사용한다.
+
+### Response and state
+
+`positive`·`hold`·`negative`는 응답 범주다. `unknown`·`not-applicable`·`not-run`·`danger`·`pending`은 각각 판단 불가·해당 없음·미실시·오류·대기다. `warning`은 실행·검토의 주의 문구다. 상태를 중간 응답으로 합치거나 브랜드 강조색으로 덮지 않는다.
+
+가격 구간은 낮은 구간부터 `rr-band0` → `rr-band3`의 청색 명도 순서를 고정한다. 라이트는 밝은 색에서 짙은 색으로, 다크는 짙은 색에서 밝은 색으로 진행한다. 경계값·통화·결제 주기는 저장한 실행 조건에서 가져온다. 가격별 관측의 선택 비율 점은 `positive`를 쓴다.
+
+독립 보고서와 앱 아이콘은 라이트 값을 고정한다. 보고서는 앱의 다크 색을 상속하지 않으며 응답·상태·가격 구간도 라이트 기준을 유지한다.
+
+**The Role Separation Rule.** 브랜드 색은 동작·선택·탐색에 쓴다. 응답과 실행 상태는 해당 의미색으로 표시하며, 색만으로 의미를 전달하지 않는다.
 
 ## Typography
 
-앱은 기존 macOS 시스템 글꼴·한국어 대체 글꼴과 본문 (14px), 문서 (16px /1.65), 결과 제목 (17px /15px /13px), 보조 라벨 (12px)을 유지한다. 진행 표시는 (13px), 현재 단계는 (600) 굵기다. 문서·결과 원문 폭은 (75ch), 숫자와 선택 점수는 `tabular-nums`를 쓴다.
+macOS 시스템 계열과 한국어 대체 글꼴을 공통으로 사용한다. 추가 웹폰트를 도입하지 않는다. 본문은 `body`, 브랜드 락업은 `brand`, 실험 제목은 `title`이다. 문서 편집기는 `document-*`, 결과는 `results-*`·`result-summary`, 독립 보고서는 `report-*` 계층을 따른다.
 
-보고서는 같은 시스템 계열의 본문 `report-body`, 제목 `report-title`, 절 제목 `report-section`, 보조 정보 `report-note`를 쓴다. 인쇄 본문·표는 별도 `report-print-*` 크기로 지정한다.
+상품 편집기의 문단과 결과의 원문·요약은 최대 (75ch)로 읽기 폭을 제한한다. 독립 보고서는 페이지 너비를 따른다. 인원·비율·금액·내부 점수는 `tabular-nums`로 정렬한다. 고정폭 글꼴은 코드·문서 차이에만 쓴다. 화면 제목은 작은 글자의 과도한 굵기보다 크기와 간격으로 구분한다. 창 너비 (1000px) 이하의 실험 제목은 (20px)로 줄인다.
 
 ## Layout
 
-앱 목록은 (222px), 작업 여백은 (45px /32px /30px)다. 창 너비 (1000px) 이하에서는 목록 (190px)과 가로 여백 (24px)을 쓴다. AppKit 시작·최소 크기는 (1220×860 /900×650)이며 지원 기준은 macOS 14 이상 Apple Silicon이다.
+왼쪽 고정 실험 목록은 (222px), 작업 여백은 상단·가로·하단 (45px 32px 30px)다. 창 너비 (1000px) 이하에서는 목록 (190px), 가로 여백 (24px)을 쓴다. 목록을 접으면 작업 화면이 전체 너비를 사용한다. 기본 창 (1220×860)과 최소 창 (900×650)에서 같은 흐름을 유지한다.
 
-입력 안의 아이템 탭·상품 조건·문서 편집기를 유지한다. 대상은 검색·지역·나이·성별과 기본 100명 표본으로 정하며 10,000명 합성 풀에서 실제 추출 수를 표시한다. 실행 시 내부 UUID 코호트를 고정한다. 후보 인물 미리보기는 없다. 질문 개요·평가 가격대·고급 설정은 접힌 `details`다.
+상품·판매조건·대상·평가 가격대의 입력 행은 (36px) 높이다. 결과의 반복·필터 입력은 (34px)이며 일반 버튼에는 고정 높이를 덧씌우지 않는다. 관련 필드는 짧게 묶고, 절은 `section-gap`·`heading-gap` 등 기존 간격으로 구분한다. 편집기의 안쪽 여백은 `editor`를 따르며 좁은 창에서는 (20px 24px)다.
 
-결과는 `minmax(0,1.3fr) minmax(0,1fr)` 두 열과 (24px) 간격이다. 오른쪽 인물 패널은 상단 (20px), 최대 높이 `calc(100vh - 40px)` 안에서 스크롤한다. 컨테이너 (620px) 이하는 한 열이며 패널 고정을 푼다. (380px) 이하는 히트맵을 세 칸씩 나눈다. 결과 위에는 판매조건·문서 두 줄 요약·조건/인원/회차/상태를 짧게 두고 원문과 전체 조건을 펼쳐 확인한다. 입력 단계로 돌아갈 필요가 없다.
+결과는 왼쪽 그래프·오른쪽 인물 데이터의 두 열이다. 열 비율은 `minmax(0,1.3fr) minmax(0,1fr)`, 간격은 (24px)다. 오른쪽은 상단 (20px)에 고정하고 최대 `calc(100vh - 40px)` 안에서 스크롤한다. 결과 컨테이너 (620px) 이하에서는 한 열로 바꾸고 고정을 푼다. (380px) 이하에서는 히트맵을 세 칸씩 나누고 셀에 짧은 라벨을 붙인다.
 
-독립 보고서는 화면에서 최대 (900px), 페이지 안쪽 여백 (42px 50px)이다. (700px) 이하에서는 한 열과 (24px 20px) 여백을 쓴다. A4 인쇄용 CSS는 절별 페이지 나눔·표 머리 반복·행 분리 억제를 지정한다. 네이티브 PDF는 비동기 AppKit `printOperation`으로 변환한다. 최종 표본 12개 A4 페이지의 한국어·SVG는 PDFKit에서 확인했으며, 원시 실행 기록의 10월 7일 날짜를 현재 클라이언트 10월 8일로 바꾸지 않는다.
+독립 보고서는 최대 너비 (900px), 여백은 `report-page`를 따른다. 화면 (700px) 이하에서는 한 열·여백 (24px 20px)이다. 인쇄는 A4·페이지 여백 (16mm 15mm 17mm), 절별 페이지 나눔·표 머리 반복·행 분리 억제를 사용한다.
 
 ## Elevation & Depth
 
-앱은 면 색과 얇은 경계로 깊이를 구분하며 그림자는 원문·검토 dialog에만 둔다. 보고서는 흰 면·구분선·절 간격을 사용하고 그림자를 두지 않는다.
+작업 화면은 면 색과 얇은 경계로 구분한다. 그림자는 원문·검토 대화상자에만 쓰며, 테마별 `shadow` 값은 sidecar에 기록한다. 보고서는 구분선과 절 간격으로 깊이를 표현하고 그림자를 쓰지 않는다. 호버가 카드 전체를 떠오르게 만들지 않는다.
 
 ## Shapes
 
-필드 (6px), 버튼 (7px), 편집기 (9px), dialog (12px)의 기존 모서리를 유지한다. 진행 연결선·누적 막대·표는 직선이다. 진단 막대는 (14px), 그래프 선택 외곽선은 (2px)다. 새로운 장식 형태는 추가하지 않는다.
+필드·버튼·편집기·대화상자의 모서리는 프런트매터 `rounded`를 따른다. 표·히트맵·누적 막대·결과 행은 직선 경계를 유지한다. 브랜드 판의 큰 곡선을 모든 컴포넌트에 반복하지 않는다.
+
+### Brand mark
+
+표시 이름은 **Paneloom**, 한국어 이름은 **패널룸**이다. `web/brand-mark.svg`의 두 채움 경로를 기준으로 사용한다. 원본은 (200×200), 실제 도형 경계는 (8–192)이며 사방의 내장 여백은 (8단위·4%)다. 수직 통로의 (x=66–80·14단위) 간격을 비롯해 두 판의 상대 위치·곡선·열린 공간을 보존한다. 자르거나 회전·반전·재그리기하지 않는다.
+
+앱 락업은 마크 (26×26px)·글자와의 간격 (10px), 보고서 푸터는 마크 (22×22px)·간격 (8px)을 사용한다. 이 내장 여백과 락업 간격이 현재의 보호 공간이다. 화면 사용은 (22px)보다 작게 줄이지 않고 통로가 읽히는지 확인한다. 옆에 이름이 있으면 마크는 장식으로 처리하고, 단독으로 쓰면 접근 가능한 이름을 제공한다.
+
+`macos/AppIcon.svg`는 (1024×1024) 원본을 사용한다. 광물청색 판의 경계는 (72–952), 밝은 마크는 `translate(208 208) scale(3.04)`다. 아이콘 출력은 이 원본에서 만들며 별도의 로고 변형을 추가하지 않는다. 보고서는 같은 마크 경로를 인라인 SVG로 넣어 파일 외부 자원에 의존하지 않는다.
 
 ## Components
 
-### Workflow, editor and valuation
+### Actions and workflow
 
-진행 단계는 클릭하지 않는 상품 입력·대상/실행·결과 목록이다. 이전과 `다음`·`실험 시작`·`이어 실행`·`결과 보기`·`보고서 저장`은 상태에 따라 상단에 둔다. 알려진 주요·보조·조용한 버튼과 키보드 포커스 (2px)를 재사용한다.
+주요·보조·조용한 버튼은 프런트매터의 세 변형을 사용한다. 일반 호버는 `hover`, 선택은 `selected`, 비활성은 불투명도 (.45)다. 키보드 포커스는 브랜드색 (2px) 윤곽선으로 표시한다. 버튼·링크·펼치기는 바깥 간격 (3px), 입력은 (1px)이다. 편집기는 포커스 시 경계색을 바꾼다. 버튼의 (.12s ease-out) 상태 전환은 `prefers-reduced-motion: no-preference`에서만 적용한다.
 
-Markdown은 같은 편집 영역에서 표현하며 아이템별 이력과 Unicode 20,000자 한도를 유지한다. 상품명·판매가격과 문서를 함께 고정한다. `평가 가격대`를 펼치면 아이템별 경계값 세 개·통화·결제 주기를 입력한다. 필드는 (36px), 경계는 양수·오름차순이며 전부 비우면 가격 평가는 미실시다. 일부만 입력하거나 순서가 잘못되면 실행을 막는다. 판매가격과 평가 단위는 별도다.
+상품 입력 → 대상·실행 → 결과의 상단 진행 표시는 클릭하지 않는 목록이다. 현재 단계는 색과 (600) 굵기·`aria-current="step"`으로 표시한다. 이동은 상단 `이전`과 상태별 `다음`·`실험 시작`·`이어 실행`·`결과 보기`·`보고서 저장`으로 수행한다. 아이템 탭은 선택 상태를 유지한다.
 
-### Frozen result context and states
+실험이 없으면 `실험이 없습니다.`와 `새 실험`을 첫 화면에 둔다. 저장된 판단이 없으면 그 상태를 짧게 설명한다. 실행 중·중단·오류에는 상태와 가능한 복구 동작을 함께 표시한다. 문구는 대상과 동작을 직접 말하고 내부 식별자나 구현 용어를 사용자 흐름에 추가하지 않는다.
 
-결과 헤더는 저장한 상품·문서·판매조건·필터·N·실행 상태와 선택한 한 회차를 보여준다. 펼친 `상품·실험 조건`에는 원문·가격대·자료·모델·질문 버전·추출 기준을 둔다. 현재 편집 값으로 과거 결과를 다시 설명하지 않는다.
+### Documents and fields
 
-판단 불가·해당 없음·미실시·오류·대기를 구분하고 전체 선택 회차의 인원을 분모로 유지한다. 가격대 미설정과 판매가격 미입력은 해당 질문만 미실시이며 판단 불가나 0%의 알려진 선택으로 바꾸지 않는다. 알려진 유한 선택의 근거는 비워 두고 입력 참조·원시 요청·선택 점수를 설명이나 소비자 확률로 부르지 않는다.
+상품 문서·판매조건·평가 가격대는 서로 구분한다. 문서는 같은 편집 영역에서 서식을 표시하며 빈 문단 안내는 저장 원문에 포함하지 않는다. 상품별 가격대는 자동 탐색을 기본으로 하고, 접힌 설정에서 통화·결제 주기와 직접 입력을 선택한다. 직접 입력은 양의 오름차순 경계값 세 개를 사용한다. 잘못된 필드는 `aria-invalid`·오류색·문제로 식별하고 수정 방법을 설명한다. 직접 입력한 경계값이 일부만 있거나 순서가 잘못되면 실행을 막고, 모두 비우면 해당 가격 평가는 미실시다. 자동 탐색이 구간을 확정하지 못하면 이유와 복제 후 직접 입력 동작을 표시한다. 본 평가와 재개는 확정 구간을 유지한다.
 
-### Ten questions and comparisons
+### Results and data boundaries
 
-문제 관련성·현재 해결 수준·설명 명확성·개선 효익·차별성·주장 신뢰성·전환 부담·사용 의향·적정가격 인식·제시 조건 선택은 독립 질문이다. 최종 선택에도 다른 답을 주입하지 않는다. 사용 의향의 `사용을 고려함`은 중간 선택이며 판단 불가가 아니다. 이전 고정 v1의 여덟 질문 계약은 그대로 읽는다.
+결과 위에는 고정한 상품·판매조건·문서 요약·표본·회차·상태를 짧게 둔다. 펼친 조건에서 원문과 전체 입력을 확인한다. 그래프는 직접 라벨·비율·인원을 함께 표시한다. 범례·교차표·그래프 선택은 오른쪽 목록을 좁히고 선택 인물·회차·스크롤 문맥을 보존한다. 인물 목록은 네 열·여섯 명 페이지이며 상세에서 제시 조건 선택을 먼저 읽는다.
 
-일곱 진단 누적 막대, 사용 의향·최종 선택 도넛, 가격대·연령/성별 분포를 직접 라벨·비율·인원으로 표시한다. 같은 인물의 사용 의향×선택 교차표는 조합이며 인과 설명이 아니다. 항목 비교표는 가장 많은 응답과 동률을 보여준다. 가격별 점은 다른 상품 정보·단위가 같고 판매가격만 다른 조건의 관찰 비율이다. 측정하지 않은 가격의 곡선·정확한 적정금액·지불 상한을 추론하지 않는다.
+판단 불가·해당 없음·미실시·오류·대기를 각 라벨과 상태색으로 보존한다. 질문 분포의 분모는 선택 회차의 전체 인원이다. 집단 히트맵은 해당 집단 인원, 교차표는 기록된 분모·제외 수를 표시한다. 저장되지 않은 값은 알려진 0이나 중간 응답으로 표시하지 않는다. 내부 점수는 선택 점수로 이름 붙이고 소비자 확률·실제 경험·생성된 설명으로 꾸미지 않는다. 교차표는 조합, 가격별 점은 관측 비율이며 인과·수요 곡선이나 측정하지 않은 가격을 추론하지 않는다.
 
-오른쪽 네 열 인물 목록·6명 페이지를 유지한다. 상세는 제시 조건 선택을 먼저 두고 열 개 질문을 표시한다. 그래프·교차표·범례 선택은 목록을 좁히며 선택 인물·회차·스크롤 문맥을 보존한다.
+**The Frozen Context Rule.** 결과와 내보내기는 저장된 입력·표본·선택 회차·분모를 함께 보여준다. 현재 편집 값으로 과거 실행을 설명하지 않는다.
 
-### Standalone report and export
+### Standalone report
 
-HTML은 저장된 입력·집계·고정 조건으로만 만든다. 보고서용 LLM 호출은 없으며 CSS·SVG는 인라인, JavaScript·네트워크는 사용하지 않는다. 헤더는 실행 시점·선택 회차/N·상태를 표시한다. 비교·상품별 분포·집단·실행 조건·질문·확인 사례·상품 원문을 이어 둔다. 대표 사례는 최대 세 명의 검토용 선택이며 인터뷰 인용이나 대표 표본이 아니다.
+보고서는 저장된 입력·집계·고정 조건으로 만들며 추가 모델 호출을 하지 않는다. CSS·SVG는 인라인, JavaScript·네트워크 자원은 사용하지 않는다. 제목·실행 시점·선택 회차·N·상태를 먼저 표시하고 비교·분포·집단·실행 조건·원문을 이어 둔다. 검토 사례는 인터뷰 인용이나 대표 소비자 증언으로 꾸미지 않는다. HTML·PDF·Markdown·CSV·JSON은 같은 선택 회차를 사용한다.
 
-보고서와 HTML·PDF·Markdown·CSV·JSON은 현재 선택한 한 회차를 사용한다. PDF는 스크립트가 꺼진 비영구 WKWebView에서 비동기 오프라인 인쇄 작업으로 만든다. 로컬 PDF 표본 `verification/survey-report.pdf`은 155,746바이트·12페이지다. 앱의 PDF 지원을 전체 네이티브 UI·IME 검증으로 확대하지 않는다.
+브랜드 변경은 표시 이름과 시각 자산에 적용한다. 패키지·번들 식별자·환경 변수·내부 ID와 `Application Support/Persona Lab` 저장 경로는 기존 호환을 유지한다.
 
 ## Do's and Don'ts
 
-- **Do** 기존 시스템 글꼴·Operate 팔레트·아이템 탐색을 유지한다.
-- **Do** 고정 입력·선택 회차·N·상태·원문을 함께 표시한다.
-- **Do** 해당 없음·미실시·판단 불가·오류·대기를 각각 보존한다.
-- **Do** 현재 기록과 로컬 이전 보관본 `.impeccable/archive/DESIGN-0.7.md`을 구분한다.
-- **Don't** 집계·교차표·선택 점수·보고서를 모델 정확도나 소비자 확률로 표시한다.
-- **Don't** 가격대 선택을 정확한 금액·지불 상한·가격 탄력성으로 표현한다.
-- **Don't** 이전 네이티브·반복성 검증을 새 버전의 검증으로 이어 붙인다.
+### Do
+
+- **Do** 원본 마크의 통로·비율·여백과 테마별 색을 유지한다.
+- **Do** 본문과 입력 안내는 대비 4.5:1 이상, 큰 글자는 3:1 이상으로 확인한다.
+- **Do** 그래프에 직접 라벨·비율·인원을 함께 표시하고 선택 상태를 텍스트와 구조로도 드러낸다.
+- **Do** 고정 입력·표본·선택 회차·실행 상태·원문을 결과와 보고서에서 확인할 수 있게 한다.
+
+### Don't
+
+- **Don't** 브랜드 색을 긍정 응답·오류·완료의 의미색으로 대체한다.
+- **Don't** 로고에 그라데이션·외곽선·장식 그림자를 넣거나 판 사이 통로를 메운다.
+- **Don't** 클릭하지 않는 진행 표시를 이동 버튼처럼 꾸민다.
+- **Don't** 내부 선택 점수·응답 비율을 실제 소비자의 구매 확률이나 모델 정확도로 표현한다.
+- **Don't** 가격대 응답을 정확한 적정금액·지불 상한·가격 탄력성으로 확장한다.
+- **Don't** 표시 이름 변경을 내부 식별자·환경 변수·기존 저장 경로 변경으로 이어 붙인다.

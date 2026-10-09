@@ -8,25 +8,30 @@ from datetime import datetime, timedelta, timezone
 from html import escape
 
 from persona_lab.contracts import CURRENCIES, require
+from persona_lab.responses import SURVEY_V2_SCENARIO_ID
 
 
 STATE_LABELS = {'unknown': '판단 불가', 'error': '오류', 'pending': '대기', 'not_run': '미실시', 'not_applicable': '해당 없음'}
 BILLING = {'one_time': '일시불', 'monthly': '월간', 'annual': '연간'}
-STATE_COLORS = {'unknown': '#a8afb5', 'error': '#b85a50', 'pending': '#e4e8eb', 'not_run': '#c7cdd1', 'not_applicable': '#a8a39a'}
-COLORS = ('#167d79', '#73aaa3', '#b8d4ca', '#d9c6a3')
+STATE_COLORS = {'unknown': '#9298A1', 'error': '#B24338', 'pending': '#ACAFC1', 'not_run': '#CED2D1', 'not_applicable': '#9B8C7A'}
+PRICE_COLORS = ('#CBDCE6', '#88B0C6', '#4D85A4', '#245C7A')
+POSITIVE_CHOICES = {'use', 'buy', 'now', 'clear', 'offered_product', 'accept', 'proceed', 'relevant', 'better', 'distinct', 'supported', 'low', 'sufficient'}
+HOLD_CHOICES = {'defer', 'later', 'request_evidence', 'seek_help', 'consider', 'partly_relevant', 'partial', 'partly_clear', 'similar', 'limited', 'partly_supported', 'moderate'}
+# Geometry matches web/brand-mark.svg; inline SVG keeps exported reports portable.
+BRAND_MARK = '<svg class="brand-mark" viewBox="0 0 200 200" fill="currentColor" aria-hidden="true"><path d="M36 8 H120 C133.255 8 144 18.745 144 32 V62 H90 C76.745 62 66 72.745 66 86 V165 H32 C18.745 165 8 154.255 8 141 V36 C8 20.536 20.536 8 36 8 Z"/><path d="M144 62 H168 C181.255 62 192 72.745 192 86 V168 C192 181.255 181.255 192 168 192 H104 C90.745 192 80 181.255 80 168 V148 C80 134.745 90.745 124 104 124 H120 C133.255 124 144 113.255 144 100 Z"/></svg>'
 CSS = '''
 @page { size: A4; margin: 16mm 15mm 17mm; }
-* { box-sizing: border-box; } body { margin: 0; color: #202c32; background: #f3f5f5; font: 13px/1.6 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; }
-main { max-width: 900px; margin: 28px auto; padding: 42px 50px; background: white; }
+* { box-sizing: border-box; } body { margin: 0; color: #182B38; background: #F4F3EF; font: 13px/1.6 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; }
+main { max-width: 900px; margin: 28px auto; padding: 42px 50px; background: #FFFEFA; }
 h1 { margin: 8px 0 14px; font-size: 30px; line-height: 1.25; letter-spacing: -.7px; } h2 { margin: 0 0 16px; font-size: 23px; line-height: 1.3; } h3 { margin: 20px 0 10px; font-size: 16px; }
-p { margin: 7px 0; } .muted, small { color: #66747b; } .meta { padding: 10px 0 15px; border-bottom: 1px solid #d8e0e1; }
-.page { margin-top: 45px; border-top: 2px solid #167d79; padding-top: 22px; } .first { margin: 0; border: 0; padding: 0; } .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-.facts { margin: 18px 0 24px; padding: 0 0 0 18px; } .facts li { margin: 7px 0; } .chart { display: block; width: 100%; height: auto; font: 12px -apple-system, "Apple SD Gothic Neo", sans-serif; } .chart text { fill: #33444c; }
+p { margin: 7px 0; } .muted, small { color: #586874; } .meta { padding: 10px 0 15px; border-bottom: 1px solid #CAD3D7; }
+.page { margin-top: 45px; border-top: 2px solid #245C7A; padding-top: 22px; } .first { margin: 0; border: 0; padding: 0; } .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.facts { margin: 18px 0 24px; padding: 0 0 0 18px; } .facts li { margin: 7px 0; } .chart { display: block; width: 100%; height: auto; font: 12px -apple-system, "Apple SD Gothic Neo", sans-serif; } .chart text { fill: #182B38; }
 .legend { display: flex; flex-wrap: wrap; gap: 3px 15px; margin: 5px 0 12px; font-size: 11px; } .legend span { display: inline-flex; align-items: baseline; gap: 5px; } .swatch { display: inline-block; width: 8px; height: 8px; flex: none; border-radius: 2px; }
-.distribution { break-inside: avoid; margin: 12px 0 16px; } .distribution h3 { margin: 0 0 3px; } table { border-collapse: collapse; width: 100%; margin: 10px 0 18px; font-size: 11px; } th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid #e1e7e8; vertical-align: top; overflow-wrap: anywhere; } th { color: #50626b; font-weight: 600; } thead { display: table-header-group; } tr { break-inside: avoid; } .numeric { text-align: right; font-variant-numeric: tabular-nums; } .heat th:first-child { width: 115px; } .heat th { word-break: keep-all; overflow-wrap: normal; } .joint { table-layout: fixed; } .joint th:first-child { width: 35%; } .joint th, .joint td { padding: 4px 3px; word-break: keep-all; overflow-wrap: normal; } .methods { table-layout: fixed; } .methods th { width: 100px; word-break: keep-all; overflow-wrap: normal; } .methods td { overflow-wrap: anywhere; } .heat td { text-align: right; font-variant-numeric: tabular-nums; } .product-summary { border-top: 1px solid #d8e0e1; padding-top: 10px; margin: 12px 0 20px; }
-pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; margin: 8px 0 18px; } details { margin: 10px 0; } summary { color: #167d79; cursor: pointer; } .note { font-size: 11px; color: #66747b; } .case { border-top: 1px solid #d8e0e1; padding-top: 9px; break-inside: avoid; } .question { break-inside: avoid; margin: 12px 0; } .question strong { display: block; } .document { border-top: 1px solid #d8e0e1; padding-top: 12px; } .document + .document { break-before: page; } footer { border-top: 1px solid #d8e0e1; margin-top: 28px; padding-top: 10px; color: #66747b; font-size: 10px; }
+.distribution { break-inside: avoid; margin: 12px 0 16px; } .distribution h3 { margin: 0 0 3px; } table { border-collapse: collapse; width: 100%; margin: 10px 0 18px; font-size: 11px; } th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid #CAD3D7; vertical-align: top; overflow-wrap: anywhere; } th { color: #586874; font-weight: 600; } thead { display: table-header-group; } tr { break-inside: avoid; } .numeric { text-align: right; font-variant-numeric: tabular-nums; } .heat th:first-child { width: 115px; } .heat th { word-break: keep-all; overflow-wrap: normal; } .joint { table-layout: fixed; } .joint th:first-child { width: 35%; } .joint th, .joint td { padding: 4px 3px; word-break: keep-all; overflow-wrap: normal; } .methods { table-layout: fixed; } .methods th { width: 100px; word-break: keep-all; overflow-wrap: normal; } .methods td { overflow-wrap: anywhere; } .heat td { text-align: right; font-variant-numeric: tabular-nums; } .product-summary { border-top: 1px solid #CAD3D7; padding-top: 10px; margin: 12px 0 20px; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; margin: 8px 0 18px; } details { margin: 10px 0; } summary { color: #245C7A; cursor: pointer; } .note { font-size: 11px; color: #586874; } .case { border-top: 1px solid #CAD3D7; padding-top: 9px; break-inside: avoid; } .question { break-inside: avoid; margin: 12px 0; } .question strong { display: block; } .document { border-top: 1px solid #CAD3D7; padding-top: 12px; } .document + .document { break-before: page; } footer { display: flex; align-items: center; gap: 8px; border-top: 1px solid #CAD3D7; margin-top: 28px; padding-top: 10px; color: #586874; font-size: 10px; } .brand-mark { width: 22px; height: 22px; flex: none; color: #245C7A; } .wordmark { color: #182B38; font-weight: 600; } ::selection { background: #DFE8ED; color: #182B38; } summary:focus-visible { outline: 2px solid #245C7A; outline-offset: 3px; }
 @media (max-width: 700px) { main { margin: 0; padding: 24px 20px; } .columns { grid-template-columns: 1fr; } table { font-size: 10px; } th, td { padding: 5px; } }
-@media print { body { background: white; font-size: 10.5pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; } main { max-width: none; margin: 0; padding: 0; } h1 { font-size: 26px; } h2 { font-size: 21px; } h3 { font-size: 13px; } .page { break-before: page; margin: 0; border: 0; padding: 0; } .first { break-before: auto; } .columns { gap: 18px; } .legend { font-size: 8.5pt; } table { font-size: 9pt; } th, td { padding: 5px 6px; } details > summary { display: none; } details > *:not(summary) { display: block !important; } footer { font-size: 8pt; } }
+@media print { body { background: #FFFEFA; font-size: 10.5pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; } main { max-width: none; margin: 0; padding: 0; } h1 { font-size: 26px; } h2 { font-size: 21px; } h3 { font-size: 13px; } .page { break-before: page; margin: 0; border: 0; padding: 0; } .first { break-before: auto; } .columns { gap: 18px; } .legend { font-size: 8.5pt; } table { font-size: 9pt; } th, td { padding: 5px 6px; } details > summary { display: none; } details > *:not(summary) { display: block !important; } footer { font-size: 8pt; } }
 '''
 
 
@@ -95,8 +100,31 @@ def label(response, product, domain, choice):
     return question['labels'].get(choice, choice)
 
 
-def color(choice, index=0):
-    return STATE_COLORS.get(choice, COLORS[index % len(COLORS)])
+def valuation_condition(response, product):
+    calibration = product.get('valuation_calibration', {})
+    mode = '자동' if calibration.get('mode') == 'auto' else '수동'
+    bands = product.get('valuation_bands', [])
+    if not bands:
+        if not calibration and response.get('workflow') != SURVEY_V2_SCENARIO_ID:
+            return '이전 질문 계약'
+        return mode + ' · 미실시 · ' + (calibration.get('reason') or '평가 가격대가 입력되지 않았습니다.')
+    return mode + ' · ' + ' / '.join(label(response, product, 'fair_price', band['id']) for band in bands)
+
+
+def color(choice):
+    if choice in STATE_COLORS:
+        return STATE_COLORS[choice]
+    if choice in {'na', 'no_current_method'}:
+        return STATE_COLORS['not_applicable']
+    if choice in {'price_0', 'price_1', 'price_2', 'price_3'}:
+        return PRICE_COLORS[int(choice[-1])]
+    if choice == 'do_nothing':
+        return PRICE_COLORS[0]
+    if choice in POSITIVE_CHOICES:
+        return '#2F6E63'
+    if choice in HOLD_CHOICES:
+        return '#AC792A'
+    return '#647487'
 
 
 def stat(response, product, domain):
@@ -107,11 +135,11 @@ def distribution(response, product, domain):
     data = stat(response, product, domain)
     counts, n = data['counts'], data['denominator']
     offset, pieces, legend = 0, [], []
-    for index, (choice, count) in enumerate(counts.items()):
+    for choice, count in counts.items():
         if not count:
             continue
         width = 640 * count / n if n else 0
-        shade = color(choice, index)
+        shade = color(choice)
         pieces.append(f'<rect x="{offset:.3f}" y="0" width="{width:.3f}" height="18" fill="{shade}"/>')
         offset += width
         text = f'{label(response, product, domain, choice)} {pct(count, n)} · {count}명'
@@ -132,7 +160,7 @@ def price_bars(response, product):
         width = 270 * count / data['denominator'] if data['denominator'] else 0
         y = 18 + index * 54
         parts += [f'<text x="0" y="{y}">{escape(label(response, product, "fair_price", band["id"]))}</text>',
-                  f'<rect x="0" y="{y + 8}" width="{width:.2f}" height="14" fill="{COLORS[index % 4]}"/>',
+                  f'<rect x="0" y="{y + 8}" width="{width:.2f}" height="14" fill="{color(band["id"])}"/>',
                   f'<text x="{width + 7:.2f}" y="{y + 20}">{pct(count, data["denominator"])} · {count}명</text>']
     states = ' · '.join(f'{STATE_LABELS[key]} {data["counts"].get(key, 0)}명' for key in STATE_LABELS if data['counts'].get(key))
     return f'<svg class="chart" viewBox="0 0 420 {height}" role="img" aria-label="적정가격 분포, n={data["denominator"]}">{"".join(parts)}</svg>' + (f'<p class="note">{escape(states)}</p>' if states else '')
@@ -181,14 +209,14 @@ def comparison_table(response):
 def price_points(response):
     chunks = []
     for group in response['price_points']:
-        parts = ['<line x1="45" x2="600" y1="200" y2="200" stroke="#c7d2d5"/>']
+        parts = ['<line x1="45" x2="600" y1="200" y2="200" stroke="#CAD3D7"/>']
         for percent, y in ((0, 200), (50, 120), (100, 40)):
-            parts += [f'<line x1="45" x2="600" y1="{y}" y2="{y}" stroke="#e4e8eb"/>', f'<text x="35" y="{y + 4}" text-anchor="end">{percent}%</text>']
+            parts += [f'<line x1="45" x2="600" y1="{y}" y2="{y}" stroke="#DFE8ED"/>', f'<text x="35" y="{y + 4}" text-anchor="end">{percent}%</text>']
         minimum, maximum = min(p['amount_minor'] for p in group['points']), max(p['amount_minor'] for p in group['points'])
         for point in group['points']:
             x = 70 + 490 * (point['amount_minor'] - minimum) / (maximum - minimum)
             y = 200 - 160 * point['share']
-            parts += [f'<circle cx="{x:.2f}" cy="{y:.2f}" r="5" fill="#167d79"/>',
+            parts += [f'<circle cx="{x:.2f}" cy="{y:.2f}" r="5" fill="#2F6E63"/>',
                       f'<text x="{x:.2f}" y="{y - 14:.2f}" text-anchor="middle">{pct(point["count"], point["denominator"])} · {point["count"]}/{point["denominator"]}명</text>',
                       f'<text x="{x:.2f}" y="224" text-anchor="middle">{escape(amount(point["amount_minor"], group["currency"]))}</text>']
         chunks.append(f'<h3>{escape(group["name"])} · 가격별 선택</h3><p class="note">{escape(group["currency"])} · {escape(BILLING[group["billing"]])}</p><svg class="chart" viewBox="0 0 640 240" role="img" aria-label="제시 가격별 가상 선택 비율">{"".join(parts)}</svg>')
@@ -210,7 +238,9 @@ def heatmap(response, product, key, title):
         cells = []
         for choice in choices:
             share = counts[choice] / len(selected)
-            background = f'rgba(22,125,121,{share * .25:.3f})' if choice not in STATE_LABELS else f'rgba(120,130,135,{share * .22:.3f})'
+            shade = color(choice)
+            rgb = ','.join(str(int(shade[index:index + 2], 16)) for index in (1, 3, 5))
+            background = f'rgba({rgb},{share * .25:.3f})'
             cells.append(f'<td style="background:{background}">{pct(counts[choice], len(selected))}<br><small>{counts[choice]}명</small></td>')
         rows.append(f'<tr><th>{escape(str(group))}<br><small>n={len(selected)}</small></th>{"".join(cells)}</tr>')
     return f'<h3>{escape(title)} 적정가격</h3><table class="heat"><thead>{header}</thead><tbody>{"".join(rows)}</tbody></table>'
@@ -261,7 +291,9 @@ def _html(report):
                   f'<tr><th>라이선스</th><td>{escape(source.get("license_id", ""))}<br>{escape(source.get("license_url", ""))}</td></tr>',
                   f'<tr><th>원천 인원·귀속</th><td>{escape(str(source.get("record_count", "미기록")))}명<br>{escape(source.get("attribution", ""))}</td></tr>',
                   f'<tr><th>원천 SHA256</th><td>{escape(source.get("local_sha256", "미기록"))}</td></tr>',
-                  f'<tr><th>추출 조건</th><td>{escape(json.dumps(conditions, ensure_ascii=False, sort_keys=True))}</td></tr></tbody></table>',
+                  f'<tr><th>추출 조건</th><td>{escape(json.dumps(conditions, ensure_ascii=False, sort_keys=True))}</td></tr>',
+                  ''.join(f'<tr><th>적정가격</th><td>{escape(display_name(response, product))} · {escape(valuation_condition(response, product))}</td></tr>' for product in response['products']),
+                  '</tbody></table>',
                   '<p class="note">질문별 분모는 전체 대상 인원입니다. 판단 불가·해당 없음·미실시·오류·대기를 각각 보존합니다. 반복 회차는 합산하지 않습니다. 교차표는 응답의 조합이며 인과 설명이 아닙니다.</p>',
                   '<p class="note">합성 인물 자료와 모델 선택은 실제 소비자 조사나 시장 예측으로 검증되지 않았습니다. 선택 점수는 소비자 확률이 아닙니다.</p></section>',
                   '<section class="page"><h2>질문과 선택지</h2>']
@@ -269,37 +301,40 @@ def _html(report):
         fragments.append(f'<div class="question"><strong>{escape(question["title"])} · {escape(question["id"])}</strong><p>{escape(question["prompt"])}</p><p class="note">' + ' / '.join(escape(question['labels'].get(choice, STATE_LABELS.get(choice, choice))) for choice in question['choices']) + '</p></div>')
     fragments += ['</section>', '<section class="page"><h2>확인할 사례</h2><p class="note">오류 → 판단 불가 → 저장된 인물 순서로 최대 3명을 선택했습니다. 대표 표본이나 인터뷰 인용문이 아닙니다.</p>']
     for person in selected_cases(response):
-        fragments.append(f'<div class="case"><h3>{escape(person["name"])} · {escape(person["age_group"])} · {escape(person["sex"])}</h3><p class="note">{escape(person["uuid"])}</p><p>{escape(" · ".join(person.get("profile", {}).values()))}</p><table><thead><tr><th>상품</th><th>항목</th><th>선택</th><th>부족 정보·오류</th></tr></thead><tbody>')
+        fragments.append(f'<div class="case"><h3>{escape(person["name"])} · {escape(person["age_group"])} · {escape(person["sex"])}</h3><p class="note">{escape(person["uuid"])}</p><p>{escape(" · ".join(person.get("profile", {}).values()))}</p><table><thead><tr><th>상품</th><th>항목</th><th>선택</th><th>사유·부족 정보</th></tr></thead><tbody>')
         for item in person['items']:
             product = next(product for product in response['products'] if product['id'] == item['product_id'])
             for question in response['questions']:
                 cell = item[question['domain']]
                 detail = '; '.join(cell.get('missing_information') or [])
-                if cell['choice'] == 'error':
-                    detail = cell.get('reason') or '실행 오류'
+                if cell['choice'] in {'error', 'not_run'}:
+                    detail = cell.get('reason') or STATE_LABELS[cell['choice']]
                 fragments.append(f'<tr><td>{escape(display_name(response, product))}</td><td>{escape(question["title"])}</td><td>{escape(label(response, product, question["domain"], cell["choice"]))}</td><td>{escape(detail)}</td></tr>')
         fragments.append('</tbody></table></div>')
     fragments += ['</section>', '<section class="page"><h2>상품 원문</h2>']
     for document, products in document_groups(context['products']):
         covered = ''.join(f'<p>{escape(display_name(response, product))} · {escape(offer_label(product))}</p>' for product in products)
         fragments.append(f'<div class="document">{covered}<pre>{escape(document)}</pre></div>')
-    fragments.append('</section><footer>Persona Lab · 저장된 실행 결과 · 실험 ' + escape(context['experiment_id']) + '</footer>')
-    return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &apos;none&apos;; style-src &apos;unsafe-inline&apos;; img-src data:"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escape(context['title']) + ' · Persona Lab</title><style>' + CSS + '</style></head><body><main>' + ''.join(fragments) + '</main></body></html>'
+    fragments.append('</section><footer>' + BRAND_MARK + '<span><span class="wordmark">Paneloom</span> · 저장된 실행 결과 · 실험 ' + escape(context['experiment_id']) + '</span></footer>')
+    return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &apos;none&apos;; style-src &apos;unsafe-inline&apos;; img-src data:"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escape(context['title']) + ' · Paneloom</title><style>' + CSS + '</style></head><body><main>' + ''.join(fragments) + '</main></body></html>'
 
 
 def _csv(report):
     response = report['responses']
     output = io.StringIO(newline='')
     writer = csv.writer(output)
-    writer.writerow(['experiment_id', 'scenario_id', 'repeat', 'product_id', 'product_name', 'domain', 'question_id', 'choice', 'label', 'count', 'selected_people_denominator', 'share', 'price_amount_minor', 'price_currency', 'price_billing', 'backend_id', 'source_id', 'source_version'])
+    writer.writerow(['experiment_id', 'scenario_id', 'repeat', 'product_id', 'product_name', 'domain', 'question_id', 'choice', 'label', 'count', 'selected_people_denominator', 'share', 'price_amount_minor', 'price_currency', 'price_billing', 'backend_id', 'source_id', 'source_version', 'valuation_mode', 'valuation_status', 'valuation_reason', 'valuation_currency', 'valuation_billing', 'band_low_minor', 'band_high_minor'])
     products = {product['id']: product for product in response['products']}
     questions = {question['domain']: question for question in response['questions']}
     for data in response['statistics']:
         product = products[data['product_id']]
         price = product.get('price') or {}
+        calibration, unit = product.get('valuation_calibration', {}), product.get('valuation_unit', {})
         question = questions[data['domain']]
         for choice, count in data['counts'].items():
+            band = next((band for band in product.get('valuation_bands', []) if data['domain'] == 'fair_price' and band['id'] == choice), {})
             values = [report['experiment_id'], response['workflow'], response['repeat'], product['id'], product['name'], data['domain'], question['id'], choice, label(response, product, data['domain'], choice), count, data['denominator'], data['shares'][choice], price.get('amount_minor', ''), price.get('currency', ''), price.get('billing', ''), report['backend_id'], report['source']['source_id'], report['source']['version']]
+            values += [calibration.get('mode', 'manual'), calibration.get('status', 'ready' if product.get('valuation_bands') else 'unavailable'), calibration.get('reason', ''), unit.get('currency', ''), unit.get('billing', ''), band.get('low_minor', ''), band.get('high_minor', '')]
             writer.writerow(["'" + value if isinstance(value, str) and value.startswith(('=', '+', '-', '@', '\t', '\r')) else value for value in values])
     return output.getvalue()
 
@@ -339,15 +374,17 @@ def _markdown(report):
                 selected = [person for person in response['people'] if person[key] == group]
                 counts = Counter(next(item for item in person['items'] if item['product_id'] == product['id'])['fair_price']['choice'] for person in selected)
                 lines += [f'| {esc(display_name(response, product))} | {title} | {esc(group)} | {esc(label(response, product, "fair_price", choice))} | {count} | {len(selected)} | {pct(count, len(selected))} |' for choice, count in counts.items()]
-    lines += ['', '## 확인할 사례', '', '오류 → 판단 불가 → 저장된 인물 순서로 최대 3명을 선택했습니다.', '', '| 인물 | 상품 | 항목 | 선택 | 부족 정보·오류 |', '| --- | --- | --- | --- | --- |']
+    lines += ['', '## 확인할 사례', '', '오류 → 판단 불가 → 저장된 인물 순서로 최대 3명을 선택했습니다.', '', '| 인물 | 상품 | 항목 | 선택 | 사유·부족 정보 |', '| --- | --- | --- | --- | --- |']
     for person in selected_cases(response):
         for item in person['items']:
             product = next(product for product in response['products'] if product['id'] == item['product_id'])
             for question in response['questions']:
                 cell = item[question['domain']]
-                detail = cell.get('reason', '') if cell['choice'] == 'error' else '; '.join(cell.get('missing_information') or [])
+                detail = cell.get('reason', '') if cell['choice'] in {'error', 'not_run'} else '; '.join(cell.get('missing_information') or [])
                 lines.append(f'| {esc(person["name"])} | {esc(display_name(response, product))} | {esc(question["title"])} | {esc(label(response, product, question["domain"], cell["choice"]))} | {esc(detail)} |')
-    lines += ['', '## 실행 조건', '', f'- 실험: {esc(context["experiment_id"])}', f'- 실행일·상태 원문: {esc(context["created_at"])} · {esc(response["status"])}', f'- 질문 버전: {esc(context["scenario_id"])}', f'- 모델: {esc(context["model"]["backend_id"])}', f'- 원천: {esc(context["source"]["source_id"])} @ {esc(context["source"]["version"])}', f'- 원천 URL: {esc(context["source"].get("url", ""))}', f'- 라이선스: {esc(context["source"].get("license_id", ""))}', f'- 추출 조건: {esc(json.dumps({key: value for key, value in context["panel"].items() if key != "selected_uuids"}, ensure_ascii=False, sort_keys=True))}', '', '비율의 분모는 선택한 회차의 전체 대상입니다. 판단 불가·해당 없음·미실시·오류·대기를 구분합니다. 반복 회차를 합산하지 않습니다. 합성 인물의 응답은 실제 구매 확률로 검증되지 않았습니다.', '', '## 질문', '']
+    lines += ['', '## 실행 조건', '', f'- 실험: {esc(context["experiment_id"])}', f'- 실행일·상태 원문: {esc(context["created_at"])} · {esc(response["status"])}', f'- 질문 버전: {esc(context["scenario_id"])}', f'- 모델: {esc(context["model"]["backend_id"])}', f'- 원천: {esc(context["source"]["source_id"])} @ {esc(context["source"]["version"])}', f'- 원천 URL: {esc(context["source"].get("url", ""))}', f'- 라이선스: {esc(context["source"].get("license_id", ""))}', f'- 추출 조건: {esc(json.dumps({key: value for key, value in context["panel"].items() if key != "selected_uuids"}, ensure_ascii=False, sort_keys=True))}']
+    lines += ['- 적정가격: ' + esc(display_name(response, product)) + ' · ' + esc(valuation_condition(response, product)) for product in response['products']]
+    lines += ['', '비율의 분모는 선택한 회차의 전체 대상입니다. 판단 불가·해당 없음·미실시·오류·대기를 구분합니다. 반복 회차를 합산하지 않습니다. 합성 인물의 응답은 실제 구매 확률로 검증되지 않았습니다.', '', '## 질문', '']
     for question in response['questions']:
         lines += [f'### {esc(question["title"])} · {esc(question["id"])}', '', esc(question['prompt']), '', ' / '.join(esc(question['labels'].get(choice, STATE_LABELS.get(choice, choice))) for choice in question['choices']), '']
     lines += ['## 상품 원문', '']

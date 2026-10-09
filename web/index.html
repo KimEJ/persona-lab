@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Persona Lab</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/results.css"><script defer src="/editor.js"></script><script defer src="/results.js"></script><script defer src="/app.js"></script></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Paneloom</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/results.css"><script defer src="/editor.js"></script><script defer src="/results.js"></script><script defer src="/app.js"></script></head>
 <body data-token="__APP_TOKEN__">
 <div class="shell">
  <aside id="sidebar" class="sidebar" aria-label="실험 탐색">
-  <div class="brand">Persona Lab</div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Paneloom</span></div>
   <button id="new-experiment" class="new-experiment">새 실험</button>
   <div id="history" class="history" aria-label="저장된 실험"></div>
   <button id="settings-button" class="settings-button">설정</button>
@@ -63,7 +63,7 @@
    <details><summary>고급 설정</summary><div class="fields"><label>반복 횟수<input id="repeats" type="number" min="1" step="1"></label><label>Seed<input id="seed" type="number" step="1"></label></div></details>
    <div id="job-count" class="job-count"></div>
    <div class="run-actions"><button id="cancel-run" class="secondary" hidden>일시 중단</button><button id="partial-results" class="quiet" hidden>현재 결과 보기</button><button id="retry-run" class="secondary" hidden>오류 항목 재시도</button></div>
-   <div id="run-status" class="run-status" aria-live="polite"></div><progress id="run-progress" value="0" max="1" hidden></progress>
+   <div id="run-status" class="run-status" aria-live="polite"></div><progress id="run-progress" value="0" max="1" aria-labelledby="run-status" hidden></progress>
    <p id="run-error" class="run-error" hidden></p>
   </section>
   <section id="results-view" class="view results-view" hidden>

@@ -21,6 +21,7 @@ from persona_lab.survey import SURVEY_QUESTIONS, SURVEY_V2_QUESTIONS, question_i
 from .results import response_report, experiment_report
 from .documents import product_from_item, DOCUMENT_TEMPLATE, item_name, price_from_document, money_from_fields, pricing_fields, valuation_fields, valuation_from_fields
 from .model import BundledModel
+from .valuation import calibrate
 
 
 def now(): return datetime.now(timezone.utc).isoformat()
@@ -50,7 +51,7 @@ class Application:
         self.home_lock = (self.home/'writer.lock').open('a')
         try: fcntl.flock(self.home_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            self.home_lock.close(); raise ValueError('다른 Persona Lab 앱이 실행 중입니다.')
+            self.home_lock.close(); raise ValueError('다른 Paneloom 앱이 실행 중입니다.')
         self.experiments = self.home/'experiments'; self.experiments.mkdir(exist_ok=True)
         self.source = json.loads((self.root/'assets/data/nemotron-japan-sample.json').read_text())
         self.source_cache={}
@@ -85,7 +86,7 @@ class Application:
         directory = self.directory(identifier)
         draft = json.loads((directory/'draft.json').read_text())
         status = self.status(identifier)
-        snapshot = json.loads((directory/'run.json').read_text()) if status and (directory/'run.json').is_file() else None
+        snapshot = self.snapshot(identifier) if status else None
         if snapshot: draft = snapshot['draft']
         if not status:
             if draft.get('workflow') in {None,'product-response-v1','product-response-v2',DECISION_SCENARIO_ID,SURVEY_SCENARIO_ID,'independent-choice-v1',SCENARIO_ID}:draft['workflow']=RESPONSE_SCENARIO_ID
@@ -95,7 +96,7 @@ class Application:
                     if 'pricing' not in item:item.update(name='',pricing=pricing_fields(None))
                 elif draft['workflow']==RESPONSE_SCENARIO_ID and 'pricing' not in item:
                     item.update(name=item_name(item['document']),pricing=pricing_fields(price_from_document(item['document'])))
-                if draft['workflow']==RESPONSE_SCENARIO_ID:item.setdefault('valuation',valuation_fields({'valuation_unit':{key:item['pricing'][key] for key in ('currency','billing')}}))
+                if draft['workflow']==RESPONSE_SCENARIO_ID:item.setdefault('valuation',valuation_fields({'valuation_unit':{key:item['pricing'][key] for key in ('currency','billing')},'valuation_bands':[]}))
             if draft['workflow']==RESPONSE_SCENARIO_ID:
                 draft['settings']={key:draft['settings'][key] for key in ('seed','repeats')}
                 draft['panel']=random_panel(draft['panel'],int(digest(['panel',identifier])[:8],16))
@@ -184,7 +185,9 @@ class Application:
             if allow_empty and not candidate['document'].strip(): candidate['document']='미작성 문서'
             product=product_from_item(candidate,index,allow_empty)
             if draft.get('workflow')==RESPONSE_SCENARIO_ID:
-                product['valuation_unit'],product['valuation_bands']=valuation_from_fields(candidate.get('valuation',valuation_fields(product)))
+                value=candidate.get('valuation',valuation_fields({**product,'valuation_bands':[]}))
+                product['valuation_unit'],product['valuation_bands']=valuation_from_fields(value)
+                if value.get('mode')=='auto':product['valuation_mode']='auto'
             products.append(product)
         settings=draft['settings']
         require(set(settings)<= {'seed','repeats','budget','event'},'지원하지 않는 실행 조건입니다.')
@@ -214,7 +217,7 @@ class Application:
 
     def panel(self,panel,identifier=None):
         people=self.people
-        if identifier and (self.directory(identifier)/'run.json').is_file():
+        if identifier and self.status(identifier):
             snapshot=self.snapshot(identifier)
             panel=snapshot['spec']['panel'];_,people=self.source_pack(snapshot['source'])
         spec=dict(self.template); spec['panel']=panel
@@ -226,13 +229,24 @@ class Application:
         return value
 
     def status(self,identifier):
+        with self.lock:
+            return self._status(identifier)
+
+    def _status(self,identifier):
         directory=self.directory(identifier)
         manifest=directory/'run.json'
-        if not manifest.exists(): return None
+        preparation=directory/'preparation.json'
+        if not manifest.exists() and not preparation.exists(): return None
         worker=self.workers.get(identifier)
         active=bool(worker and worker[0].is_alive())
         value={'cursor':0,'total':None,'status':'preparing','error':None,'backend_errors':0}
-        if (directory/'run.sqlite').exists():
+        if not manifest.exists():
+            state=json.loads(preparation.read_text()).get('price_calibration') or {}
+            products=state.get('products',{})
+            pending=next((item for item in products.values() if item.get('status') in {'pending','exploring'}),{})
+            value.update(phase='price_calibration',status='calibrating' if active else 'paused' if worker and worker[1].is_set() else 'interrupted',
+                         calibration={'completed':state.get('completed',0),'total':state.get('total',0),'product_name':pending.get('name','')})
+        elif (directory/'run.sqlite').exists():
             try: value=read_status(directory/'run.sqlite')
             except (ValueError,sqlite3.OperationalError): pass
         if not active and value['status'] in {'running','retrying','preparing'}: value['status']='interrupted'
@@ -244,8 +258,12 @@ class Application:
             require(not any(worker[0].is_alive() for worker in self.workers.values()),'다른 실험을 처리 중입니다. 먼저 일시 중단하세요.')
             directory=self.directory(identifier)
             manifest=directory/'run.json'
+            preparation=directory/'preparation.json'
             if manifest.exists():
                 snapshot=json.loads(manifest.read_text()); spec=snapshot['spec']
+            elif preparation.exists():
+                require(not retry,'먼저 실험을 완료하세요.')
+                snapshot=json.loads(preparation.read_text());spec=snapshot['spec']
             else:
                 require(not retry,'먼저 실험을 실행하세요.')
                 draft=self.get(identifier); spec=self.make_spec(draft)
@@ -259,14 +277,47 @@ class Application:
             backend=self.test_backend if self.test_backend is not None else self.model.backend(structured=spec['scenario'].get('id')==SCENARIO_ID,response=spec['scenario'].get('id')=='product-response-v1',linked=spec['scenario'].get('id')==LINKED_SCENARIO_ID,finite=spec['scenario'].get('id') in FINITE_SCENARIO_IDS,survey=spec['scenario'].get('id')==SURVEY_SCENARIO_ID,survey_version=RESPONSE_SCENARIO_ID if spec['scenario'].get('id')==RESPONSE_SCENARIO_ID else None)
             if not manifest.exists() and callable(getattr(backend,'preflight',None)):
                 for job in jobs(data_path,source,{**spec,'repeats':1}):backend.preflight(job)
-            if not manifest.exists():atomic_json(manifest,snapshot)
+            calibrating=not manifest.exists() and any(product.get('valuation_mode')=='auto' for product in spec['products'])
+            if not manifest.exists():atomic_json(preparation if calibrating else manifest,snapshot)
             if retry:
                 status=self.status(identifier)
                 require(status and status['cursor']==status['total'] and status['backend_errors']>0,'전체 실행 완료 후 오류 항목을 재시도하세요.')
             event=threading.Event()
             (directory/'error.txt').unlink(missing_ok=True)
             def work():
-                try: run(data_path,source,spec,directory/'run.sqlite',backend,cancelled=event.is_set,retry_errors=retry)
+                try:
+                    main_spec=spec
+                    if calibrating:
+                        _,people=self.source_pack(source)
+                        def checkpoint(state):
+                            snapshot['price_calibration']=state
+                            atomic_json(preparation,snapshot)
+                        previous_audit=getattr(backend,'audit',None)
+                        with sqlite3.connect(directory/'price-calibration.sqlite') as journal:
+                            journal.execute('CREATE TABLE IF NOT EXISTS model_calls (id INTEGER PRIMARY KEY,job_id TEXT,started_at TEXT,request TEXT,response TEXT,error TEXT,finished_at TEXT)')
+                            def audit(action,identifier,value):
+                                if action=='start':
+                                    row=journal.execute('INSERT INTO model_calls(job_id,started_at,request) VALUES (?,?,?)',(identifier,value['time'],value.get('request_text',canonical(value['request']))))
+                                    journal.commit();return row.lastrowid
+                                journal.execute('UPDATE model_calls SET response=COALESCE(?,response),error=?,finished_at=? WHERE id=?',(value.get('response'),value.get('error'),value['time'],identifier));journal.commit()
+                            if hasattr(backend,'audit'):backend.audit=audit
+                            try:
+                                products,state,complete=calibrate(spec['products'],people,spec['panel'],backend,identifier,spec['seed'],
+                                                                 state=snapshot.get('price_calibration'),cancelled=event.is_set,checkpoint=checkpoint)
+                            finally:
+                                if hasattr(backend,'audit'):backend.audit=previous_audit
+                        checkpoint(state)
+                        if not complete or event.is_set():return
+                        main_spec=validate_experiment({**spec,'products':products})
+                        if callable(getattr(backend,'preflight',None)):
+                            for job in jobs(data_path,source,{**main_spec,'repeats':1}):
+                                if event.is_set():return
+                                backend.preflight(job)
+                        snapshot['spec']=main_spec
+                        with self.lock:
+                            atomic_json(manifest,snapshot)
+                            preparation.unlink(missing_ok=True)
+                    run(data_path,source,main_spec,directory/'run.sqlite',backend,cancelled=event.is_set,retry_errors=retry)
                 except Exception as error: (directory/'error.txt').write_text(str(error)[:1000])
             thread=threading.Thread(target=work,name='experiment-'+identifier[:8],daemon=True)
             self.workers[identifier]=(thread,event);thread.start()
@@ -284,7 +335,11 @@ class Application:
         snapshot=self.snapshot(identifier)
         if snapshot['spec']['scenario'].get('id') in RESPONSE_SCENARIO_IDS:
             _,people=self.source_pack(snapshot['source'])
-            return experiment_report(directory/'run.sqlite',people,repeat,self.reviews(identifier),snapshot,include_calls)
+            report=experiment_report(directory/'run.sqlite',people,repeat,self.reviews(identifier),snapshot,include_calls)
+            if include_calls and snapshot.get('price_calibration') is not None:
+                report['price_calibration']=snapshot['price_calibration']
+                report['price_calibration_calls']=self.model_calls(directory,filename='price-calibration.sqlite')
+            return report
         return summarize(directory/'run.sqlite')
 
     def responses(self, identifier, repeat=0):
@@ -353,12 +408,15 @@ class Application:
         # At most 20k characters per side; stdlib owns the line diff.
         for line in list(difflib.unified_diff(left.splitlines(),right.splitlines(),n=3))[2:]:
             rows.append({'kind':'range' if line.startswith('@@') else 'remove' if line.startswith('-') else 'add' if line.startswith('+') else 'same','text':line[1:] if not line.startswith('@@') else line})
-        return {'baseline':baseline,'item':item,'frozen':bool(draft.get('run') or (self.directory(identifier)/'run.json').is_file()),'rows':rows[:500],'total_rows':len(rows)}
+        return {'baseline':baseline,'item':item,'frozen':bool(self.status(identifier)),'rows':rows[:500],'total_rows':len(rows)}
 
     def snapshot(self,identifier):
-        directory=self.directory(identifier)
-        require((directory/'run.json').is_file(),'저장한 실행 조건이 없습니다.')
-        return json.loads((directory/'run.json').read_text())
+        with self.lock:
+            directory=self.directory(identifier)
+            path=directory/'run.json'
+            if not path.is_file():path=directory/'preparation.json'
+            require(path.is_file(),'저장한 실행 조건이 없습니다.')
+            return json.loads(path.read_text())
 
     def detail(self,identifier,job):
         require(isinstance(job,str) and re.fullmatch('[a-f0-9]{64}',job) is not None,'invalid job id')
@@ -379,9 +437,10 @@ class Application:
         return {'record':record,'model_calls':traces,'review':self.review(identifier,job),'persona':{'raw':person.raw,'missing':person.missing},'product':supplied,'offered_product':product,'question':next(q for q in snapshot['spec']['questions'] if q['id']==record['question_id']),'conditions':{'assumptions':snapshot['spec']['assumptions'],'scenario':snapshot['spec']['scenario']}}
 
     @staticmethod
-    def model_calls(directory,job=None,db=None):
+    def model_calls(directory,job=None,db=None,filename='run.sqlite'):
         if db is None:
-            with sqlite3.connect(directory/'run.sqlite') as connection:return Application.model_calls(directory,job,connection)
+            if not (directory/filename).is_file():return []
+            with sqlite3.connect(directory/filename) as connection:return Application.model_calls(directory,job,connection)
         if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='model_calls'").fetchone():return []
         keys=('id','job_id','started_at','request','response','error','finished_at')
         return [dict(zip(keys,row)) for row in db.execute('SELECT '+','.join(keys)+' FROM model_calls'+(' WHERE job_id=?' if job else '')+' ORDER BY id',(job,) if job else ())]

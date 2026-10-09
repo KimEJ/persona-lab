@@ -147,6 +147,65 @@ class ReportingTests(unittest.TestCase):
         self.assertNotIn('consider', next(question['choices'] for question in old['questions'] if question['domain'] == 'usage'))
         self.assertTrue(all(person['items'][1]['fair_price']['choice'] == 'pending' for person in old['people']))
 
+    def test_automatic_unavailable_price_keeps_reason_and_other_answers(self):
+        spec = copy.deepcopy(self.spec)
+        summary = {'mode': 'auto', 'status': 'ready', 'reason': '', 'pilot_count': 4,
+                   'valid_count': 3, 'algorithm_version': 'test-v1'}
+        reason = '유효한 탐색 응답이 부족합니다. <script>미실시</script>'
+        spec['products'][0]['valuation_calibration'] = summary
+        spec['products'][1].update(valuation_bands=[], valuation_calibration={**summary, 'status': 'unavailable', 'valid_count': 0, 'reason': reason})
+        self.snapshot['price_calibration'] = {'products': {'b': {'reason': reason}}}
+        with sqlite3.connect(self.path) as db:
+            db.execute('UPDATE run SET spec=?', (json.dumps(spec),))
+        report = self.report()
+        response = report['responses']
+        self.assertEqual(response['products'][0]['valuation_calibration'], summary)
+        self.assertEqual(response['context']['price_calibration'], self.snapshot['price_calibration'])
+        for person in response['people']:
+            cell = person['items'][1]['fair_price']
+            self.assertEqual((cell['choice'], cell['reason'], cell['missing_information']), ('not_run', reason, []))
+        self.assertEqual(response['people'][0]['items'][1]['usage']['choice'], 'consider')
+        self.assertEqual(response['people'][0]['items'][1]['purchase']['choice'], 'buy')
+        html, _ = render_report(report, 'html')
+        self.assertIn('자동 · 1,000 JPY 미만', html)
+        self.assertIn('자동 · 미실시 · 유효한 탐색 응답이 부족합니다.', html)
+        self.assertIn('&lt;script&gt;미실시&lt;/script&gt;', html)
+        self.assertNotIn('<script>', html)
+        markdown, _ = render_report(report, 'md')
+        self.assertIn('자동 · 미실시', markdown)
+        csv_body, _ = render_report(report, 'csv')
+        rows = list(csv.DictReader(io.StringIO(csv_body)))
+        band = next(row for row in rows if row['product_id'] == 'a' and row['domain'] == 'fair_price' and row['choice'] == 'price_1')
+        self.assertEqual((band['valuation_mode'], band['valuation_currency'], band['band_low_minor'], band['band_high_minor']), ('auto', 'JPY', '1000', '1999'))
+        unavailable = next(row for row in rows if row['product_id'] == 'b' and row['domain'] == 'fair_price' and row['choice'] == 'not_run')
+        self.assertEqual((unavailable['valuation_status'], unavailable['valuation_reason']), ('unavailable', reason))
+
+    def test_price_comparisons_keep_effective_grid_and_ignore_calibration_provenance(self):
+        spec = copy.deepcopy(self.spec)
+        spec['products'][0]['valuation_calibration'] = {'mode': 'auto', 'pilot_count': 4}
+        spec['products'][1]['valuation_calibration'] = {'mode': 'manual', 'pilot_count': 0}
+        with sqlite3.connect(self.path) as db:
+            db.execute('UPDATE run SET spec=?', (json.dumps(spec),))
+        self.add(0, 'b', 'fair_price', 'price_1')
+        response = self.report()['responses']
+        self.assertEqual(len(response['price_points']), 1)
+        equal = next(pair for pair in response['paired_comparisons'] if pair['domain'] == 'fair_price')
+        self.assertTrue(equal['comparable_price_grid'])
+        self.assertEqual(equal['transitions'], [{'from': 'price_1', 'to': 'price_1', 'count': 1}])
+        for band in spec['products'][1]['valuation_bands']:
+            band['low_minor'] *= 10
+            if band['high_minor'] is not None:
+                band['high_minor'] = (band['high_minor'] + 1) * 10 - 1
+        with sqlite3.connect(self.path) as db:
+            db.execute('UPDATE run SET spec=?', (json.dumps(spec),))
+        response = self.report()['responses']
+        self.assertEqual(response['price_points'], [])
+        different = next(pair for pair in response['paired_comparisons'] if pair['domain'] == 'fair_price')
+        self.assertFalse(different['comparable_price_grid'])
+        self.assertEqual(different['comparison_semantics'], 'product_specific_price_bands')
+        self.assertEqual(different['from_price_grid']['bands'][1]['low_minor'], 1000)
+        self.assertEqual(different['to_price_grid']['bands'][1]['low_minor'], 10000)
+
 
 if __name__ == '__main__':
     unittest.main()

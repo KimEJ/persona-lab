@@ -11,7 +11,7 @@ import zipfile
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-APP=ROOT/'build/releases/survey-report/Persona Lab.app'
+APP=ROOT/'build/releases/survey-report/Paneloom.app'
 PREFIX=Path(sys.base_prefix)
 
 def command(*args):subprocess.run([str(arg) for arg in args],check=True)
@@ -46,12 +46,14 @@ def write_archive(app,archive):
 
 def main():
     global APP
-    parser=argparse.ArgumentParser();parser.add_argument('--zip',action='store_true');parser.add_argument('--output',type=Path,default=APP);parser.add_argument('--archive',type=Path,default=ROOT/'dist/Persona-Lab-0.8.1-macOS-arm64.zip');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--zip',action='store_true');parser.add_argument('--output',type=Path,default=APP);parser.add_argument('--archive',type=Path,default=ROOT/'dist/Paneloom-0.8.1-macOS-arm64.zip');args=parser.parse_args()
     APP=args.output.resolve()
     if not APP.is_relative_to(ROOT/'build') or APP.suffix!='.app':raise SystemExit('Build output must be an .app directory under build/.')
     if sys.platform!='darwin':raise SystemExit('This build targets macOS.')
     info=json.loads((ROOT/'assets/model.json').read_text())
     if not (ROOT/'assets/models'/info['file']).is_file():raise SystemExit('Prepare the pinned current model first.')
+    (ROOT/'build/module-cache').mkdir(parents=True,exist_ok=True)
+    command('xcrun','swift','-module-cache-path',ROOT/'build/module-cache',ROOT/'tools/generate_app_icon.swift')
     if APP.exists():shutil.rmtree(APP)
     macos=APP/'Contents/MacOS';resources=APP/'Contents/Resources'
     macos.mkdir(parents=True);resources.mkdir(parents=True)

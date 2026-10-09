@@ -7,7 +7,7 @@ flowchart LR
     M["고정 Clef 가중치"] --> B
     R["llama.cpp b11429"] --> B
     D["10,000명 JSONL·메타데이터"] --> B
-    B --> A["Persona Lab.app"]
+    B --> A["Paneloom.app"]
 ```
 
 0.8.1 · 빌드 9는 Apple Silicon·macOS 14 이상을 대상으로 합니다.
@@ -106,7 +106,7 @@ Python.framework 3.12의 실행 파일로 빌드합니다.
 
 ```sh
 /Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12 tools/build.py \
-  --output 'build/releases/survey-report/Persona Lab.app'
+  --output 'build/releases/survey-report/Paneloom.app'
 ```
 
 출력 경로에 앱이 있으면 빌드가 해당 앱을 교체합니다.
@@ -119,18 +119,19 @@ ZIP이 필요하면 `--zip`을 추가합니다.
 
 ```sh
 /Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12 tools/build.py \
-  --output 'build/releases/survey-report/Persona Lab.app' --zip
+  --output 'build/releases/survey-report/Paneloom.app' --zip
 ```
 
-기본 ZIP 경로는 `dist/Persona-Lab-0.8.1-macOS-arm64.zip`입니다.
+기본 ZIP 경로는 `dist/Paneloom-0.8.1-macOS-arm64.zip`입니다.
 현재 GitHub 소스 기록에는 앱이나 ZIP이 없습니다.
 빌드는 로컬 임시 서명을 사용합니다. 공개 배포용 개발자 서명과 공증은 별도 작업입니다.
 
 ## 6. 실행과 기록 위치를 확인한다
 
-빌드한 `Persona Lab.app`을 엽니다.
+빌드한 `Paneloom.app`을 엽니다.
 앱은 로컬 서비스와 전용 모델 프로세스를 실행합니다.
 상품 입력·실험 DB·스냅샷·로그는 `~/Library/Application Support/Persona Lab/`에 저장합니다.
+기존 실험을 계속 읽도록 저장 경로와 내부 식별자는 유지합니다.
 이 기록은 Git에 포함하지 않습니다.
 
 기능의 확인 범위와 알려진 실패는 [구현·검증 기록](IMPLEMENTATION.md)을 보세요.
