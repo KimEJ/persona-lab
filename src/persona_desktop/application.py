@@ -8,6 +8,9 @@ import sqlite3
 import threading
 import uuid
 import difflib
+import tempfile
+import unicodedata
+from collections import OrderedDict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -22,6 +25,7 @@ from .results import response_report, experiment_report
 from .documents import product_from_item, DOCUMENT_TEMPLATE, item_name, price_from_document, money_from_fields, pricing_fields, valuation_fields, valuation_from_fields
 from .model import BundledModel
 from .valuation import calibrate
+from .importing import normalize_settings
 
 
 def now(): return datetime.now(timezone.utc).isoformat()
@@ -36,7 +40,7 @@ def atomic_json(path, value):
 
 def random_panel(panel=None, seed=None):
     panel=panel or {}
-    filters={key:panel[key] for key in ('prefecture','age_min','age_max','sex','query') if key in panel}
+    filters={key:panel[key] for key in ('prefecture','age_min','age_max','sex','query','tags','tag_mode') if key in panel}
     return {'selection':'random','sample_size':panel.get('sample_size',100),'sample_seed':panel.get('sample_seed',seed if seed is not None else uuid.uuid4().int & 0xffffffff),'sampling_version':'hash-rank-v1',**filters}
 
 
@@ -55,6 +59,7 @@ class Application:
         self.experiments = self.home/'experiments'; self.experiments.mkdir(exist_ok=True)
         self.source = json.loads((self.root/'assets/data/nemotron-japan-sample.json').read_text())
         self.source_cache={}
+        self.tag_catalog_cache=OrderedDict()
         self.data_path,self.people=self.source_pack(self.source)
         self.template = json.loads((self.root/'assets/questions.json').read_text())
         self.test_backend = test_backend
@@ -116,9 +121,27 @@ class Application:
     def model_status(self):
         return self.model.status() if self.model else {'phase':'ready','error':None,'info':{'name':'Mock · 테스트 전용','model_id':self.test_backend.backend_id,'license':'project fixture','url':''}}
 
+    def ui_preferences(self):
+        try:
+            value = json.loads((self.home/'ui-preferences.json').read_text())
+            require(isinstance(value, dict), 'invalid UI preferences')
+            canonical(value)
+        except (OSError, ValueError, TypeError):
+            value = {}
+        locale = value.get('tag_locale', 'ko')
+        return {**value, 'tag_locale': locale if isinstance(locale, str) and locale in {'ko', 'en', 'ja'} else 'ko'}
+
+    def update_preferences(self, data):
+        require(isinstance(data, dict) and set(data) == {'tag_locale'}, '표시 언어 설정 형식을 확인하세요.')
+        locale = data['tag_locale']
+        require(isinstance(locale, str) and locale in {'ko', 'en', 'ja'}, '태그 언어는 한국어·영어·일본어 중에서 선택하세요.')
+        with self.lock:
+            atomic_json(self.home/'ui-preferences.json', {**self.ui_preferences(), 'tag_locale': locale})
+        return {'tag_locale': locale}
+
     def state(self):
         deleted=[{'id':path.parent.name,'title':json.loads(path.read_text())['title']} for path in sorted((self.home/'deleted-experiments').glob('*/draft.json'),key=lambda p:p.parent.stat().st_mtime,reverse=True)]
-        return {'version':'0.8.1','history':self.history(),'deleted':deleted,'source':self.source,'model':self.model_status(),'document_template':DOCUMENT_TEMPLATE,'max_items':5,'home':str(self.home),'prefectures':sorted({p.raw['prefecture'] for p in self.people if p.raw.get('prefecture')}),'survey_questions':question_catalog(SURVEY_V2_QUESTIONS,RESPONSE_SCENARIO_ID)}
+        return {'version':'0.8.1','history':self.history(),'deleted':deleted,'source':self.source,'model':self.model_status(),'document_template':DOCUMENT_TEMPLATE,'max_items':5,'home':str(self.home),'prefectures':sorted({p.raw['prefecture'] for p in self.people if p.raw.get('prefecture')}),'survey_questions':question_catalog(SURVEY_V2_QUESTIONS,RESPONSE_SCENARIO_ID),'tag_locale':self.ui_preferences()['tag_locale']}
 
     def create(self, copy_from=None):
         with self.lock:
@@ -134,6 +157,23 @@ class Application:
             draft = {'id':identifier,'title':(original['title']+' 복제') if original else '새 실험','workflow':RESPONSE_SCENARIO_ID,'revision':0,'updated_at':now(),'items':items,'panel':random_panel(original['panel'] if original else None),'settings':{key:original['settings'][key] for key in ('seed','repeats')} if original else {'seed':17,'repeats':1}}
             directory = self.experiments/identifier; directory.mkdir()
             atomic_json(directory/'draft.json',draft)
+            return self.get(identifier)
+
+    def import_settings(self, value):
+        with self.lock:
+            fields = normalize_settings(value)
+            identifier = uuid.uuid4().hex
+            draft = {'id': identifier, **fields, 'revision': 0, 'updated_at': now()}
+            self.make_spec(draft, allow_empty=True)
+            if draft['panel']['selection'] != 'random':
+                count = sum(matches(person, draft['panel']) for person in self.people)
+                draft['panel'] = random_panel({**draft['panel'], 'sample_size': max(1, count)}, draft['settings']['seed'])
+            self.make_spec(draft, allow_empty=True)
+            # Publish only after validation and a complete atomic write.
+            with tempfile.TemporaryDirectory(prefix='.settings-import-', dir=self.home) as staging:
+                directory = Path(staging)
+                atomic_json(directory/'draft.json', draft)
+                directory.rename(self.experiments/identifier)
             return self.get(identifier)
 
     def remove(self, identifier):
@@ -227,6 +267,65 @@ class Application:
         value={'count':len(selected),'sample_size':len(selected),'eligible_count':eligible,'requested_size':panel.get('sample_size',eligible)}
         if panel['selection']!='random':value['items']=[{'uuid':p.uuid,'raw':p.raw,'missing':p.missing} for p in selected[:20]]
         return value
+
+    def panel_tags(self, panel, identifier=None, query='', locale='ko'):
+        from persona_lab.tags import canonical_tag_id, tag_catalog, tag_metadata, valid_tag_id
+        require(isinstance(query, str) and len(query) <= 120, '태그 검색어는 120자까지 입력하세요.')
+        require(isinstance(locale, str) and locale in {'ko', 'en', 'ja'}, '태그 언어는 한국어·영어·일본어 중에서 선택하세요.')
+        query = unicodedata.normalize('NFKC', query).casefold().strip().lstrip('#').strip()
+        query_id = canonical_tag_id(query) if valid_tag_id(query) else None
+        with self.lock:
+            people, source = self.people, self.source
+            if identifier and self.status(identifier):
+                snapshot = self.snapshot(identifier)
+                panel, source = snapshot['spec']['panel'], snapshot['source']
+                _, people = self.source_pack(source)
+            spec = dict(self.template); spec['panel'] = panel
+            validate_experiment(spec)
+            filters = {key: panel[key] for key in ('prefecture', 'age_min', 'age_max', 'sex', 'query') if key in panel}
+            base = {'selection': 'filter' if filters else 'all', **filters}
+            source_key = digest(source)
+            def cached_catalog(conditions):
+                key = (source_key, canonical(conditions))
+                catalog = self.tag_catalog_cache.get(key)
+                if catalog is None:
+                    catalog = sorted(tag_catalog(person for person in people if matches(person, conditions)),
+                                     key=lambda tag: (-tag['count'], tag['id']))
+                    self.tag_catalog_cache[key] = catalog
+                    if len(self.tag_catalog_cache) > 64:
+                        self.tag_catalog_cache.popitem(last=False)
+                self.tag_catalog_cache.move_to_end(key)
+                return catalog
+            catalog = cached_catalog(base)
+            kind_labels = {'skill': '기술 skill skills スキル 技術',
+                           'interest': '관심사 interest interests 趣味 関心',
+                           'occupation': '직업 occupation job 職業'}
+            def matching(tag):
+                if query_id == canonical_tag_id(tag['id']):
+                    return True
+                text = ' '.join((tag['id'], *tag.get('aliases', []),
+                                 *tag.get('labels', {}).values(), tag['label'],
+                                 kind_labels.get(tag['kind'], '')))
+                return query in unicodedata.normalize('NFKC', text).casefold()
+            selected = panel.get('tags', [])
+            equivalents = {canonical_tag_id(identifier) for identifier in selected}
+            source_labels, found = {}, []
+            for tag in catalog:
+                canonical_id = canonical_tag_id(tag['id'])
+                if canonical_id in equivalents:
+                    source_labels[canonical_id] = tag['label']
+                elif not query or matching(tag):
+                    found.append(tag)
+            if filters and equivalents - source_labels.keys():
+                for tag in cached_catalog({'selection': 'all'}):
+                    canonical_id = canonical_tag_id(tag['id'])
+                    if canonical_id in equivalents:
+                        source_labels[canonical_id] = tag['label']
+            return {'tags': [{**tag_metadata(tag['id'], locale, source_label=tag['label']), 'count': tag['count']}
+                             for tag in found[:16]],
+                    'selected': [tag_metadata(identifier, locale, source_label=source_labels.get(canonical_tag_id(identifier)))
+                                 for identifier in selected],
+                    'total': len(catalog), 'matched': len(found), 'tag_locale': locale}
 
     def status(self,identifier):
         with self.lock:
@@ -329,6 +428,15 @@ class Application:
         if worker:worker[1].set()
         return self.status(identifier)
 
+    def tag_report_locale(self, report):
+        locale = self.ui_preferences()['tag_locale']
+        responses = report.get('responses', {})
+        for context in (report.get('report_context'), report.get('context'),
+                        responses.get('report_context'), responses.get('context')):
+            if isinstance(context, dict):
+                context['tag_locale'] = locale
+        return report
+
     def report(self,identifier,repeat=0,include_calls=False):
         directory=self.directory(identifier)
         require((directory/'run.sqlite').exists(),'판단 결과를 준비 중입니다.')
@@ -339,7 +447,7 @@ class Application:
             if include_calls and snapshot.get('price_calibration') is not None:
                 report['price_calibration']=snapshot['price_calibration']
                 report['price_calibration_calls']=self.model_calls(directory,filename='price-calibration.sqlite')
-            return report
+            return self.tag_report_locale(report)
         return summarize(directory/'run.sqlite')
 
     def responses(self, identifier, repeat=0):
@@ -347,7 +455,7 @@ class Application:
         require(path.is_file(), '판단 결과를 준비 중입니다.')
         snapshot=self.snapshot(identifier)
         _,people=self.source_pack(snapshot['source'])
-        return response_report(path,people,repeat,self.reviews(identifier),snapshot)
+        return self.tag_report_locale(response_report(path,people,repeat,self.reviews(identifier),snapshot))
 
     def results(self, identifier, **filters):
         directory = self.directory(identifier)

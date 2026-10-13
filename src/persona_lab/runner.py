@@ -16,6 +16,7 @@ from collections.abc import Iterator, Callable
 from . import __version__
 from .adapter import read_personas
 from .backends import DecisionBackend
+from .tags import matching_tags
 from .scenarios import execution_record, context_gate, SCENARIO_IDS
 from .responses import RESPONSE_SCENARIO_IDS, LINKED_SCENARIO_IDS, FINITE_SCENARIO_IDS, SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, input_product
 from .contracts import Job, Persona, ContractError, canonical, digest, require, validate_decision, validate_experiment, validate_source
@@ -33,7 +34,15 @@ def matches(persona: Persona, panel: dict) -> bool:
         age = raw.get("age")
         if type(age) is not int or not panel.get("age_min", 0) <= age <= panel.get("age_max", 10000):
             return False
-    return not panel.get("query") or panel["query"].casefold() in canonical(raw).casefold()
+    if panel.get("query") and panel["query"].casefold() not in canonical(raw).casefold():
+        return False
+    requested = panel.get('tags', [])
+    if requested:
+        available = matching_tags(raw)
+        return (all(identifier in available for identifier in requested)
+                if panel.get('tag_mode', 'any') == 'all'
+                else any(identifier in available for identifier in requested))
+    return True
 
 
 def sex_code(value):

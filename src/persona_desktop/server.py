@@ -77,7 +77,10 @@ def make_server(app, port=0):
                 data=json.loads(self.rfile.read(length));require(isinstance(data,dict),'request must be an object')
                 parts=urlparse(self.path).path.strip('/').split('/')
                 if self.path=='/api/experiments':self.json(app.create(data.get('copy_from')),201)
+                elif self.path=='/api/experiments/import':self.json(app.import_settings(data.get('settings')),201)
                 elif self.path=='/api/panel':self.json(app.panel(data.get('panel',{'selection':'all'}),data.get('experiment_id')))
+                elif self.path=='/api/panel/tags':self.json(app.panel_tags(data.get('panel',{'selection':'all'}),data.get('experiment_id'),data.get('query',''),data.get('locale','ko')))
+                elif self.path=='/api/preferences':self.json(app.update_preferences(data))
                 elif self.path=='/api/document/inspect':
                     document=data.get('document');require(isinstance(document,str) and len(document)<=MAX_DOCUMENT_CHARS,'문서는 20,000자까지 사용할 수 있습니다.')
                     self.json({'name':item_name(document,''),'pricing':pricing_fields(price_from_document(document))})

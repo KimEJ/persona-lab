@@ -6,33 +6,49 @@
  <aside id="sidebar" class="sidebar" aria-label="실험 탐색">
   <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Paneloom</span></div>
   <button id="new-experiment" class="new-experiment">새 실험</button>
+  <div class="history-controls"><input id="history-search" type="search" aria-label="실험 제목 검색" placeholder="실험 검색" maxlength="120"><select id="history-filter" aria-label="실험 목록 필터"><option value="all">전체 실험</option><option value="running">실행 중</option></select><span id="history-count" class="history-count"></span></div>
   <div id="history" class="history" aria-label="저장된 실험"></div>
   <button id="settings-button" class="settings-button">설정</button>
  </aside>
  <main>
+  <div id="workbench-header" class="workbench-header">
   <header class="toolbar">
    <button id="sidebar-toggle" class="icon-button" aria-label="실험 목록 접기"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 4v16"></path></svg></button>
    <input id="experiment-title" aria-label="실험 이름" maxlength="120" value="새 실험" hidden>
    <span id="save-state" class="save-state" aria-live="polite" hidden></span>
+   <div class="settings-actions" role="group" aria-label="실험 설정 파일">
+    <button id="import-settings" class="secondary" title="상품 문서, 대상 조건, 실행 설정을 새 실험으로 가져오기">설정 가져오기</button>
+    <button id="export-settings" class="quiet" title="상품 문서, 대상 조건, 실행 설정 전체 저장" hidden>설정 저장</button>
+   </div>
+   <input id="settings-file" type="file" accept=".json,application/json" hidden>
    <button id="duplicate" class="quiet" hidden>복제</button>
    <button id="delete-experiment" class="quiet delete-experiment" hidden>실험 삭제</button>
    <button id="undo-experiment" class="quiet undo-experiment" hidden>삭제 되돌리기</button>
-   <button id="previous-step" class="quiet" hidden>이전</button>
-   <button id="primary-action" class="primary" hidden>다음</button>
+   <button id="previous-step" class="quiet" hidden>돌아가기</button>
+   <label id="tag-locale-field" class="tag-locale-field header-tag-locale" for="tag-locale" hidden>태그 언어 <select id="tag-locale" aria-label="태그 표시 언어"><option value="ko">한국어</option><option value="en">English</option><option value="ja">日本語</option></select></label>
+   <button id="primary-action" class="primary" hidden>실험 시작</button>
   </header>
-  <ol id="workflow-steps" class="workflow-steps" aria-label="실험 진행" hidden>
-   <li data-step="input" aria-current="step">상품 입력</li><li data-step="run">대상·실행</li><li data-step="results">결과</li>
-  </ol>
+  <section id="run-monitor" class="run-monitor" aria-label="실험 실행 상태" hidden>
+   <div class="run-monitor-summary"><div id="run-status" class="run-status" aria-live="polite"></div><strong id="run-percent" class="run-percent" hidden></strong></div>
+   <progress id="run-progress" value="0" max="1" aria-labelledby="run-status" hidden></progress>
+   <div class="run-actions"><button id="cancel-run" class="secondary" hidden>일시 중단</button><button id="retry-run" class="secondary" hidden>오류 항목 재시도</button></div>
+   <p id="run-error" class="run-error" role="alert" hidden></p>
+  </section>
+  </div>
   <div id="error" class="error" role="alert" hidden></div>
+  <div id="import-notice" class="import-notice" role="status" hidden></div>
   <div id="model-message" class="model-message" aria-live="polite" hidden></div>
   <section id="empty-view" class="view empty-view" hidden><h1>실험이 없습니다.</h1><button type="button" id="empty-create" class="primary">새 실험</button></section>
-  <section id="input-view" class="view input-view" hidden>
+  <section id="experiment-view" class="view experiment-view" hidden>
+  <div id="experiment-setup" class="experiment-layout">
+  <section id="input-view" class="input-view" aria-labelledby="product-heading">
+   <h2 id="product-heading" class="section-heading">상품 입력</h2>
    <div class="item-row"><div id="item-tabs" class="item-tabs" role="tablist" aria-label="아이템"></div><span id="item-count" class="item-count"></span><button id="add-item" class="secondary">아이템 추가</button></div>
-   <div class="document-actions"><button id="undo-remove" class="quiet" hidden>삭제 되돌리기</button><button id="compare-documents" class="quiet" hidden>문서 비교</button><span class="spacer"></span><button id="remove-item" class="quiet">아이템 삭제</button><button id="import-document" class="secondary">문서 가져오기</button><input id="document-file" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown" hidden></div>
+   <div class="document-actions"><button id="undo-remove" class="quiet" hidden>삭제 되돌리기</button><button id="compare-documents" class="quiet" hidden>문서 비교</button><span class="spacer"></span><button id="remove-item" class="quiet">아이템 삭제</button><button id="import-document" class="secondary" title="현재 상품의 문서를 Markdown 파일로 교체">문서 가져오기</button><input id="document-file" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown" hidden></div>
    <div class="product-fields" aria-label="상품 조건">
-    <label class="product-name">상품명<input id="product-name" maxlength="120" placeholder="상품명"></label>
+    <label class="product-name">상품명<input id="product-name" maxlength="120" placeholder="상품명" aria-describedby="product-name-error"><span id="product-name-error" class="field-error" hidden></span></label>
     <label>가격<select id="price-state"><option value="unset">미입력</option><option value="free">무료</option><option value="paid">유료</option></select></label>
-    <div id="price-fields" class="money-fields" hidden><label>금액<input id="price-amount" type="number" min="0" step="1" placeholder="금액"></label><label>통화<select id="price-currency"><option>JPY</option><option>KRW</option><option>USD</option><option>EUR</option></select></label><label>결제 주기<select id="price-billing"><option value="one_time">일시불</option><option value="monthly">월간</option><option value="annual">연간</option></select></label></div>
+    <div id="price-fields" class="money-fields" hidden><label>금액<input id="price-amount" type="number" min="0" step="1" placeholder="금액" aria-describedby="price-amount-error"><span id="price-amount-error" class="field-error" hidden></span></label><label>통화<select id="price-currency"><option>JPY</option><option>KRW</option><option>USD</option><option>EUR</option></select></label><label>결제 주기<select id="price-billing"><option value="one_time">일시불</option><option value="monthly">월간</option><option value="annual">연간</option></select></label></div>
    </div>
    <div id="price-candidate" class="price-candidate" hidden><span id="price-candidate-value"></span><button id="apply-price-candidate" class="quiet">가격 적용</button><button id="dismiss-price-candidate" class="quiet">닫기</button></div>
    <div id="editor-tools" class="editor-tools" aria-label="문서 서식" hidden>
@@ -41,35 +57,43 @@
     <span id="table-tools" hidden><button data-table="row-add">행 추가</button><button data-table="column-add">열 추가</button><button data-table="row-remove">행 삭제</button><button data-table="column-remove">열 삭제</button></span>
    </div>
    <div id="link-fields" class="link-fields" hidden><label>텍스트<input id="link-text" maxlength="2000"></label><label>주소<input id="link-url" type="url" placeholder="https://"></label><button id="apply-link" class="secondary">적용</button><button id="cancel-link" class="quiet">취소</button></div>
-   <div id="editor" class="editor" contenteditable="false" role="textbox" aria-label="상품 문서" aria-multiline="true" data-placeholder="상품 문서" spellcheck="false"></div>
+   <div id="editor" class="editor" contenteditable="false" role="textbox" aria-label="상품 문서" aria-multiline="true" aria-describedby="editor-error" data-placeholder="상품 문서" spellcheck="false"></div><p id="editor-error" class="field-error" hidden></p>
    <section id="document-diff" class="document-diff" aria-label="상품 문서 차이" hidden><div class="diff-toolbar"><label>기준<select id="diff-baseline"></select></label><span id="diff-current"></span><button id="close-diff" class="quiet">닫기</button></div><div id="diff-content"></div></section>
   </section>
-  <section id="run-view" class="view run-view" hidden>
+  <section id="run-view" class="run-view" aria-labelledby="execution-heading">
+   <h2 id="execution-heading" class="section-heading">대상·실행 설정</h2>
    <div class="run-summary"><span>실험 대상</span><strong id="panel-count" aria-live="polite">—</strong></div>
-   <section id="panel-filters" class="panel-filters" aria-label="대상 조건"><div class="fields">
-    <label>프로필 검색<input id="panel-query" type="search"></label>
+   <section id="panel-filters" class="panel-filters" aria-label="대상 조건">
+    <div id="panel-tags" class="panel-tags">
+      <label for="panel-tag-search">대상 해시태그</label>
+     <div id="selected-tags" class="selected-tags" aria-label="선택한 대상 태그"></div>
+     <input id="panel-tag-search" type="search" placeholder="태그 검색 또는 아래에서 선택" maxlength="120" role="combobox" aria-autocomplete="list" aria-controls="tag-suggestions" aria-expanded="true" aria-describedby="tag-search-help">
+     <p id="tag-search-help" class="tag-search-help">프로필에 있는 태그를 선택하세요. 인원은 현재 지역·나이·성별 조건 기준입니다.</p>
+     <p id="tag-status" class="tag-status" role="status" aria-live="polite"></p>
+     <div id="tag-suggestions" class="tag-suggestions" role="listbox" aria-label="대상 태그 추천"></div>
+     <label id="tag-mode-field" class="tag-mode-field" hidden>선택한 태그<select id="tag-match-mode"><option value="any">하나 이상 일치</option><option value="all">모두 일치</option></select></label>
+     <div id="legacy-panel-query" class="legacy-panel-query" hidden><span id="legacy-panel-query-value"></span><button id="remove-panel-query" type="button" class="quiet">제거</button></div>
+    </div>
+    <div class="fields">
     <label>지역<select id="panel-prefecture"><option value="">전체</option></select></label>
-    <label>최소 나이<input id="panel-age-min" type="number" min="0" max="150"></label>
-    <label>최대 나이<input id="panel-age-max" type="number" min="0" max="150"></label>
+    <label>최소 나이<input id="panel-age-min" type="number" min="0" max="150" aria-describedby="panel-age-min-error"><span id="panel-age-min-error" class="field-error" hidden></span></label>
+    <label>최대 나이<input id="panel-age-max" type="number" min="0" max="150" aria-describedby="panel-age-max-error"><span id="panel-age-max-error" class="field-error" hidden></span></label>
     <label>성별<select id="panel-sex"><option value="">전체</option><option value="female">여성</option><option value="male">남성</option><option value="other">기타</option><option value="unknown">미제공</option></select></label>
-    <label>추출 인원<input id="panel-sample-size" type="number" min="1" step="1" value="100" required></label>
+    <label>추출 인원<input id="panel-sample-size" type="number" min="1" step="1" value="100" required aria-describedby="panel-sample-size-error"><span id="panel-sample-size-error" class="field-error" hidden></span></label>
    </div><div class="sample-status"><span id="panel-eligible"></span><button id="resample-panel" class="secondary">다시 추출</button></div></section>
    <details id="legacy-conditions"><summary>추가 조건</summary><div class="fields">
-    <div class="budget-fields"><label>구매 상한<input id="budget" type="number" min="0" step="1" placeholder="미입력"></label><label>통화<select id="budget-currency"><option>JPY</option><option>KRW</option><option>USD</option><option>EUR</option></select></label><label>기준 기간<select id="budget-billing"><option value="one_time">일시불</option><option value="monthly">월간</option><option value="annual">연간</option></select></label></div>
+    <div class="budget-fields"><label>구매 상한<input id="budget" type="number" min="0" step="1" placeholder="미입력" aria-describedby="budget-error"><span id="budget-error" class="field-error" hidden></span></label><label>통화<select id="budget-currency"><option>JPY</option><option>KRW</option><option>USD</option><option>EUR</option></select></label><label>기준 기간<select id="budget-billing"><option value="one_time">일시불</option><option value="monthly">월간</option><option value="annual">연간</option></select></label></div>
     <label>사용 후 사건<select id="event"><option value="">미제공</option><option value="repeated_crash">반복 오류</option><option value="unexpected_permission">예상하지 못한 권한 요청</option><option value="price_increase">가격 인상</option></select></label>
    </div></details>
    <details id="valuation-settings" hidden><summary>평가 가격대</summary><div id="valuation-items" class="valuation-items"></div><p id="valuation-error" class="run-error" role="alert" hidden></p></details>
-   <details id="survey-outline" hidden><summary>평가 항목 · <span id="survey-question-count">10</span>개</summary><ol id="survey-questions" class="survey-questions"></ol></details>
-   <details><summary>고급 설정</summary><div class="fields"><label>반복 횟수<input id="repeats" type="number" min="1" step="1"></label><label>Seed<input id="seed" type="number" step="1"></label></div></details>
+   <details id="advanced-settings"><summary>고급 설정</summary><div class="fields"><label>반복 횟수<input id="repeats" type="number" min="1" step="1" required aria-describedby="repeats-error"><span id="repeats-error" class="field-error" hidden></span></label><label>Seed<input id="seed" type="number" step="1" required aria-describedby="seed-error"><span id="seed-error" class="field-error" hidden></span></label></div></details>
    <div id="job-count" class="job-count"></div>
-   <div class="run-actions"><button id="cancel-run" class="secondary" hidden>일시 중단</button><button id="partial-results" class="quiet" hidden>현재 결과 보기</button><button id="retry-run" class="secondary" hidden>오류 항목 재시도</button></div>
-   <div id="run-status" class="run-status" aria-live="polite"></div><progress id="run-progress" value="0" max="1" aria-labelledby="run-status" hidden></progress>
-   <p id="run-error" class="run-error" hidden></p>
   </section>
-  <section id="results-view" class="view results-view" hidden>
-   <div id="results-empty" class="empty-state">아직 저장된 판단이 없습니다.</div>
+  </div>
+  <section id="results-view" class="results-view" aria-label="실험 결과" hidden>
+   <div id="results-empty" class="empty-state"><h2 id="result-waiting-title">첫 응답을 기다리고 있습니다.</h2><p id="result-waiting-message" role="status">응답이 저장되면 이 화면에 자동으로 표시됩니다.</p><details id="pending-context" class="pending-context"><summary>상품·실험 조건</summary><div id="pending-context-content"></div></details></div>
    <div id="results-content" hidden>
-    <div class="report-toolbar"><span id="report-summary"></span><select id="export-format" aria-label="보고서 형식"><option value="pdf" id="export-pdf">PDF</option><option value="html" id="export-html">HTML</option><option value="md">Markdown</option><option value="csv">CSV</option><option value="json">JSON</option><option value="spec">재실행 명세</option><option value="reviews">검토 기록</option></select></div>
+    <div class="report-toolbar"><span id="report-summary"></span><div class="report-export-actions"><select id="export-format" aria-label="보고서 형식"><option value="pdf" id="export-pdf">PDF</option><option value="html" id="export-html">HTML</option><option value="md">Markdown</option><option value="csv">CSV</option><option value="json">JSON</option><option value="spec">재실행 명세</option><option value="reviews">검토 기록</option></select><button id="save-report" class="secondary" hidden>보고서 저장</button></div></div>
     <div id="response-results" hidden></div>
     <div id="legacy-results">
     <div id="consistency-warning" class="consistency-warning" hidden></div>
@@ -81,6 +105,7 @@
     <p class="result-note">합성 패널의 선택 비율입니다. 실제 구매 확률이 아닙니다.</p>
     </div>
    </div>
+  </section>
   </section>
   <section id="settings-view" class="view settings-view" hidden>
    <h1>설정</h1><dl id="settings-info"></dl><button id="reload-model" class="secondary" hidden>모델 다시 불러오기</button><button id="open-home" class="secondary">저장 폴더 열기</button>

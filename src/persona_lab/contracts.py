@@ -7,6 +7,8 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from .tags import valid_tag_id
+
 CONTRACT_VERSION = "0.1"
 DOMAINS = {"need", "understanding", "alternatives", "purchase", "trust", "onboarding", "churn", "usage", "fair_price",
            "relevance", "current_solution", "clarity", "benefit", "differentiation", "credibility", "switching"}
@@ -87,7 +89,7 @@ def validate_experiment(spec: dict) -> dict:
     require(spec.get("mode") == "independent_comparison", "only independent comparison is implemented")
     panel = spec.get("panel")
     require(isinstance(panel, dict) and panel.get("selection") in {"all", "filter", "random"}, "unsupported panel selection")
-    require(set(panel) <= {"selection", "prefecture", "age_min", "age_max", "query", "sex", "sample_size", "sample_seed", "sampling_version", "selected_uuids"}, "unsupported panel filter")
+    require(set(panel) <= {"selection", "prefecture", "age_min", "age_max", "query", "sex", "sample_size", "sample_seed", "sampling_version", "selected_uuids", "tags", "tag_mode"}, "unsupported panel filter")
     for key in ("prefecture", "query"):
         require(key not in panel or isinstance(panel[key], str), f"{key} must be text")
     for key in ("age_min", "age_max"):
@@ -95,6 +97,11 @@ def validate_experiment(spec: dict) -> dict:
     require(panel.get("age_min", 0) <= panel.get("age_max", 10000), "age range is reversed")
     require(panel["selection"] != "all" or len(panel) == 1, "all selection cannot also contain filters")
     require('sex' not in panel or isinstance(panel['sex'],str) and panel['sex'] in {'female','male','other','unknown'}, 'unsupported sex filter')
+    if 'tags' in panel:
+        tags = panel['tags']
+        require(isinstance(tags, list) and len(tags) <= 20 and all(valid_tag_id(value) for value in tags), 'invalid panel tags')
+        require(len(set(tags)) == len(tags), 'duplicate panel tags')
+    require('tag_mode' not in panel or isinstance(panel['tag_mode'], str) and panel['tag_mode'] in {'any', 'all'}, 'unsupported tag mode')
     if panel['selection']=='random':
         positive_int(panel.get('sample_size'),'sample size')
         require(type(panel.get('sample_seed')) is int, 'sampling seed must be an integer')

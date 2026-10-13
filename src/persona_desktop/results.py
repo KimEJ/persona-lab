@@ -10,6 +10,7 @@ from persona_lab.reports import summarize
 from persona_lab.responses import RESPONSE_SCENARIO_IDS, SURVEY_V2_SCENARIO_ID
 from persona_lab.runner import selected_personas, sex_code
 from persona_lab.survey import question_info
+from persona_lab.tags import tag_metadata, tag_source_labels
 
 
 EXCLUDED = ('unknown', 'error', 'pending', 'not_run', 'not_applicable')
@@ -29,7 +30,17 @@ def document_summary(document):
     return text[:240] + ('…' if len(text) > 240 else '')
 
 
-def _context(spec, source, backend_id, backend_kind, count, status, repeat, snapshot):
+def _tag_labels(panel, people):
+    metadata = {identifier: tag_metadata(identifier) for identifier in panel.get('tags', [])}
+    missing = {identifier for identifier, value in metadata.items()
+               if ':source/' in identifier and not value['aliases']}
+    if missing:
+        for identifier, label in tag_source_labels(people, missing).items():
+            metadata[identifier] = tag_metadata(identifier, source_label=label)
+    return {identifier: value['labels'] for identifier, value in metadata.items()}
+
+
+def _context(spec, source, backend_id, backend_kind, count, status, repeat, snapshot, people=()):
     frozen = snapshot or {}
     draft = frozen.get('draft', {})
     products = [{**product, 'document': product.get('document', product.get('intro', '')),
@@ -37,7 +48,9 @@ def _context(spec, source, backend_id, backend_kind, count, status, repeat, snap
                 for product in spec['products']]
     return {'experiment_id': spec['experiment_id'], 'title': draft.get('title') or '제품 설문',
             'created_at': frozen.get('created_at', draft.get('created_at', '')),
-            'panel': spec['panel'], 'source': {**source, 'name': source.get('name', source['source_id'])},
+            'panel': spec['panel'],
+            'tag_labels': _tag_labels(spec['panel'], people),
+            'source': {**source, 'name': source.get('name', source['source_id'])},
             'model': {'backend_id': backend_id, 'backend_kind': backend_kind,
                       'name': backend_id.split(':')[1] if backend_id.startswith('llama-cpp:') else backend_id},
             'scenario': spec['scenario'], 'scenario_id': spec['scenario'].get('id'),
@@ -63,6 +76,7 @@ def _response_report(db, people, repeat=0, reviews=None, snapshot=None):
     row = db.execute('SELECT spec,cursor,total,status,source,backend_id,backend_kind FROM run WHERE id=1').fetchone()
     require(row is not None, '판단 결과를 준비 중입니다.')
     spec = json.loads(row[0])
+    people = list(people)
     scenario_id = spec['scenario'].get('id')
     require(scenario_id in RESPONSE_SCENARIO_IDS, '이전 실험은 기존 결과 화면에서 확인하세요.')
     require(type(repeat) is int and 0 <= repeat < spec['repeats'], '반복 번호를 확인하세요.')
@@ -97,7 +111,7 @@ def _response_report(db, people, repeat=0, reviews=None, snapshot=None):
     questions = [{**question, 'title': question_info(question['domain'], scenario_id)['title'],
                   'labels': question_info(question['domain'], scenario_id)['choices']} for question in spec['questions']]
     count = len(cases)
-    context = _context(spec, json.loads(row[4]), row[5], row[6], count, row[3], repeat, snapshot)
+    context = _context(spec, json.loads(row[4]), row[5], row[6], count, row[3], repeat, snapshot, people)
     response = {'workflow': scenario_id, 'questions': questions, 'repeat': repeat, 'repeats': spec['repeats'],
                 'products': products, 'people': cases, 'count': count, 'cursor': row[1], 'total': row[2],
                 'status': row[3], 'report_context': context, 'context': context}

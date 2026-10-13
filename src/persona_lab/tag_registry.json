@@ -1,0 +1,5999 @@
+{
+  "version": 1,
+  "tags": [
+    {
+      "id": "interest:concept/abstract-painting",
+      "kind": "interest",
+      "source": [
+        "抽象画制作"
+      ],
+      "labels": {
+        "en": "Creating abstract paintings",
+        "ko": "추상화 그리기",
+        "ja": "抽象画制作"
+      }
+    },
+    {
+      "id": "interest:concept/alpine-hiking",
+      "kind": "interest",
+      "source": [
+        "山岳ハイキング"
+      ],
+      "labels": {
+        "en": "Alpine hiking",
+        "ko": "산악 하이킹",
+        "ja": "山岳ハイキング"
+      }
+    },
+    {
+      "id": "interest:concept/art-exhibition-appreciation",
+      "kind": "interest",
+      "source": [
+        "アート展鑑賞"
+      ],
+      "labels": {
+        "en": "Art exhibition appreciation",
+        "ko": "미술 전시 감상",
+        "ja": "アート展鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/art-exhibition-visits",
+      "kind": "interest",
+      "source": [
+        "アート展訪問"
+      ],
+      "labels": {
+        "en": "Visiting art exhibitions",
+        "ko": "미술 전시 방문",
+        "ja": "アート展訪問"
+      }
+    },
+    {
+      "id": "interest:concept/art-gallery-tours",
+      "kind": "interest",
+      "source": [
+        "アートギャラリー巡り"
+      ],
+      "labels": {
+        "en": "Visiting art galleries",
+        "ko": "미술 갤러리 탐방",
+        "ja": "アートギャラリー巡り"
+      }
+    },
+    {
+      "id": "interest:concept/baseball-spectating",
+      "kind": "interest",
+      "source": [
+        "野球観戦"
+      ],
+      "labels": {
+        "en": "Watching baseball",
+        "ko": "야구 관람",
+        "ja": "野球観戦"
+      }
+    },
+    {
+      "id": "interest:concept/birdwatching",
+      "kind": "interest",
+      "source": [
+        "バードウォッチング"
+      ],
+      "labels": {
+        "en": "Birdwatching",
+        "ko": "버드워칭",
+        "ja": "バードウォッチング"
+      }
+    },
+    {
+      "id": "interest:concept/bonsai",
+      "kind": "interest",
+      "source": [
+        "盆栽"
+      ],
+      "labels": {
+        "en": "Bonsai",
+        "ko": "분재",
+        "ja": "盆栽"
+      }
+    },
+    {
+      "id": "interest:concept/book-clubs",
+      "kind": "interest",
+      "source": [
+        "読書会"
+      ],
+      "labels": {
+        "en": "Book clubs",
+        "ko": "독서 모임",
+        "ja": "読書会"
+      }
+    },
+    {
+      "id": "interest:concept/brush-writing-practice",
+      "kind": "interest",
+      "source": [
+        "筆練習"
+      ],
+      "labels": {
+        "en": "Brush writing practice",
+        "ko": "붓글씨 연습",
+        "ja": "筆練習"
+      }
+    },
+    {
+      "id": "interest:concept/bubble-era-music-and-movies",
+      "kind": "interest",
+      "source": [
+        "バブル期の音楽・映画鑑賞"
+      ],
+      "labels": {
+        "en": "Bubble-era music and movies",
+        "ko": "일본 버블 시대 음악·영화 감상",
+        "ja": "バブル期の音楽・映画鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/business-and-self-help-reading",
+      "kind": "interest",
+      "source": [
+        "ビジネス書・自己啓発書の読書"
+      ],
+      "labels": {
+        "en": "Reading business and self-help books",
+        "ko": "경영·자기계발서 읽기",
+        "ja": "ビジネス書・自己啓発書の読書"
+      }
+    },
+    {
+      "id": "interest:concept/cafe-conversations",
+      "kind": "interest",
+      "source": [
+        "カフェでの語らい"
+      ],
+      "labels": {
+        "en": "Conversations in cafés",
+        "ko": "카페에서 대화 나누기",
+        "ja": "カフェでの語らい"
+      }
+    },
+    {
+      "id": "interest:concept/cafe-hopping",
+      "kind": "interest",
+      "source": [
+        "カフェ巡り"
+      ],
+      "labels": {
+        "en": "Café hopping",
+        "ko": "카페 탐방",
+        "ja": "カフェ巡り"
+      }
+    },
+    {
+      "id": "interest:concept/cafe-note-writing",
+      "kind": "interest",
+      "source": [
+        "カフェでのノート書き"
+      ],
+      "labels": {
+        "en": "Writing notes in cafés",
+        "ko": "카페에서 노트 쓰기",
+        "ja": "カフェでのノート書き"
+      }
+    },
+    {
+      "id": "interest:concept/cafe-tours-by-bicycle",
+      "kind": "interest",
+      "source": [
+        "自転車カフェ巡り"
+      ],
+      "labels": {
+        "en": "Café tours by bicycle",
+        "ko": "자전거 카페 탐방",
+        "ja": "自転車カフェ巡り"
+      }
+    },
+    {
+      "id": "interest:concept/calligraphy",
+      "kind": "interest",
+      "source": [
+        "書道"
+      ],
+      "labels": {
+        "en": "Calligraphy",
+        "ko": "서예",
+        "ja": "書道"
+      }
+    },
+    {
+      "id": "interest:concept/calligraphy-and-ikebana",
+      "kind": "interest",
+      "source": [
+        "書道・生け花"
+      ],
+      "labels": {
+        "en": "Calligraphy and ikebana",
+        "ko": "서예와 꽃꽂이",
+        "ja": "書道・生け花"
+      }
+    },
+    {
+      "id": "interest:concept/card-games",
+      "kind": "interest",
+      "source": [
+        "カードゲーム"
+      ],
+      "labels": {
+        "en": "Card games",
+        "ko": "카드 게임",
+        "ja": "カードゲーム"
+      }
+    },
+    {
+      "id": "interest:concept/cherry-blossom-viewing-planning",
+      "kind": "interest",
+      "source": [
+        "桜花見計画"
+      ],
+      "labels": {
+        "en": "Planning cherry blossom outings",
+        "ko": "벚꽃 구경 계획",
+        "ja": "桜花見計画"
+      }
+    },
+    {
+      "id": "interest:concept/childrens-art-workshops",
+      "kind": "interest",
+      "source": [
+        "子ども向けアートワークショップ"
+      ],
+      "labels": {
+        "en": "Children's art workshops",
+        "ko": "어린이 미술 워크숍",
+        "ja": "子ども向けアートワークショップ"
+      }
+    },
+    {
+      "id": "interest:concept/childrens-craft-class-volunteering",
+      "kind": "interest",
+      "source": [
+        "子ども向け工作教室ボランティア"
+      ],
+      "labels": {
+        "en": "Volunteering in children's craft classes",
+        "ko": "어린이 만들기 교실 봉사",
+        "ja": "子ども向け工作教室ボランティア"
+      }
+    },
+    {
+      "id": "interest:concept/classic-literature",
+      "kind": "interest",
+      "source": [
+        "古典文学"
+      ],
+      "labels": {
+        "en": "Classic literature",
+        "ko": "고전 문학",
+        "ja": "古典文学"
+      }
+    },
+    {
+      "id": "interest:concept/classic-literature-reading",
+      "kind": "interest",
+      "source": [
+        "古典文学読書"
+      ],
+      "labels": {
+        "en": "Reading classic literature",
+        "ko": "고전 문학 읽기",
+        "ja": "古典文学読書"
+      }
+    },
+    {
+      "id": "interest:concept/classic-movie-watching",
+      "kind": "interest",
+      "source": [
+        "古典映画鑑賞"
+      ],
+      "labels": {
+        "en": "Watching classic movies",
+        "ko": "고전 영화 감상",
+        "ja": "古典映画鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/community-cleanups",
+      "kind": "interest",
+      "source": [
+        "地域清掃活動"
+      ],
+      "labels": {
+        "en": "Community cleanups",
+        "ko": "지역 청소 활동",
+        "ja": "地域清掃活動"
+      }
+    },
+    {
+      "id": "interest:concept/community-festival-attendance",
+      "kind": "interest",
+      "source": [
+        "地域祭り参加"
+      ],
+      "labels": {
+        "en": "Attending community festivals",
+        "ko": "지역 축제 참여",
+        "ja": "地域祭り参加"
+      }
+    },
+    {
+      "id": "interest:concept/community-festivals-and-volunteering",
+      "kind": "interest",
+      "source": [
+        "地域祭り・ボランティア"
+      ],
+      "labels": {
+        "en": "Community festivals and volunteering",
+        "ko": "지역 축제와 봉사",
+        "ja": "地域祭り・ボランティア"
+      }
+    },
+    {
+      "id": "interest:concept/community-history-research",
+      "kind": "interest",
+      "source": [
+        "地域歴史調査"
+      ],
+      "labels": {
+        "en": "Researching community history",
+        "ko": "지역 역사 조사",
+        "ja": "地域歴史調査"
+      }
+    },
+    {
+      "id": "interest:concept/community-volunteering",
+      "kind": "interest",
+      "source": [
+        "地域ボランティア"
+      ],
+      "labels": {
+        "en": "Community volunteering",
+        "ko": "지역 봉사",
+        "ja": "地域ボランティア"
+      }
+    },
+    {
+      "id": "interest:concept/contemporary-art-appreciation",
+      "kind": "interest",
+      "source": [
+        "現代アート鑑賞"
+      ],
+      "labels": {
+        "en": "Contemporary art appreciation",
+        "ko": "현대 미술 감상",
+        "ja": "現代アート鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/cooking",
+      "kind": "interest",
+      "source": [
+        "料理"
+      ],
+      "labels": {
+        "en": "Cooking",
+        "ko": "요리",
+        "ja": "料理"
+      }
+    },
+    {
+      "id": "interest:concept/cooking-classes",
+      "kind": "interest",
+      "source": [
+        "料理教室"
+      ],
+      "labels": {
+        "en": "Cooking classes",
+        "ko": "요리 교실",
+        "ja": "料理教室"
+      }
+    },
+    {
+      "id": "interest:concept/countryside-walks",
+      "kind": "interest",
+      "source": [
+        "田園散歩"
+      ],
+      "labels": {
+        "en": "Countryside walks",
+        "ko": "전원 산책",
+        "ja": "田園散歩"
+      }
+    },
+    {
+      "id": "interest:concept/crafting-with-grandchildren",
+      "kind": "interest",
+      "source": [
+        "孫との工作・手作り"
+      ],
+      "labels": {
+        "en": "Crafting with grandchildren",
+        "ko": "손주와 만들기",
+        "ja": "孫との工作・手作り"
+      }
+    },
+    {
+      "id": "interest:concept/cycling",
+      "kind": "interest",
+      "source": [
+        "サイクリング"
+      ],
+      "labels": {
+        "en": "Cycling",
+        "ko": "자전거 타기",
+        "ja": "サイクリング"
+      }
+    },
+    {
+      "id": "interest:concept/digital-flower-and-street-photography",
+      "kind": "interest",
+      "source": [
+        "デジタル花・街角撮影"
+      ],
+      "labels": {
+        "en": "Digital flower and street photography",
+        "ko": "꽃과 거리 디지털 사진 촬영",
+        "ja": "デジタル花・街角撮影"
+      }
+    },
+    {
+      "id": "interest:concept/digital-illustration",
+      "kind": "interest",
+      "source": [
+        "デジタルイラスト"
+      ],
+      "labels": {
+        "en": "Digital illustration",
+        "ko": "디지털 일러스트",
+        "ja": "デジタルイラスト"
+      }
+    },
+    {
+      "id": "interest:concept/diy-furniture-makeovers",
+      "kind": "interest",
+      "source": [
+        "DIY家具リメイク"
+      ],
+      "labels": {
+        "en": "DIY furniture makeovers",
+        "ko": "DIY 가구 리폼",
+        "ja": "DIY家具リメイク"
+      }
+    },
+    {
+      "id": "interest:concept/diy-furniture-making",
+      "kind": "interest",
+      "source": [
+        "DIY家具制作"
+      ],
+      "labels": {
+        "en": "DIY furniture making",
+        "ko": "DIY 가구 제작",
+        "ja": "DIY家具制作"
+      }
+    },
+    {
+      "id": "interest:concept/economical-cooking",
+      "kind": "interest",
+      "source": [
+        "節約料理"
+      ],
+      "labels": {
+        "en": "Economical cooking",
+        "ko": "알뜰 요리",
+        "ja": "節約料理"
+      }
+    },
+    {
+      "id": "interest:concept/english-mystery-fiction",
+      "kind": "interest",
+      "source": [
+        "英語ミステリー小説"
+      ],
+      "labels": {
+        "en": "Mystery novels in English",
+        "ko": "영어 미스터리 소설",
+        "ja": "英語ミステリー小説"
+      }
+    },
+    {
+      "id": "interest:concept/enka-listening",
+      "kind": "interest",
+      "source": [
+        "演歌鑑賞"
+      ],
+      "labels": {
+        "en": "Listening to enka",
+        "ko": "엔카 감상",
+        "ja": "演歌鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/family-trip-planning",
+      "kind": "interest",
+      "source": [
+        "家族旅行企画"
+      ],
+      "labels": {
+        "en": "Planning family trips",
+        "ko": "가족 여행 계획",
+        "ja": "家族旅行企画"
+      }
+    },
+    {
+      "id": "interest:concept/festival-drumming",
+      "kind": "interest",
+      "source": [
+        "祭り太鼓"
+      ],
+      "labels": {
+        "en": "Festival drumming",
+        "ko": "축제 북 연주",
+        "ja": "祭り太鼓"
+      }
+    },
+    {
+      "id": "interest:concept/festival-volunteering",
+      "kind": "interest",
+      "source": [
+        "祭りボランティア"
+      ],
+      "labels": {
+        "en": "Festival volunteering",
+        "ko": "축제 봉사",
+        "ja": "祭りボランティア"
+      }
+    },
+    {
+      "id": "interest:concept/fishing",
+      "kind": "interest",
+      "source": [
+        "釣り"
+      ],
+      "labels": {
+        "en": "Fishing",
+        "ko": "낚시",
+        "ja": "釣り"
+      }
+    },
+    {
+      "id": "interest:concept/fitness-walking",
+      "kind": "interest",
+      "source": [
+        "ウォーキング"
+      ],
+      "labels": {
+        "en": "Fitness walking",
+        "ko": "걷기 운동",
+        "ja": "ウォーキング"
+      }
+    },
+    {
+      "id": "interest:concept/floral-arrangement",
+      "kind": "interest",
+      "source": [
+        "フラワーアレンジメント"
+      ],
+      "labels": {
+        "en": "Floral arrangement",
+        "ko": "플라워 어레인지먼트",
+        "ja": "フラワーアレンジメント"
+      }
+    },
+    {
+      "id": "interest:concept/flour-based-cooking",
+      "kind": "interest",
+      "source": [
+        "粉もの料理"
+      ],
+      "labels": {
+        "en": "Flour-based cooking",
+        "ko": "밀가루 요리",
+        "ja": "粉もの料理"
+      }
+    },
+    {
+      "id": "interest:concept/folk-song-choral-singing",
+      "kind": "interest",
+      "source": [
+        "民謡合唱"
+      ],
+      "labels": {
+        "en": "Folk-song choral singing",
+        "ko": "민요 합창",
+        "ja": "民謡合唱"
+      }
+    },
+    {
+      "id": "interest:concept/folk-song-listening",
+      "kind": "interest",
+      "source": [
+        "民謡鑑賞"
+      ],
+      "labels": {
+        "en": "Listening to folk songs",
+        "ko": "민요 감상",
+        "ja": "民謡鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/folklore-research",
+      "kind": "interest",
+      "source": [
+        "民俗調査"
+      ],
+      "labels": {
+        "en": "Folklore research",
+        "ko": "민속 조사",
+        "ja": "民俗調査"
+      }
+    },
+    {
+      "id": "interest:concept/garden-cultivation",
+      "kind": "interest",
+      "source": [
+        "庭園栽培"
+      ],
+      "labels": {
+        "en": "Garden cultivation",
+        "ko": "정원 식물 재배",
+        "ja": "庭園栽培"
+      }
+    },
+    {
+      "id": "interest:concept/garden-maintenance",
+      "kind": "interest",
+      "source": [
+        "庭園手入れ"
+      ],
+      "labels": {
+        "en": "Garden maintenance",
+        "ko": "정원 관리",
+        "ja": "庭園手入れ"
+      }
+    },
+    {
+      "id": "interest:concept/garden-planting-and-gardening",
+      "kind": "interest",
+      "source": [
+        "庭植栽・ガーデニング"
+      ],
+      "labels": {
+        "en": "Garden planting and gardening",
+        "ko": "정원 식재와 가꾸기",
+        "ja": "庭植栽・ガーデニング"
+      }
+    },
+    {
+      "id": "interest:concept/garden-tinkering",
+      "kind": "interest",
+      "source": [
+        "庭いじり"
+      ],
+      "labels": {
+        "en": "Tending the garden",
+        "ko": "정원 손질",
+        "ja": "庭いじり"
+      }
+    },
+    {
+      "id": "interest:concept/garden-vegetable-growing",
+      "kind": "interest",
+      "source": [
+        "庭の野菜栽培"
+      ],
+      "labels": {
+        "en": "Growing vegetables in the garden",
+        "ko": "정원에서 채소 기르기",
+        "ja": "庭の野菜栽培"
+      }
+    },
+    {
+      "id": "interest:concept/gardening",
+      "kind": "interest",
+      "source": [
+        "ガーデニング"
+      ],
+      "labels": {
+        "en": "Gardening",
+        "ko": "정원 가꾸기",
+        "ja": "ガーデニング"
+      }
+    },
+    {
+      "id": "interest:concept/go-board-game",
+      "kind": "interest",
+      "source": [
+        "囲碁"
+      ],
+      "labels": {
+        "en": "Go",
+        "ko": "바둑",
+        "ja": "囲碁"
+      }
+    },
+    {
+      "id": "interest:concept/haiku",
+      "kind": "interest",
+      "source": [
+        "俳句"
+      ],
+      "labels": {
+        "en": "Haiku",
+        "ko": "하이쿠",
+        "ja": "俳句"
+      }
+    },
+    {
+      "id": "interest:concept/haiku-writing",
+      "kind": "interest",
+      "source": [
+        "俳句創作"
+      ],
+      "labels": {
+        "en": "Writing haiku",
+        "ko": "하이쿠 창작",
+        "ja": "俳句創作"
+      }
+    },
+    {
+      "id": "interest:concept/hand-embroidery",
+      "kind": "interest",
+      "source": [
+        "ハンドメイド刺繍"
+      ],
+      "labels": {
+        "en": "Hand embroidery",
+        "ko": "손자수",
+        "ja": "ハンドメイド刺繍"
+      }
+    },
+    {
+      "id": "interest:concept/hand-knitted-accessory-making",
+      "kind": "interest",
+      "source": [
+        "手編み小物作り"
+      ],
+      "labels": {
+        "en": "Making hand-knitted accessories",
+        "ko": "손뜨개 소품 만들기",
+        "ja": "手編み小物作り"
+      }
+    },
+    {
+      "id": "interest:concept/hiking",
+      "kind": "interest",
+      "source": [
+        "ハイキング"
+      ],
+      "labels": {
+        "en": "Hiking",
+        "ko": "하이킹",
+        "ja": "ハイキング"
+      }
+    },
+    {
+      "id": "interest:concept/historical-fiction-reading",
+      "kind": "interest",
+      "source": [
+        "歴史小説読書"
+      ],
+      "labels": {
+        "en": "Reading historical fiction",
+        "ko": "역사 소설 읽기",
+        "ja": "歴史小説読書"
+      }
+    },
+    {
+      "id": "interest:concept/historical-nonfiction-reading",
+      "kind": "interest",
+      "source": [
+        "歴史ノンフィクション読書"
+      ],
+      "labels": {
+        "en": "Reading historical nonfiction",
+        "ko": "역사 논픽션 읽기",
+        "ja": "歴史ノンフィクション読書"
+      }
+    },
+    {
+      "id": "interest:concept/historical-research",
+      "kind": "interest",
+      "source": [
+        "歴史調査"
+      ],
+      "labels": {
+        "en": "Historical research",
+        "ko": "역사 조사",
+        "ja": "歴史調査"
+      }
+    },
+    {
+      "id": "interest:concept/historical-site-walks",
+      "kind": "interest",
+      "source": [
+        "歴史散策"
+      ],
+      "labels": {
+        "en": "Historical walks",
+        "ko": "역사 탐방 산책",
+        "ja": "歴史散策"
+      }
+    },
+    {
+      "id": "interest:concept/history-reading",
+      "kind": "interest",
+      "source": [
+        "歴史読書"
+      ],
+      "labels": {
+        "en": "Reading history",
+        "ko": "역사책 읽기",
+        "ja": "歴史読書"
+      }
+    },
+    {
+      "id": "interest:concept/home-beer-brewing",
+      "kind": "interest",
+      "source": [
+        "手作りビール醸造"
+      ],
+      "labels": {
+        "en": "Home beer brewing",
+        "ko": "수제 맥주 양조",
+        "ja": "手作りビール醸造"
+      }
+    },
+    {
+      "id": "interest:concept/home-cooking",
+      "kind": "interest",
+      "source": [
+        "家庭料理"
+      ],
+      "labels": {
+        "en": "Home cooking",
+        "ko": "가정 요리",
+        "ja": "家庭料理"
+      }
+    },
+    {
+      "id": "interest:concept/home-vegetable-gardening",
+      "kind": "interest",
+      "source": [
+        "家庭菜園"
+      ],
+      "labels": {
+        "en": "Home vegetable gardening",
+        "ko": "텃밭 가꾸기",
+        "ja": "家庭菜園"
+      }
+    },
+    {
+      "id": "interest:concept/homemade-cooking",
+      "kind": "interest",
+      "source": [
+        "手料理"
+      ],
+      "labels": {
+        "en": "Homemade cooking",
+        "ko": "직접 만드는 요리",
+        "ja": "手料理"
+      }
+    },
+    {
+      "id": "interest:concept/hometown-festival-attendance",
+      "kind": "interest",
+      "source": [
+        "郷土祭り参加"
+      ],
+      "labels": {
+        "en": "Attending hometown festivals",
+        "ko": "고향 축제 참여",
+        "ja": "郷土祭り参加"
+      }
+    },
+    {
+      "id": "interest:concept/horticulture",
+      "kind": "interest",
+      "source": [
+        "園芸"
+      ],
+      "labels": {
+        "en": "Horticulture",
+        "ko": "원예",
+        "ja": "園芸"
+      }
+    },
+    {
+      "id": "interest:concept/horticulture-and-bonsai",
+      "kind": "interest",
+      "source": [
+        "園芸・盆栽"
+      ],
+      "labels": {
+        "en": "Horticulture and bonsai",
+        "ko": "원예와 분재",
+        "ja": "園芸・盆栽"
+      }
+    },
+    {
+      "id": "interest:concept/hot-spring-tours",
+      "kind": "interest",
+      "source": [
+        "温泉巡り"
+      ],
+      "labels": {
+        "en": "Visiting hot springs",
+        "ko": "온천 탐방",
+        "ja": "温泉巡り"
+      }
+    },
+    {
+      "id": "interest:concept/ikebana",
+      "kind": "interest",
+      "source": [
+        "生け花"
+      ],
+      "labels": {
+        "en": "Ikebana",
+        "ko": "꽃꽂이",
+        "ja": "生け花"
+      }
+    },
+    {
+      "id": "interest:concept/improvised-musical-participation",
+      "kind": "interest",
+      "source": [
+        "即興ミュージカル参加"
+      ],
+      "labels": {
+        "en": "Participating in improvised musicals",
+        "ko": "즉흥 뮤지컬 참여",
+        "ja": "即興ミュージカル参加"
+      }
+    },
+    {
+      "id": "interest:concept/indie-music-listening",
+      "kind": "interest",
+      "source": [
+        "インディー音楽鑑賞"
+      ],
+      "labels": {
+        "en": "Listening to indie music",
+        "ko": "인디 음악 감상",
+        "ja": "インディー音楽鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/ink-wash-painting",
+      "kind": "interest",
+      "source": [
+        "水墨画"
+      ],
+      "labels": {
+        "en": "Ink wash painting",
+        "ko": "수묵화",
+        "ja": "水墨画"
+      }
+    },
+    {
+      "id": "interest:concept/izakaya-tours-and-dish-development",
+      "kind": "interest",
+      "source": [
+        "居酒屋巡り・料理開発"
+      ],
+      "labels": {
+        "en": "Izakaya tours and dish development",
+        "ko": "이자카야 탐방과 메뉴 개발",
+        "ja": "居酒屋巡り・料理開発"
+      }
+    },
+    {
+      "id": "interest:concept/japanese-cooking-classes",
+      "kind": "interest",
+      "source": [
+        "和食料理教室"
+      ],
+      "labels": {
+        "en": "Japanese cooking classes",
+        "ko": "일식 요리 교실",
+        "ja": "和食料理教室"
+      }
+    },
+    {
+      "id": "interest:concept/jazz-piano",
+      "kind": "interest",
+      "source": [
+        "ジャズピアノ"
+      ],
+      "labels": {
+        "en": "Jazz piano",
+        "ko": "재즈 피아노",
+        "ja": "ジャズピアノ"
+      }
+    },
+    {
+      "id": "interest:concept/jogging",
+      "kind": "interest",
+      "source": [
+        "ジョギング"
+      ],
+      "labels": {
+        "en": "Jogging",
+        "ko": "조깅",
+        "ja": "ジョギング"
+      }
+    },
+    {
+      "id": "interest:concept/kanagawa-walks",
+      "kind": "interest",
+      "source": [
+        "神奈川散策"
+      ],
+      "labels": {
+        "en": "Walks in Kanagawa",
+        "ko": "가나가와 산책",
+        "ja": "神奈川散策"
+      }
+    },
+    {
+      "id": "interest:concept/karaoke",
+      "kind": "interest",
+      "source": [
+        "カラオケ"
+      ],
+      "labels": {
+        "en": "Karaoke",
+        "ko": "노래방",
+        "ja": "カラオケ"
+      }
+    },
+    {
+      "id": "interest:concept/knitting",
+      "kind": "interest",
+      "source": [
+        "編み物"
+      ],
+      "labels": {
+        "en": "Knitting",
+        "ko": "뜨개질",
+        "ja": "編み物"
+      }
+    },
+    {
+      "id": "interest:concept/landscape-photography",
+      "kind": "interest",
+      "source": [
+        "風景写真撮影"
+      ],
+      "labels": {
+        "en": "Landscape photography",
+        "ko": "풍경 사진 촬영",
+        "ja": "風景写真撮影"
+      }
+    },
+    {
+      "id": "interest:concept/leftover-cooking",
+      "kind": "interest",
+      "source": [
+        "余りもの料理"
+      ],
+      "labels": {
+        "en": "Cooking with leftovers",
+        "ko": "남은 재료로 요리하기",
+        "ja": "余りもの料理"
+      }
+    },
+    {
+      "id": "interest:concept/leisure-walks",
+      "kind": "interest",
+      "source": [
+        "散歩"
+      ],
+      "labels": {
+        "en": "Leisurely walks",
+        "ko": "가벼운 산책",
+        "ja": "散歩"
+      }
+    },
+    {
+      "id": "interest:concept/live-jazz-listening",
+      "kind": "interest",
+      "source": [
+        "ジャズライブ鑑賞"
+      ],
+      "labels": {
+        "en": "Watching live jazz",
+        "ko": "재즈 공연 감상",
+        "ja": "ジャズライブ鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/live-manzai-comedy",
+      "kind": "interest",
+      "source": [
+        "漫才ライブ鑑賞"
+      ],
+      "labels": {
+        "en": "Watching live manzai comedy",
+        "ko": "만자이 공연 감상",
+        "ja": "漫才ライブ鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/live-music-and-jazz-listening",
+      "kind": "interest",
+      "source": [
+        "音楽鑑賞(ライブ・ジャズ)"
+      ],
+      "labels": {
+        "en": "Listening to live music and jazz",
+        "ko": "라이브 음악·재즈 감상",
+        "ja": "音楽鑑賞(ライブ・ジャズ)"
+      }
+    },
+    {
+      "id": "interest:concept/local-festival-attendance",
+      "kind": "interest",
+      "source": [
+        "地元祭り参加"
+      ],
+      "labels": {
+        "en": "Attending local festivals",
+        "ko": "동네 축제 참여",
+        "ja": "地元祭り参加"
+      }
+    },
+    {
+      "id": "interest:concept/local-history-reading",
+      "kind": "interest",
+      "source": [
+        "郷土史読書"
+      ],
+      "labels": {
+        "en": "Reading local history",
+        "ko": "향토사 읽기",
+        "ja": "郷土史読書"
+      }
+    },
+    {
+      "id": "interest:concept/local-music-event-attendance",
+      "kind": "interest",
+      "source": [
+        "地元音楽イベント参加"
+      ],
+      "labels": {
+        "en": "Attending local music events",
+        "ko": "지역 음악 행사 참여",
+        "ja": "地元音楽イベント参加"
+      }
+    },
+    {
+      "id": "interest:concept/local-photography",
+      "kind": "interest",
+      "source": [
+        "ローカルフォトグラフ"
+      ],
+      "labels": {
+        "en": "Local photography",
+        "ko": "지역 사진 촬영",
+        "ja": "ローカルフォトグラフ"
+      }
+    },
+    {
+      "id": "interest:concept/local-tradition-event-volunteering",
+      "kind": "interest",
+      "source": [
+        "郷土行事ボランティア"
+      ],
+      "labels": {
+        "en": "Volunteering at local traditional events",
+        "ko": "향토 행사 봉사",
+        "ja": "郷土行事ボランティア"
+      }
+    },
+    {
+      "id": "interest:concept/low-budget-cooking",
+      "kind": "interest",
+      "source": [
+        "低予算料理"
+      ],
+      "labels": {
+        "en": "Low-budget cooking",
+        "ko": "저예산 요리",
+        "ja": "低予算料理"
+      }
+    },
+    {
+      "id": "interest:concept/magazine-trend-discovery",
+      "kind": "interest",
+      "source": [
+        "雑誌でトレンド探索"
+      ],
+      "labels": {
+        "en": "Discovering trends in magazines",
+        "ko": "잡지로 트렌드 찾기",
+        "ja": "雑誌でトレンド探索"
+      }
+    },
+    {
+      "id": "interest:concept/matcha-etiquette",
+      "kind": "interest",
+      "source": [
+        "抹茶作法"
+      ],
+      "labels": {
+        "en": "Matcha etiquette",
+        "ko": "말차 예법",
+        "ja": "抹茶作法"
+      }
+    },
+    {
+      "id": "interest:concept/minyo-sanpo",
+      "kind": "interest",
+      "source": [
+        "民謡散歩"
+      ],
+      "labels": {
+        "en": "Minyo sanpo",
+        "ko": "民謡散歩",
+        "ja": "民謡散歩"
+      },
+      "untranslated": true
+    },
+    {
+      "id": "interest:concept/model-railways",
+      "kind": "interest",
+      "source": [
+        "模型鉄道"
+      ],
+      "labels": {
+        "en": "Model railways",
+        "ko": "철도 모형",
+        "ja": "模型鉄道"
+      }
+    },
+    {
+      "id": "interest:concept/mountain-climbing",
+      "kind": "interest",
+      "source": [
+        "登山"
+      ],
+      "labels": {
+        "en": "Mountain climbing",
+        "ko": "등산",
+        "ja": "登山"
+      }
+    },
+    {
+      "id": "interest:concept/mountain-walks",
+      "kind": "interest",
+      "source": [
+        "山歩き"
+      ],
+      "labels": {
+        "en": "Mountain walks",
+        "ko": "산길 걷기",
+        "ja": "山歩き"
+      }
+    },
+    {
+      "id": "interest:concept/mountain-walks-and-nature-observation",
+      "kind": "interest",
+      "source": [
+        "山歩き・自然観察"
+      ],
+      "labels": {
+        "en": "Mountain walks and nature observation",
+        "ko": "산길 걷기와 자연 관찰",
+        "ja": "山歩き・自然観察"
+      }
+    },
+    {
+      "id": "interest:concept/movie-watching",
+      "kind": "interest",
+      "source": [
+        "映画鑑賞"
+      ],
+      "labels": {
+        "en": "Watching movies",
+        "ko": "영화 감상",
+        "ja": "映画鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/music-event-attendance",
+      "kind": "interest",
+      "source": [
+        "音楽イベント参加"
+      ],
+      "labels": {
+        "en": "Attending music events",
+        "ko": "음악 행사 참여",
+        "ja": "音楽イベント参加"
+      }
+    },
+    {
+      "id": "interest:concept/music-listening",
+      "kind": "interest",
+      "source": [
+        "音楽鑑賞"
+      ],
+      "labels": {
+        "en": "Listening to music",
+        "ko": "음악 감상",
+        "ja": "音楽鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/music-streaming-subscriptions",
+      "kind": "interest",
+      "source": [
+        "デジタル音楽サブスク利用"
+      ],
+      "labels": {
+        "en": "Music streaming subscriptions",
+        "ko": "음악 스트리밍 구독",
+        "ja": "デジタル音楽サブスク利用"
+      }
+    },
+    {
+      "id": "interest:concept/nature-walks",
+      "kind": "interest",
+      "source": [
+        "自然散策"
+      ],
+      "labels": {
+        "en": "Nature walks",
+        "ko": "자연 속 산책",
+        "ja": "自然散策"
+      }
+    },
+    {
+      "id": "interest:concept/neighborhood-association-and-class-volunteering",
+      "kind": "interest",
+      "source": [
+        "自治会・講座ボランティア"
+      ],
+      "labels": {
+        "en": "Neighborhood association and class volunteering",
+        "ko": "주민회·강좌 봉사",
+        "ja": "自治会・講座ボランティア"
+      }
+    },
+    {
+      "id": "interest:concept/niwa-igurai",
+      "kind": "interest",
+      "source": [
+        "庭いぐらい"
+      ],
+      "labels": {
+        "en": "Niwa igurai",
+        "ko": "庭いぐらい",
+        "ja": "庭いぐらい"
+      },
+      "untranslated": true
+    },
+    {
+      "id": "interest:concept/nostalgic-manga-magazines",
+      "kind": "interest",
+      "source": [
+        "懐かし漫画雑誌"
+      ],
+      "labels": {
+        "en": "Nostalgic manga magazines",
+        "ko": "추억의 만화 잡지",
+        "ja": "懐かし漫画雑誌"
+      }
+    },
+    {
+      "id": "interest:concept/origami",
+      "kind": "interest",
+      "source": [
+        "折り紙"
+      ],
+      "labels": {
+        "en": "Origami",
+        "ko": "종이접기",
+        "ja": "折り紙"
+      }
+    },
+    {
+      "id": "interest:concept/painting-and-calligraphy",
+      "kind": "interest",
+      "source": [
+        "絵画・書道"
+      ],
+      "labels": {
+        "en": "Painting and calligraphy",
+        "ko": "회화와 서예",
+        "ja": "絵画・書道"
+      }
+    },
+    {
+      "id": "interest:concept/park-walks-and-sketching",
+      "kind": "interest",
+      "source": [
+        "公園散策とスケッチ"
+      ],
+      "labels": {
+        "en": "Park walks and sketching",
+        "ko": "공원 산책과 스케치",
+        "ja": "公園散策とスケッチ"
+      }
+    },
+    {
+      "id": "interest:concept/photography",
+      "kind": "interest",
+      "source": [
+        "写真撮影"
+      ],
+      "labels": {
+        "en": "Photography",
+        "ko": "사진 촬영",
+        "ja": "写真撮影"
+      }
+    },
+    {
+      "id": "interest:concept/photography-and-editing",
+      "kind": "interest",
+      "source": [
+        "写真撮影と編集"
+      ],
+      "labels": {
+        "en": "Photography and editing",
+        "ko": "사진 촬영과 편집",
+        "ja": "写真撮影と編集"
+      }
+    },
+    {
+      "id": "interest:concept/pottery",
+      "kind": "interest",
+      "source": [
+        "陶芸"
+      ],
+      "labels": {
+        "en": "Pottery",
+        "ko": "도예",
+        "ja": "陶芸"
+      }
+    },
+    {
+      "id": "interest:concept/preserved-food-research",
+      "kind": "interest",
+      "source": [
+        "保存食研究"
+      ],
+      "labels": {
+        "en": "Researching preserved foods",
+        "ko": "보존식 연구",
+        "ja": "保存食研究"
+      }
+    },
+    {
+      "id": "interest:concept/quiet-cafe-writing",
+      "kind": "interest",
+      "source": [
+        "静謐なカフェでの執筆"
+      ],
+      "labels": {
+        "en": "Writing in quiet cafés",
+        "ko": "조용한 카페에서 글쓰기",
+        "ja": "静謐なカフェでの執筆"
+      }
+    },
+    {
+      "id": "interest:concept/reading",
+      "kind": "interest",
+      "source": [
+        "読書"
+      ],
+      "labels": {
+        "en": "Reading",
+        "ko": "독서",
+        "ja": "読書"
+      }
+    },
+    {
+      "id": "interest:concept/regional-cuisine-learning",
+      "kind": "interest",
+      "source": [
+        "郷土料理学習"
+      ],
+      "labels": {
+        "en": "Learning regional cuisine",
+        "ko": "향토 요리 배우기",
+        "ja": "郷土料理学習"
+      }
+    },
+    {
+      "id": "interest:concept/regional-cuisine-research",
+      "kind": "interest",
+      "source": [
+        "郷土料理研究"
+      ],
+      "labels": {
+        "en": "Researching regional cuisine",
+        "ko": "향토 요리 연구",
+        "ja": "郷土料理研究"
+      }
+    },
+    {
+      "id": "interest:concept/regional-dish-cooking",
+      "kind": "interest",
+      "source": [
+        "郷土料理調理"
+      ],
+      "labels": {
+        "en": "Cooking regional dishes",
+        "ko": "향토 요리 만들기",
+        "ja": "郷土料理調理"
+      }
+    },
+    {
+      "id": "interest:concept/regional-recipe-development",
+      "kind": "interest",
+      "source": [
+        "郷土料理レシピ開発"
+      ],
+      "labels": {
+        "en": "Developing regional recipes",
+        "ko": "향토 요리 레시피 개발",
+        "ja": "郷土料理レシピ開発"
+      }
+    },
+    {
+      "id": "interest:concept/retro-cafe-hopping",
+      "kind": "interest",
+      "source": [
+        "レトロカフェ巡り"
+      ],
+      "labels": {
+        "en": "Visiting retro cafés",
+        "ko": "레트로 카페 탐방",
+        "ja": "レトロカフェ巡り"
+      }
+    },
+    {
+      "id": "interest:concept/retro-game-collecting",
+      "kind": "interest",
+      "source": [
+        "レトロゲーム収集"
+      ],
+      "labels": {
+        "en": "Collecting retro games",
+        "ko": "레트로 게임 수집",
+        "ja": "レトロゲーム収集"
+      }
+    },
+    {
+      "id": "interest:concept/rice-growing",
+      "kind": "interest",
+      "source": [
+        "米作り"
+      ],
+      "labels": {
+        "en": "Growing rice",
+        "ko": "벼농사",
+        "ja": "米作り"
+      }
+    },
+    {
+      "id": "interest:concept/ritual-festival-music",
+      "kind": "interest",
+      "source": [
+        "祭礼音楽"
+      ],
+      "labels": {
+        "en": "Ritual festival music",
+        "ko": "축제 의식 음악",
+        "ja": "祭礼音楽"
+      }
+    },
+    {
+      "id": "interest:concept/riverside-walks-and-photography",
+      "kind": "interest",
+      "source": [
+        "川辺散歩と写真"
+      ],
+      "labels": {
+        "en": "Riverside walks and photography",
+        "ko": "강변 산책과 사진 촬영",
+        "ja": "川辺散歩と写真"
+      }
+    },
+    {
+      "id": "interest:concept/running",
+      "kind": "interest",
+      "source": [
+        "ランニング"
+      ],
+      "labels": {
+        "en": "Running",
+        "ko": "달리기",
+        "ja": "ランニング"
+      }
+    },
+    {
+      "id": "interest:concept/saga-summer-festival-attendance",
+      "kind": "interest",
+      "source": [
+        "佐賀の夏祭り参加"
+      ],
+      "labels": {
+        "en": "Attending summer festivals in Saga",
+        "ko": "사가 여름 축제 참여",
+        "ja": "佐賀の夏祭り参加"
+      }
+    },
+    {
+      "id": "interest:concept/scenic-cycling-tours",
+      "kind": "interest",
+      "source": [
+        "自転車での風景巡り"
+      ],
+      "labels": {
+        "en": "Scenic cycling tours",
+        "ko": "자전거 풍경 탐방",
+        "ja": "自転車での風景巡り"
+      }
+    },
+    {
+      "id": "interest:concept/science-fiction-and-philosophy-reading",
+      "kind": "interest",
+      "source": [
+        "読書(SF・哲学)"
+      ],
+      "labels": {
+        "en": "Reading science fiction and philosophy",
+        "ko": "SF·철학 독서",
+        "ja": "読書(SF・哲学)"
+      }
+    },
+    {
+      "id": "interest:concept/science-fiction-reading",
+      "kind": "interest",
+      "source": [
+        "SF小説読書"
+      ],
+      "labels": {
+        "en": "Reading science fiction",
+        "ko": "SF 소설 읽기",
+        "ja": "SF小説読書"
+      }
+    },
+    {
+      "id": "interest:concept/sea-fishing",
+      "kind": "interest",
+      "source": [
+        "海釣り"
+      ],
+      "labels": {
+        "en": "Sea fishing",
+        "ko": "바다낚시",
+        "ja": "海釣り"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-cooking-and-classes",
+      "kind": "interest",
+      "source": [
+        "季節料理・料理教室"
+      ],
+      "labels": {
+        "en": "Seasonal cooking and cooking classes",
+        "ko": "계절 요리와 요리 교실",
+        "ja": "季節料理・料理教室"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-festival-attendance",
+      "kind": "interest",
+      "source": [
+        "季節祭り参加"
+      ],
+      "labels": {
+        "en": "Attending seasonal festivals",
+        "ko": "계절 축제 참여",
+        "ja": "季節祭り参加"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-flower-appreciation",
+      "kind": "interest",
+      "source": [
+        "季節の花観賞"
+      ],
+      "labels": {
+        "en": "Enjoying seasonal flowers",
+        "ko": "계절 꽃 감상",
+        "ja": "季節の花観賞"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-flower-planting",
+      "kind": "interest",
+      "source": [
+        "季節の花植栽"
+      ],
+      "labels": {
+        "en": "Planting seasonal flowers",
+        "ko": "계절 꽃 심기",
+        "ja": "季節の花植栽"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-strolls",
+      "kind": "interest",
+      "source": [
+        "季節散策"
+      ],
+      "labels": {
+        "en": "Seasonal strolls",
+        "ko": "계절 풍경 산책",
+        "ja": "季節散策"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-verse-writing",
+      "kind": "interest",
+      "source": [
+        "季節句作"
+      ],
+      "labels": {
+        "en": "Writing seasonal verses",
+        "ko": "계절 시 짓기",
+        "ja": "季節句作"
+      }
+    },
+    {
+      "id": "interest:concept/seasonal-walks",
+      "kind": "interest",
+      "source": [
+        "季節散歩"
+      ],
+      "labels": {
+        "en": "Seasonal walks",
+        "ko": "계절을 느끼며 걷기",
+        "ja": "季節散歩"
+      }
+    },
+    {
+      "id": "interest:concept/senior-health-exercises",
+      "kind": "interest",
+      "source": [
+        "シニア健康体操"
+      ],
+      "labels": {
+        "en": "Senior health exercises",
+        "ko": "시니어 건강 체조",
+        "ja": "シニア健康体操"
+      }
+    },
+    {
+      "id": "interest:concept/shogi-matches",
+      "kind": "interest",
+      "source": [
+        "将棋対局"
+      ],
+      "labels": {
+        "en": "Playing shogi",
+        "ko": "쇼기 대국",
+        "ja": "将棋対局"
+      }
+    },
+    {
+      "id": "interest:concept/short-story-reading",
+      "kind": "interest",
+      "source": [
+        "短編小説読書"
+      ],
+      "labels": {
+        "en": "Reading short stories",
+        "ko": "단편 소설 읽기",
+        "ja": "短編小説読書"
+      }
+    },
+    {
+      "id": "interest:concept/short-trips",
+      "kind": "interest",
+      "source": [
+        "小旅行"
+      ],
+      "labels": {
+        "en": "Short trips",
+        "ko": "짧은 여행",
+        "ja": "小旅行"
+      }
+    },
+    {
+      "id": "interest:concept/showa-era-movie-watching",
+      "kind": "interest",
+      "source": [
+        "昭和映画鑑賞"
+      ],
+      "labels": {
+        "en": "Watching Showa-era movies",
+        "ko": "쇼와 시대 영화 감상",
+        "ja": "昭和映画鑑賞"
+      }
+    },
+    {
+      "id": "interest:concept/showa-era-song-karaoke",
+      "kind": "interest",
+      "source": [
+        "昭和歌謡カラオケ"
+      ],
+      "labels": {
+        "en": "Showa-era song karaoke",
+        "ko": "노래방에서 쇼와 가요 부르기",
+        "ja": "昭和歌謡カラオケ"
+      }
+    },
+    {
+      "id": "interest:concept/shu-yaki-ryori",
+      "kind": "interest",
+      "source": [
+        "週焼き料理"
+      ],
+      "labels": {
+        "en": "Shu yaki ryori",
+        "ko": "週焼き料理",
+        "ja": "週焼き料理"
+      },
+      "untranslated": true
+    },
+    {
+      "id": "interest:concept/small-group-book-clubs",
+      "kind": "interest",
+      "source": [
+        "少人数読書会"
+      ],
+      "labels": {
+        "en": "Small-group book clubs",
+        "ko": "소규모 독서 모임",
+        "ja": "少人数読書会"
+      }
+    },
+    {
+      "id": "interest:concept/small-group-hiking",
+      "kind": "interest",
+      "source": [
+        "少人数ハイキング"
+      ],
+      "labels": {
+        "en": "Small-group hiking",
+        "ko": "소규모 하이킹",
+        "ja": "少人数ハイキング"
+      }
+    },
+    {
+      "id": "interest:concept/small-instrument-playing",
+      "kind": "interest",
+      "source": [
+        "ミニ楽器演奏"
+      ],
+      "labels": {
+        "en": "Playing small instruments",
+        "ko": "소형 악기 연주",
+        "ja": "ミニ楽器演奏"
+      }
+    },
+    {
+      "id": "interest:concept/smartphone-photography",
+      "kind": "interest",
+      "source": [
+        "スマホ写真撮影"
+      ],
+      "labels": {
+        "en": "Smartphone photography",
+        "ko": "스마트폰 사진 촬영",
+        "ja": "スマホ写真撮影"
+      }
+    },
+    {
+      "id": "interest:concept/soccer-spectating",
+      "kind": "interest",
+      "source": [
+        "サッカー観戦"
+      ],
+      "labels": {
+        "en": "Watching soccer",
+        "ko": "축구 관람",
+        "ja": "サッカー観戦"
+      }
+    },
+    {
+      "id": "interest:concept/social-news-discussions",
+      "kind": "interest",
+      "source": [
+        "社会ニュースディスカッション"
+      ],
+      "labels": {
+        "en": "Discussing social news",
+        "ko": "사회 뉴스 토론",
+        "ja": "社会ニュースディスカッション"
+      }
+    },
+    {
+      "id": "interest:concept/strolling",
+      "kind": "interest",
+      "source": [
+        "散策"
+      ],
+      "labels": {
+        "en": "Strolling",
+        "ko": "산책",
+        "ja": "散策"
+      }
+    },
+    {
+      "id": "interest:concept/strolls-and-photography",
+      "kind": "interest",
+      "source": [
+        "散策と写真撮影"
+      ],
+      "labels": {
+        "en": "Strolls and photography",
+        "ko": "산책하며 사진 촬영",
+        "ja": "散策と写真撮影"
+      }
+    },
+    {
+      "id": "interest:concept/tea-ceremony",
+      "kind": "interest",
+      "source": [
+        "茶道"
+      ],
+      "labels": {
+        "en": "Tea ceremony",
+        "ko": "다도",
+        "ja": "茶道"
+      }
+    },
+    {
+      "id": "interest:concept/tea-ceremony-and-japanese-sweet-making",
+      "kind": "interest",
+      "source": [
+        "茶道と和菓子作り"
+      ],
+      "labels": {
+        "en": "Tea ceremony and Japanese sweet making",
+        "ko": "다도와 화과자 만들기",
+        "ja": "茶道と和菓子作り"
+      }
+    },
+    {
+      "id": "interest:concept/tea-ceremony-experiences",
+      "kind": "interest",
+      "source": [
+        "茶道体験"
+      ],
+      "labels": {
+        "en": "Tea ceremony experiences",
+        "ko": "다도 체험",
+        "ja": "茶道体験"
+      }
+    },
+    {
+      "id": "interest:concept/tea-gatherings",
+      "kind": "interest",
+      "source": [
+        "茶会"
+      ],
+      "labels": {
+        "en": "Tea gatherings",
+        "ko": "다회",
+        "ja": "茶会"
+      }
+    },
+    {
+      "id": "interest:concept/traditional-craft-preservation",
+      "kind": "interest",
+      "source": [
+        "伝統工芸保存活動"
+      ],
+      "labels": {
+        "en": "Preserving traditional crafts",
+        "ko": "전통 공예 보존 활동",
+        "ja": "伝統工芸保存活動"
+      }
+    },
+    {
+      "id": "interest:concept/traditional-flower-arranging",
+      "kind": "interest",
+      "source": [
+        "華道"
+      ],
+      "labels": {
+        "en": "Traditional flower arranging",
+        "ko": "전통 꽃꽂이",
+        "ja": "華道"
+      }
+    },
+    {
+      "id": "interest:concept/traditional-instrument-ensemble",
+      "kind": "interest",
+      "source": [
+        "伝統楽器アンサンブル"
+      ],
+      "labels": {
+        "en": "Traditional instrument ensemble",
+        "ko": "전통 악기 합주",
+        "ja": "伝統楽器アンサンブル"
+      }
+    },
+    {
+      "id": "interest:concept/ubusuna-sansaku",
+      "kind": "interest",
+      "source": [
+        "産土散策"
+      ],
+      "labels": {
+        "en": "Ubusuna sansaku",
+        "ko": "産土散策",
+        "ja": "産土散策"
+      },
+      "untranslated": true
+    },
+    {
+      "id": "interest:concept/urban-photo-walks",
+      "kind": "interest",
+      "source": [
+        "街中フォトウォーク"
+      ],
+      "labels": {
+        "en": "Urban photo walks",
+        "ko": "도심 사진 산책",
+        "ja": "街中フォトウォーク"
+      }
+    },
+    {
+      "id": "interest:concept/vegetable-dish-experiments",
+      "kind": "interest",
+      "source": [
+        "野菜料理実験"
+      ],
+      "labels": {
+        "en": "Experimenting with vegetable dishes",
+        "ko": "채소 요리 실험",
+        "ja": "野菜料理実験"
+      }
+    },
+    {
+      "id": "interest:concept/vegetable-growing",
+      "kind": "interest",
+      "source": [
+        "野菜作り"
+      ],
+      "labels": {
+        "en": "Growing vegetables",
+        "ko": "채소 기르기",
+        "ja": "野菜作り"
+      }
+    },
+    {
+      "id": "interest:concept/volunteer-activities",
+      "kind": "interest",
+      "source": [
+        "ボランティア活動"
+      ],
+      "labels": {
+        "en": "Volunteer activities",
+        "ko": "봉사 활동",
+        "ja": "ボランティア活動"
+      }
+    },
+    {
+      "id": "interest:concept/walks-and-hiking",
+      "kind": "interest",
+      "source": [
+        "散歩・ハイキング"
+      ],
+      "labels": {
+        "en": "Walks and hiking",
+        "ko": "산책과 하이킹",
+        "ja": "散歩・ハイキング"
+      }
+    },
+    {
+      "id": "interest:concept/walks-and-nature-observation",
+      "kind": "interest",
+      "source": [
+        "散歩&自然観察"
+      ],
+      "labels": {
+        "en": "Walks and nature observation",
+        "ko": "산책과 자연 관찰",
+        "ja": "散歩&自然観察"
+      }
+    },
+    {
+      "id": "interest:concept/walks-and-seasonal-observation",
+      "kind": "interest",
+      "source": [
+        "散歩・季節観察"
+      ],
+      "labels": {
+        "en": "Walks and seasonal observation",
+        "ko": "산책과 계절 관찰",
+        "ja": "散歩・季節観察"
+      }
+    },
+    {
+      "id": "interest:concept/washi-crafts",
+      "kind": "interest",
+      "source": [
+        "和紙工芸"
+      ],
+      "labels": {
+        "en": "Washi paper crafts",
+        "ko": "와시 공예",
+        "ja": "和紙工芸"
+      }
+    },
+    {
+      "id": "interest:concept/washi-handicrafts",
+      "kind": "interest",
+      "source": [
+        "和紙工作"
+      ],
+      "labels": {
+        "en": "Washi paper handicrafts",
+        "ko": "와시로 만들기",
+        "ja": "和紙工作"
+      }
+    },
+    {
+      "id": "interest:concept/watercolor-painting",
+      "kind": "interest",
+      "source": [
+        "水彩画"
+      ],
+      "labels": {
+        "en": "Watercolor painting",
+        "ko": "수채화",
+        "ja": "水彩画"
+      }
+    },
+    {
+      "id": "interest:concept/wild-bird-observation",
+      "kind": "interest",
+      "source": [
+        "野鳥観察"
+      ],
+      "labels": {
+        "en": "Observing wild birds",
+        "ko": "야생 조류 관찰",
+        "ja": "野鳥観察"
+      }
+    },
+    {
+      "id": "interest:concept/wild-ingredient-cooking",
+      "kind": "interest",
+      "source": [
+        "野生食材料理"
+      ],
+      "labels": {
+        "en": "Cooking with wild ingredients",
+        "ko": "야생 식재료 요리",
+        "ja": "野生食材料理"
+      }
+    },
+    {
+      "id": "interest:concept/wild-vegetable-collecting",
+      "kind": "interest",
+      "source": [
+        "山菜採集"
+      ],
+      "labels": {
+        "en": "Collecting wild vegetables",
+        "ko": "산나물 채집",
+        "ja": "山菜採集"
+      }
+    },
+    {
+      "id": "interest:concept/wild-vegetable-foraging",
+      "kind": "interest",
+      "source": [
+        "山菜狩り"
+      ],
+      "labels": {
+        "en": "Foraging for wild vegetables",
+        "ko": "산나물 캐기",
+        "ja": "山菜狩り"
+      }
+    },
+    {
+      "id": "interest:concept/wooden-furniture-making",
+      "kind": "interest",
+      "source": [
+        "木工家具制作"
+      ],
+      "labels": {
+        "en": "Making wooden furniture",
+        "ko": "목제 가구 제작",
+        "ja": "木工家具制作"
+      }
+    },
+    {
+      "id": "interest:concept/woodworking",
+      "kind": "interest",
+      "source": [
+        "木工作業"
+      ],
+      "labels": {
+        "en": "Woodworking",
+        "ko": "목공 작업",
+        "ja": "木工作業"
+      }
+    },
+    {
+      "id": "occupation:concept/agriculture",
+      "kind": "occupation",
+      "source": [
+        "農業"
+      ],
+      "labels": {
+        "en": "Agriculture",
+        "ko": "농업",
+        "ja": "農業"
+      }
+    },
+    {
+      "id": "occupation:concept/amusement-establishment-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "遊技場 中小"
+      ],
+      "labels": {
+        "en": "Amusement establishment sector (small or medium-sized company)",
+        "ko": "오락장업 (중소기업)",
+        "ja": "遊技場 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/barbering-mid-sized-company-retired",
+      "kind": "occupation",
+      "source": [
+        "理容業 中堅 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Barbering sector (mid-sized company; currently retired)",
+        "ko": "이발업 (중견기업, 현재 은퇴)",
+        "ja": "理容業 中堅 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/beauty-services-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "美容業 中小"
+      ],
+      "labels": {
+        "en": "Beauty services sector (small or medium-sized company)",
+        "ko": "미용업 (중소기업)",
+        "ja": "美容業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/bookbinding-large-company",
+      "kind": "occupation",
+      "source": [
+        "製本業 大手"
+      ],
+      "labels": {
+        "en": "Bookbinding sector (large company)",
+        "ko": "제본업 (대기업)",
+        "ja": "製本業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/care-and-welfare-large-company",
+      "kind": "occupation",
+      "source": [
+        "介護福祉業 大手"
+      ],
+      "labels": {
+        "en": "Care and welfare sector (large company)",
+        "ko": "돌봄·복지업 (대기업)",
+        "ja": "介護福祉業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/care-and-welfare-mid-sized-company",
+      "kind": "occupation",
+      "source": [
+        "介護福祉業 中堅"
+      ],
+      "labels": {
+        "en": "Care and welfare sector (mid-sized company)",
+        "ko": "돌봄·복지업 (중견기업)",
+        "ja": "介護福祉業 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/care-and-welfare-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "介護福祉業 中小"
+      ],
+      "labels": {
+        "en": "Care and welfare sector (small or medium-sized company)",
+        "ko": "돌봄·복지업 (중소기업)",
+        "ja": "介護福祉業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/care-and-welfare-small-medium-company-retired",
+      "kind": "occupation",
+      "source": [
+        "介護福祉業 中小 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Care and welfare sector (small or medium-sized company; currently retired)",
+        "ko": "돌봄·복지업 (중소기업, 현재 은퇴)",
+        "ja": "介護福祉業 中小 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/chemical-industry-large-company",
+      "kind": "occupation",
+      "source": [
+        "化学工業 大手"
+      ],
+      "labels": {
+        "en": "Chemical industry (large company)",
+        "ko": "화학 공업 (대기업)",
+        "ja": "化学工業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/construction-small-medium-company-retired",
+      "kind": "occupation",
+      "source": [
+        "建設業 中小 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Construction sector (small or medium-sized company; currently retired)",
+        "ko": "건설업 (중소기업, 현재 은퇴)",
+        "ja": "建設業 中小 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/cram-school-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "学習塾 中小"
+      ],
+      "labels": {
+        "en": "Cram school (small or medium-sized company)",
+        "ko": "입시·보습 학원 (중소기업)",
+        "ja": "学習塾 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/dental-services-large",
+      "kind": "occupation",
+      "source": [
+        "歯科 大手"
+      ],
+      "labels": {
+        "en": "Dental services (large-scale)",
+        "ko": "치과 (대규모)",
+        "ja": "歯科 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/dental-services-mid-sized",
+      "kind": "occupation",
+      "source": [
+        "歯科 中堅"
+      ],
+      "labels": {
+        "en": "Dental services (mid-sized)",
+        "ko": "치과 (중견 규모)",
+        "ja": "歯科 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/electric-utilities-large-company",
+      "kind": "occupation",
+      "source": [
+        "電気業 大手"
+      ],
+      "labels": {
+        "en": "Electric utilities sector (large company)",
+        "ko": "전기 공급업 (대기업)",
+        "ja": "電気業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/elementary-school-mid-sized",
+      "kind": "occupation",
+      "source": [
+        "小学校 中堅"
+      ],
+      "labels": {
+        "en": "Elementary school (mid-sized)",
+        "ko": "초등학교 (중견 규모)",
+        "ja": "小学校 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/employment-placement-mid-sized-company",
+      "kind": "occupation",
+      "source": [
+        "職業紹介業 中堅"
+      ],
+      "labels": {
+        "en": "Employment placement services (mid-sized company)",
+        "ko": "직업 소개업 (중견기업)",
+        "ja": "職業紹介業 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/fictitious-occupation-for-testing",
+      "kind": "occupation",
+      "source": [
+        "テスト用架空の職業"
+      ],
+      "labels": {
+        "en": "Fictitious occupation for testing",
+        "ko": "테스트용 가상 직업",
+        "ja": "テスト用架空の職業"
+      }
+    },
+    {
+      "id": "occupation:concept/finance-large-company",
+      "kind": "occupation",
+      "source": [
+        "金融業 大手"
+      ],
+      "labels": {
+        "en": "Financial sector (large company)",
+        "ko": "금융업 (대기업)",
+        "ja": "金融業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/hospital-mid-sized",
+      "kind": "occupation",
+      "source": [
+        "病院 中堅"
+      ],
+      "labels": {
+        "en": "Hospital (mid-sized)",
+        "ko": "병원 (중견 규모)",
+        "ja": "病院 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/industrial-machinery-manufacturing-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "生産用機械器具製造業 中小"
+      ],
+      "labels": {
+        "en": "Industrial machinery manufacturing (small or medium-sized company)",
+        "ko": "생산용 기계 제조업 (중소기업)",
+        "ja": "生産用機械器具製造業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/information-communication-equipment-manufacturing-large-company",
+      "kind": "occupation",
+      "source": [
+        "情報通信機械器具製造業 大手"
+      ],
+      "labels": {
+        "en": "Information and communication equipment manufacturing (large company)",
+        "ko": "정보통신 기기 제조업 (대기업)",
+        "ja": "情報通信機械器具製造業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/information-services-small-medium-company-retired",
+      "kind": "occupation",
+      "source": [
+        "情報サービス業 中小 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Information services sector (small or medium-sized company; currently retired)",
+        "ko": "정보 서비스업 (중소기업, 현재 은퇴)",
+        "ja": "情報サービス業 中小 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/insurance-large-company",
+      "kind": "occupation",
+      "source": [
+        "保険業 大手"
+      ],
+      "labels": {
+        "en": "Insurance sector (large company)",
+        "ko": "보험업 (대기업)",
+        "ja": "保険業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/insurance-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "保険業 中小"
+      ],
+      "labels": {
+        "en": "Insurance sector (small or medium-sized company)",
+        "ko": "보험업 (중소기업)",
+        "ja": "保険業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/local-government-employee",
+      "kind": "occupation",
+      "source": [
+        "地方公務員"
+      ],
+      "labels": {
+        "en": "Local government employee",
+        "ko": "지방 공무원",
+        "ja": "地方公務員"
+      }
+    },
+    {
+      "id": "occupation:concept/medical-clinic-mid-sized",
+      "kind": "occupation",
+      "source": [
+        "診療所 中堅"
+      ],
+      "labels": {
+        "en": "Medical clinic (mid-sized)",
+        "ko": "의원 (중견 규모)",
+        "ja": "診療所 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/post-office-mid-sized",
+      "kind": "occupation",
+      "source": [
+        "郵便局 中堅"
+      ],
+      "labels": {
+        "en": "Post office (mid-sized)",
+        "ko": "우체국 (중견 규모)",
+        "ja": "郵便局 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/postal-services-large-company",
+      "kind": "occupation",
+      "source": [
+        "郵便業 大手"
+      ],
+      "labels": {
+        "en": "Postal services sector (large company)",
+        "ko": "우편업 (대기업)",
+        "ja": "郵便業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/postal-services-mid-sized-company-management",
+      "kind": "occupation",
+      "source": [
+        "郵便業 中堅 経営"
+      ],
+      "labels": {
+        "en": "Postal services sector management (mid-sized company)",
+        "ko": "우편업 경영 (중견기업)",
+        "ja": "郵便業 中堅 経営"
+      }
+    },
+    {
+      "id": "occupation:concept/real-estate-large-company-management-retired",
+      "kind": "occupation",
+      "source": [
+        "不動産業 大手 経営 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Real estate sector management (large company; currently retired)",
+        "ko": "부동산업 경영 (대기업, 현재 은퇴)",
+        "ja": "不動産業 大手 経営 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/real-estate-mid-sized-company-retired",
+      "kind": "occupation",
+      "source": [
+        "不動産業 中堅 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Real estate sector (mid-sized company; currently retired)",
+        "ko": "부동산업 (중견기업, 현재 은퇴)",
+        "ja": "不動産業 中堅 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/religious-organization-small-medium",
+      "kind": "occupation",
+      "source": [
+        "宗教 中小"
+      ],
+      "labels": {
+        "en": "Religious organization (small or medium-sized)",
+        "ko": "종교 기관 (중소 규모)",
+        "ja": "宗教 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/retail-large-company",
+      "kind": "occupation",
+      "source": [
+        "小売業 大手"
+      ],
+      "labels": {
+        "en": "Retail sector (large company)",
+        "ko": "소매업 (대기업)",
+        "ja": "小売業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/retail-mid-sized-company",
+      "kind": "occupation",
+      "source": [
+        "小売業 中堅"
+      ],
+      "labels": {
+        "en": "Retail sector (mid-sized company)",
+        "ko": "소매업 (중견기업)",
+        "ja": "小売業 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/retail-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "小売業 中小"
+      ],
+      "labels": {
+        "en": "Retail sector (small or medium-sized company)",
+        "ko": "소매업 (중소기업)",
+        "ja": "小売業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/rubber-products-manufacturing-large-company",
+      "kind": "occupation",
+      "source": [
+        "ゴム製品製造業 大手"
+      ],
+      "labels": {
+        "en": "Rubber products manufacturing (large company)",
+        "ko": "고무 제품 제조업 (대기업)",
+        "ja": "ゴム製品製造業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/rubber-products-manufacturing-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "ゴム製品製造業 中小"
+      ],
+      "labels": {
+        "en": "Rubber products manufacturing (small or medium-sized company)",
+        "ko": "고무 제품 제조업 (중소기업)",
+        "ja": "ゴム製品製造業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/security-services-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "警備業 中小"
+      ],
+      "labels": {
+        "en": "Security services sector (small or medium-sized company)",
+        "ko": "경비업 (중소기업)",
+        "ja": "警備業 中小"
+      }
+    },
+    {
+      "id": "occupation:concept/steel-industry-mid-sized-company-retired",
+      "kind": "occupation",
+      "source": [
+        "鉄鋼業 中堅 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Steel industry (mid-sized company; currently retired)",
+        "ko": "철강업 (중견기업, 현재 은퇴)",
+        "ja": "鉄鋼業 中堅 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/transportation-equipment-manufacturing-large-company",
+      "kind": "occupation",
+      "source": [
+        "輸送用機械器具製造業 大手"
+      ],
+      "labels": {
+        "en": "Transportation equipment manufacturing (large company)",
+        "ko": "운송 장비 제조업 (대기업)",
+        "ja": "輸送用機械器具製造業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/transportation-equipment-manufacturing-large-company-retired",
+      "kind": "occupation",
+      "source": [
+        "輸送用機械器具製造業 大手 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Transportation equipment manufacturing (large company; currently retired)",
+        "ko": "운송 장비 제조업 (대기업, 현재 은퇴)",
+        "ja": "輸送用機械器具製造業 大手 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/transportation-equipment-manufacturing-mid-sized-company",
+      "kind": "occupation",
+      "source": [
+        "輸送用機械器具製造業 中堅"
+      ],
+      "labels": {
+        "en": "Transportation equipment manufacturing (mid-sized company)",
+        "ko": "운송 장비 제조업 (중견기업)",
+        "ja": "輸送用機械器具製造業 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/transportation-large-company",
+      "kind": "occupation",
+      "source": [
+        "運輸業 大手"
+      ],
+      "labels": {
+        "en": "Transportation sector (large company)",
+        "ko": "운수업 (대기업)",
+        "ja": "運輸業 大手"
+      }
+    },
+    {
+      "id": "occupation:concept/transportation-mid-sized-company",
+      "kind": "occupation",
+      "source": [
+        "運輸業 中堅"
+      ],
+      "labels": {
+        "en": "Transportation sector (mid-sized company)",
+        "ko": "운수업 (중견기업)",
+        "ja": "運輸業 中堅"
+      }
+    },
+    {
+      "id": "occupation:concept/travel-services-mid-sized-company-retired",
+      "kind": "occupation",
+      "source": [
+        "旅行業 中堅 (現在は引退)"
+      ],
+      "labels": {
+        "en": "Travel services sector (mid-sized company; currently retired)",
+        "ko": "여행업 (중견기업, 현재 은퇴)",
+        "ja": "旅行業 中堅 (現在は引退)"
+      }
+    },
+    {
+      "id": "occupation:concept/wholesale-small-medium-company",
+      "kind": "occupation",
+      "source": [
+        "卸売業 中小"
+      ],
+      "labels": {
+        "en": "Wholesale sector (small or medium-sized company)",
+        "ko": "도매업 (중소기업)",
+        "ja": "卸売業 中小"
+      }
+    },
+    {
+      "id": "skill:concept/academic-paper-writing",
+      "kind": "skill",
+      "source": [
+        "学術論文執筆"
+      ],
+      "labels": {
+        "en": "Academic paper writing",
+        "ko": "학술 논문 집필",
+        "ja": "学術論文執筆"
+      }
+    },
+    {
+      "id": "skill:concept/administrative-document-digitization",
+      "kind": "skill",
+      "source": [
+        "行政文書デジタル化"
+      ],
+      "labels": {
+        "en": "Administrative document digitization",
+        "ko": "행정 문서 디지털화",
+        "ja": "行政文書デジタル化"
+      }
+    },
+    {
+      "id": "skill:concept/advanced-dental-clinical-care",
+      "kind": "skill",
+      "source": [
+        "高度歯科診療"
+      ],
+      "labels": {
+        "en": "Advanced dental clinical care",
+        "ko": "고급 치과 진료",
+        "ja": "高度歯科診療"
+      }
+    },
+    {
+      "id": "skill:concept/advanced-excel-use",
+      "kind": "skill",
+      "source": [
+        "Excel高度活用"
+      ],
+      "labels": {
+        "en": "Advanced Excel use",
+        "ko": "Excel 고급 활용",
+        "ja": "Excel高度活用"
+      }
+    },
+    {
+      "id": "skill:concept/analog-medical-equipment-operation",
+      "kind": "skill",
+      "source": [
+        "医療機器のアナログ操作"
+      ],
+      "labels": {
+        "en": "Analog medical equipment operation",
+        "ko": "아날로그 의료기기 조작",
+        "ja": "医療機器のアナログ操作"
+      }
+    },
+    {
+      "id": "skill:concept/barbering-techniques",
+      "kind": "skill",
+      "source": [
+        "理容技術"
+      ],
+      "labels": {
+        "en": "Barbering techniques",
+        "ko": "이용 기술",
+        "ja": "理容技術"
+      }
+    },
+    {
+      "id": "skill:concept/basic-data-management",
+      "kind": "skill",
+      "source": [
+        "簡易データ管理"
+      ],
+      "labels": {
+        "en": "Basic data management",
+        "ko": "기초 데이터 관리",
+        "ja": "簡易データ管理"
+      }
+    },
+    {
+      "id": "skill:concept/basic-excel-aggregation",
+      "kind": "skill",
+      "source": [
+        "Excel集計(基本)"
+      ],
+      "labels": {
+        "en": "Basic Excel aggregation",
+        "ko": "Excel 기초 집계",
+        "ja": "Excel集計(基本)"
+      }
+    },
+    {
+      "id": "skill:concept/basic-word-and-excel-operation",
+      "kind": "skill",
+      "source": [
+        "ワード・エクセル基本操作"
+      ],
+      "labels": {
+        "en": "Basic Word and Excel operation",
+        "ko": "Word·Excel 기초 사용",
+        "ja": "ワード・エクセル基本操作"
+      }
+    },
+    {
+      "id": "skill:concept/bookbinding-process-management",
+      "kind": "skill",
+      "source": [
+        "製本工程管理"
+      ],
+      "labels": {
+        "en": "Bookbinding process management",
+        "ko": "제본 공정 관리",
+        "ja": "製本工程管理"
+      }
+    },
+    {
+      "id": "skill:concept/bookbinding-software",
+      "kind": "skill",
+      "source": [
+        "製本ソフト"
+      ],
+      "labels": {
+        "en": "Bookbinding software",
+        "ko": "제본 소프트웨어",
+        "ja": "製本ソフト"
+      }
+    },
+    {
+      "id": "skill:concept/budget-and-cost-management",
+      "kind": "skill",
+      "source": [
+        "予算・コスト管理"
+      ],
+      "labels": {
+        "en": "Budget and cost management",
+        "ko": "예산·비용 관리",
+        "ja": "予算・コスト管理"
+      }
+    },
+    {
+      "id": "skill:concept/budget-management",
+      "kind": "skill",
+      "source": [
+        "予算管理"
+      ],
+      "labels": {
+        "en": "Budget management",
+        "ko": "예산 관리",
+        "ja": "予算管理"
+      }
+    },
+    {
+      "id": "skill:concept/budget-management-and-resource-use",
+      "kind": "skill",
+      "source": [
+        "予算管理と資源活用"
+      ],
+      "labels": {
+        "en": "Budget management and resource use",
+        "ko": "예산 관리·자원 활용",
+        "ja": "予算管理と資源活用"
+      }
+    },
+    {
+      "id": "skill:concept/business-level-spoken-english",
+      "kind": "skill",
+      "source": [
+        "英会話(ビジネスレベル)"
+      ],
+      "labels": {
+        "en": "Business-level spoken English",
+        "ko": "비즈니스 수준 영어 회화",
+        "ja": "英会話(ビジネスレベル)"
+      }
+    },
+    {
+      "id": "skill:concept/business-operations-management",
+      "kind": "skill",
+      "source": [
+        "業務管理"
+      ],
+      "labels": {
+        "en": "Business operations management",
+        "ko": "업무 관리",
+        "ja": "業務管理"
+      }
+    },
+    {
+      "id": "skill:concept/business-partner-negotiation",
+      "kind": "skill",
+      "source": [
+        "取引先交渉"
+      ],
+      "labels": {
+        "en": "Business partner negotiation",
+        "ko": "거래처 협상",
+        "ja": "取引先交渉"
+      }
+    },
+    {
+      "id": "skill:concept/cad-operation",
+      "kind": "skill",
+      "source": [
+        "CAD操作"
+      ],
+      "labels": {
+        "en": "CAD operation",
+        "ko": "CAD 조작",
+        "ja": "CAD操作"
+      }
+    },
+    {
+      "id": "skill:concept/calligraphy",
+      "kind": "skill",
+      "source": [
+        "書道"
+      ],
+      "labels": {
+        "en": "Calligraphy",
+        "ko": "서예",
+        "ja": "書道"
+      }
+    },
+    {
+      "id": "skill:concept/care-equipment-selection-and-guidance",
+      "kind": "skill",
+      "source": [
+        "介護用具選定と指導"
+      ],
+      "labels": {
+        "en": "Care equipment selection and guidance",
+        "ko": "돌봄 용품 선정·사용 지도",
+        "ja": "介護用具選定と指導"
+      }
+    },
+    {
+      "id": "skill:concept/care-plan-preparation",
+      "kind": "skill",
+      "source": [
+        "ケアプラン作成"
+      ],
+      "labels": {
+        "en": "Care plan preparation",
+        "ko": "돌봄 계획 작성",
+        "ja": "ケアプラン作成"
+      }
+    },
+    {
+      "id": "skill:concept/cargo-loading-and-unloading",
+      "kind": "skill",
+      "source": [
+        "荷積み・荷下ろし"
+      ],
+      "labels": {
+        "en": "Cargo loading and unloading",
+        "ko": "화물 적재·하역",
+        "ja": "荷積み・荷下ろし"
+      }
+    },
+    {
+      "id": "skill:concept/cash-register-operation",
+      "kind": "skill",
+      "source": [
+        "レジ操作"
+      ],
+      "labels": {
+        "en": "Cash register operation",
+        "ko": "계산대 조작",
+        "ja": "レジ操作"
+      }
+    },
+    {
+      "id": "skill:concept/chemical-analysis",
+      "kind": "skill",
+      "source": [
+        "化学分析"
+      ],
+      "labels": {
+        "en": "Chemical analysis",
+        "ko": "화학 분석",
+        "ja": "化学分析"
+      }
+    },
+    {
+      "id": "skill:concept/child-counseling",
+      "kind": "skill",
+      "source": [
+        "児童相談"
+      ],
+      "labels": {
+        "en": "Child counseling",
+        "ko": "아동 상담",
+        "ja": "児童相談"
+      }
+    },
+    {
+      "id": "skill:concept/chronic-disease-management",
+      "kind": "skill",
+      "source": [
+        "慢性疾患管理"
+      ],
+      "labels": {
+        "en": "Chronic disease management",
+        "ko": "만성 질환 관리",
+        "ja": "慢性疾患管理"
+      }
+    },
+    {
+      "id": "skill:concept/community-counseling",
+      "kind": "skill",
+      "source": [
+        "コミュニティカウンセリング"
+      ],
+      "labels": {
+        "en": "Community counseling",
+        "ko": "지역사회 상담",
+        "ja": "コミュニティカウンセリング"
+      }
+    },
+    {
+      "id": "skill:concept/community-event-coordination",
+      "kind": "skill",
+      "source": [
+        "地域行事調整"
+      ],
+      "labels": {
+        "en": "Community event coordination",
+        "ko": "지역 행사 조정",
+        "ja": "地域行事調整"
+      }
+    },
+    {
+      "id": "skill:concept/community-health-activities",
+      "kind": "skill",
+      "source": [
+        "地域保健活動"
+      ],
+      "labels": {
+        "en": "Community health activities",
+        "ko": "지역 보건 활동",
+        "ja": "地域保健活動"
+      }
+    },
+    {
+      "id": "skill:concept/community-welfare-participation",
+      "kind": "skill",
+      "source": [
+        "地域福祉活動参加"
+      ],
+      "labels": {
+        "en": "Community welfare participation",
+        "ko": "지역 복지 활동 참여",
+        "ja": "地域福祉活動参加"
+      }
+    },
+    {
+      "id": "skill:concept/complaint-resolution",
+      "kind": "skill",
+      "source": [
+        "クレーム処理"
+      ],
+      "labels": {
+        "en": "Complaint resolution",
+        "ko": "불만 처리",
+        "ja": "クレーム処理"
+      }
+    },
+    {
+      "id": "skill:concept/computer-aided-design",
+      "kind": "skill",
+      "source": [
+        "CAD"
+      ],
+      "labels": {
+        "en": "CAD",
+        "ko": "CAD",
+        "ja": "CAD"
+      }
+    },
+    {
+      "id": "skill:concept/computer-email-and-document-writing",
+      "kind": "skill",
+      "source": [
+        "PCメール・文書作成"
+      ],
+      "labels": {
+        "en": "Computer email and document writing",
+        "ko": "PC 이메일·문서 작성",
+        "ja": "PCメール・文書作成"
+      }
+    },
+    {
+      "id": "skill:concept/cooperative-coordination",
+      "kind": "skill",
+      "source": [
+        "協同組合調整"
+      ],
+      "labels": {
+        "en": "Cooperative coordination",
+        "ko": "협동조합 조정",
+        "ja": "協同組合調整"
+      }
+    },
+    {
+      "id": "skill:concept/cost-calculation",
+      "kind": "skill",
+      "source": [
+        "コスト計算"
+      ],
+      "labels": {
+        "en": "Cost calculation",
+        "ko": "원가 계산",
+        "ja": "コスト計算"
+      }
+    },
+    {
+      "id": "skill:concept/counseling",
+      "kind": "skill",
+      "source": [
+        "カウンセリング"
+      ],
+      "labels": {
+        "en": "Counseling",
+        "ko": "상담",
+        "ja": "カウンセリング"
+      }
+    },
+    {
+      "id": "skill:concept/craftsmanship-knowledge-transfer",
+      "kind": "skill",
+      "source": [
+        "職人技伝承"
+      ],
+      "labels": {
+        "en": "Craftsmanship knowledge transfer",
+        "ko": "장인 기술 전수",
+        "ja": "職人技伝承"
+      }
+    },
+    {
+      "id": "skill:concept/cram-school-management-and-operation",
+      "kind": "skill",
+      "source": [
+        "塾経営・運営"
+      ],
+      "labels": {
+        "en": "Cram school management and operation",
+        "ko": "학원 경영·운영",
+        "ja": "塾経営・運営"
+      }
+    },
+    {
+      "id": "skill:concept/crisis-communication",
+      "kind": "skill",
+      "source": [
+        "危機コミュニケーション"
+      ],
+      "labels": {
+        "en": "Crisis communication",
+        "ko": "위기 소통",
+        "ja": "危機コミュニケーション"
+      }
+    },
+    {
+      "id": "skill:concept/crm-administration",
+      "kind": "skill",
+      "source": [
+        "CRM運用"
+      ],
+      "labels": {
+        "en": "CRM administration",
+        "ko": "CRM 운영",
+        "ja": "CRM運用"
+      }
+    },
+    {
+      "id": "skill:concept/crm-use",
+      "kind": "skill",
+      "source": [
+        "CRM活用"
+      ],
+      "labels": {
+        "en": "CRM use",
+        "ko": "CRM 활용",
+        "ja": "CRM活用"
+      }
+    },
+    {
+      "id": "skill:concept/curriculum-design",
+      "kind": "skill",
+      "source": [
+        "カリキュラム設計"
+      ],
+      "labels": {
+        "en": "Curriculum design",
+        "ko": "교육과정 설계",
+        "ja": "カリキュラム設計"
+      }
+    },
+    {
+      "id": "skill:concept/customer-complaint-handling",
+      "kind": "skill",
+      "source": [
+        "顧客クレーム対応"
+      ],
+      "labels": {
+        "en": "Customer complaint handling",
+        "ko": "고객 불만 응대",
+        "ja": "顧客クレーム対応"
+      }
+    },
+    {
+      "id": "skill:concept/customer-negotiation",
+      "kind": "skill",
+      "source": [
+        "顧客交渉"
+      ],
+      "labels": {
+        "en": "Customer negotiation",
+        "ko": "고객 협상",
+        "ja": "顧客交渉"
+      }
+    },
+    {
+      "id": "skill:concept/customer-service",
+      "kind": "skill",
+      "source": [
+        "顧客対応"
+      ],
+      "labels": {
+        "en": "Customer service",
+        "ko": "고객 응대",
+        "ja": "顧客対応"
+      }
+    },
+    {
+      "id": "skill:concept/customer-service-etiquette",
+      "kind": "skill",
+      "source": [
+        "顧客対応マナー"
+      ],
+      "labels": {
+        "en": "Customer service etiquette",
+        "ko": "고객 응대 예절",
+        "ja": "顧客対応マナー"
+      }
+    },
+    {
+      "id": "skill:concept/customer-service-practice",
+      "kind": "skill",
+      "source": [
+        "顧客サービス実践"
+      ],
+      "labels": {
+        "en": "Customer service practice",
+        "ko": "고객 서비스 실무",
+        "ja": "顧客サービス実践"
+      }
+    },
+    {
+      "id": "skill:concept/customer-service-training",
+      "kind": "skill",
+      "source": [
+        "接客教育"
+      ],
+      "labels": {
+        "en": "Customer service training",
+        "ko": "고객 응대 교육",
+        "ja": "接客教育"
+      }
+    },
+    {
+      "id": "skill:concept/daily-living-support",
+      "kind": "skill",
+      "source": [
+        "生活支援"
+      ],
+      "labels": {
+        "en": "Daily living support",
+        "ko": "일상생활 지원",
+        "ja": "生活支援"
+      }
+    },
+    {
+      "id": "skill:concept/data-aggregation-and-email-use",
+      "kind": "skill",
+      "source": [
+        "データ集計・メール活用"
+      ],
+      "labels": {
+        "en": "Data aggregation and email use",
+        "ko": "데이터 집계·이메일 활용",
+        "ja": "データ集計・メール活用"
+      }
+    },
+    {
+      "id": "skill:concept/data-analysis",
+      "kind": "skill",
+      "source": [
+        "データ分析"
+      ],
+      "labels": {
+        "en": "Data analysis",
+        "ko": "데이터 분석",
+        "ja": "データ分析"
+      }
+    },
+    {
+      "id": "skill:concept/data-visualization",
+      "kind": "skill",
+      "source": [
+        "データ可視化"
+      ],
+      "labels": {
+        "en": "Data visualization",
+        "ko": "데이터 시각화",
+        "ja": "データ可視化"
+      }
+    },
+    {
+      "id": "skill:concept/data-visualization-and-reporting",
+      "kind": "skill",
+      "source": [
+        "データ視覚化・レポーティング"
+      ],
+      "labels": {
+        "en": "Data visualization and reporting",
+        "ko": "데이터 시각화·보고",
+        "ja": "データ視覚化・レポーティング"
+      }
+    },
+    {
+      "id": "skill:concept/delivery-route-optimization",
+      "kind": "skill",
+      "source": [
+        "配送ルート最適化"
+      ],
+      "labels": {
+        "en": "Delivery route optimization",
+        "ko": "배송 경로 최적화",
+        "ja": "配送ルート最適化"
+      }
+    },
+    {
+      "id": "skill:concept/dental-clinical-care",
+      "kind": "skill",
+      "source": [
+        "歯科診療"
+      ],
+      "labels": {
+        "en": "Dental clinical care",
+        "ko": "치과 진료",
+        "ja": "歯科診療"
+      }
+    },
+    {
+      "id": "skill:concept/dental-materials-research",
+      "kind": "skill",
+      "source": [
+        "歯科材料研究"
+      ],
+      "labels": {
+        "en": "Dental materials research",
+        "ko": "치과 재료 연구",
+        "ja": "歯科材料研究"
+      }
+    },
+    {
+      "id": "skill:concept/digital-archive-development",
+      "kind": "skill",
+      "source": [
+        "デジタルアーカイブ構築"
+      ],
+      "labels": {
+        "en": "Digital archive development",
+        "ko": "디지털 아카이브 구축",
+        "ja": "デジタルアーカイブ構築"
+      }
+    },
+    {
+      "id": "skill:concept/digital-work-improvement-proposals",
+      "kind": "skill",
+      "source": [
+        "業務デジタル改善提案"
+      ],
+      "labels": {
+        "en": "Digital work improvement proposals",
+        "ko": "업무 디지털 개선 제안",
+        "ja": "業務デジタル改善提案"
+      }
+    },
+    {
+      "id": "skill:concept/doctor-nurse-and-staff-coordination",
+      "kind": "skill",
+      "source": [
+        "医師・看護師・スタッフ間の調整力"
+      ],
+      "labels": {
+        "en": "Doctor, nurse and staff coordination",
+        "ko": "의사·간호사·직원 간 조정",
+        "ja": "医師・看護師・スタッフ間の調整力"
+      }
+    },
+    {
+      "id": "skill:concept/document-management",
+      "kind": "skill",
+      "source": [
+        "文書管理"
+      ],
+      "labels": {
+        "en": "Document management",
+        "ko": "문서 관리",
+        "ja": "文書管理"
+      }
+    },
+    {
+      "id": "skill:concept/document-writing",
+      "kind": "skill",
+      "source": [
+        "文書作成"
+      ],
+      "labels": {
+        "en": "Document writing",
+        "ko": "문서 작성",
+        "ja": "文書作成"
+      }
+    },
+    {
+      "id": "skill:concept/education-and-instruction",
+      "kind": "skill",
+      "source": [
+        "教育・指導"
+      ],
+      "labels": {
+        "en": "Education and instruction",
+        "ko": "교육·지도",
+        "ja": "教育・指導"
+      }
+    },
+    {
+      "id": "skill:concept/educational-materials-web-development",
+      "kind": "skill",
+      "source": [
+        "教材ウェブ制作"
+      ],
+      "labels": {
+        "en": "Educational materials web development",
+        "ko": "교육 자료 웹 제작",
+        "ja": "教材ウェブ制作"
+      }
+    },
+    {
+      "id": "skill:concept/electrical-design",
+      "kind": "skill",
+      "source": [
+        "電気設計"
+      ],
+      "labels": {
+        "en": "Electrical design",
+        "ko": "전기 설계",
+        "ja": "電気設計"
+      }
+    },
+    {
+      "id": "skill:concept/electronic-medical-record-entry",
+      "kind": "skill",
+      "source": [
+        "電子カルテ入力"
+      ],
+      "labels": {
+        "en": "Electronic medical record entry",
+        "ko": "전자 의무기록 입력",
+        "ja": "電子カルテ入力"
+      }
+    },
+    {
+      "id": "skill:concept/electronic-medical-record-operation",
+      "kind": "skill",
+      "source": [
+        "電子カルテ操作"
+      ],
+      "labels": {
+        "en": "Electronic medical record operation",
+        "ko": "전자 의무기록 조작",
+        "ja": "電子カルテ操作"
+      }
+    },
+    {
+      "id": "skill:concept/email-administration",
+      "kind": "skill",
+      "source": [
+        "メール事務管理"
+      ],
+      "labels": {
+        "en": "Email administration",
+        "ko": "이메일 사무 관리",
+        "ja": "メール事務管理"
+      }
+    },
+    {
+      "id": "skill:concept/email-and-business-document-writing",
+      "kind": "skill",
+      "source": [
+        "メール・ビジネス文書作成"
+      ],
+      "labels": {
+        "en": "Email and business document writing",
+        "ko": "이메일·업무 문서 작성",
+        "ja": "メール・ビジネス文書作成"
+      }
+    },
+    {
+      "id": "skill:concept/email-communication",
+      "kind": "skill",
+      "source": [
+        "メールコミュニケーション"
+      ],
+      "labels": {
+        "en": "Email communication",
+        "ko": "이메일 소통",
+        "ja": "メールコミュニケーション"
+      }
+    },
+    {
+      "id": "skill:concept/email-consultation-handling",
+      "kind": "skill",
+      "source": [
+        "メール相談対応"
+      ],
+      "labels": {
+        "en": "Email consultation handling",
+        "ko": "이메일 상담 응대",
+        "ja": "メール相談対応"
+      }
+    },
+    {
+      "id": "skill:concept/email-sorting",
+      "kind": "skill",
+      "source": [
+        "メール仕分け"
+      ],
+      "labels": {
+        "en": "Email sorting",
+        "ko": "이메일 분류",
+        "ja": "メール仕分け"
+      }
+    },
+    {
+      "id": "skill:concept/emergency-decision-making",
+      "kind": "skill",
+      "source": [
+        "緊急時判断"
+      ],
+      "labels": {
+        "en": "Emergency decision making",
+        "ko": "긴급 상황 판단",
+        "ja": "緊急時判断"
+      }
+    },
+    {
+      "id": "skill:concept/emergency-patient-transport-coordination",
+      "kind": "skill",
+      "source": [
+        "救急搬送調整"
+      ],
+      "labels": {
+        "en": "Emergency patient transport coordination",
+        "ko": "응급 환자 이송 조정",
+        "ja": "救急搬送調整"
+      }
+    },
+    {
+      "id": "skill:concept/emergency-response-and-first-aid",
+      "kind": "skill",
+      "source": [
+        "非常時対応(避避・応急手当)"
+      ],
+      "labels": {
+        "en": "Emergency response and first aid",
+        "ko": "비상 대응·응급처치",
+        "ja": "非常時対応(避避・応急手当)"
+      }
+    },
+    {
+      "id": "skill:concept/equipment-design",
+      "kind": "skill",
+      "source": [
+        "設備設計"
+      ],
+      "labels": {
+        "en": "Equipment design",
+        "ko": "설비 설계",
+        "ja": "設備設計"
+      }
+    },
+    {
+      "id": "skill:concept/equipment-fault-diagnosis",
+      "kind": "skill",
+      "source": [
+        "設備トラブル診断"
+      ],
+      "labels": {
+        "en": "Equipment fault diagnosis",
+        "ko": "설비 고장 진단",
+        "ja": "設備トラブル診断"
+      }
+    },
+    {
+      "id": "skill:concept/erp-administration",
+      "kind": "skill",
+      "source": [
+        "ERP運用"
+      ],
+      "labels": {
+        "en": "ERP administration",
+        "ko": "ERP 운영",
+        "ja": "ERP運用"
+      }
+    },
+    {
+      "id": "skill:concept/erp-and-excel",
+      "kind": "skill",
+      "source": [
+        "ERP/Excel"
+      ],
+      "labels": {
+        "en": "ERP / Excel",
+        "ko": "ERP·Excel 활용",
+        "ja": "ERP/Excel"
+      }
+    },
+    {
+      "id": "skill:concept/erp-inventory-management",
+      "kind": "skill",
+      "source": [
+        "ERP在庫管理"
+      ],
+      "labels": {
+        "en": "ERP inventory management",
+        "ko": "ERP 재고 관리",
+        "ja": "ERP在庫管理"
+      }
+    },
+    {
+      "id": "skill:concept/erp-operation",
+      "kind": "skill",
+      "source": [
+        "ERP操作"
+      ],
+      "labels": {
+        "en": "ERP operation",
+        "ko": "ERP 조작",
+        "ja": "ERP操作"
+      }
+    },
+    {
+      "id": "skill:concept/etiquette-instruction",
+      "kind": "skill",
+      "source": [
+        "礼儀作法指導"
+      ],
+      "labels": {
+        "en": "Etiquette instruction",
+        "ko": "예절 지도",
+        "ja": "礼儀作法指導"
+      }
+    },
+    {
+      "id": "skill:concept/event-and-seminar-planning",
+      "kind": "skill",
+      "source": [
+        "イベント・セミナー企画"
+      ],
+      "labels": {
+        "en": "Event and seminar planning",
+        "ko": "행사·세미나 기획",
+        "ja": "イベント・セミナー企画"
+      }
+    },
+    {
+      "id": "skill:concept/event-operations",
+      "kind": "skill",
+      "source": [
+        "イベント運営"
+      ],
+      "labels": {
+        "en": "Event operations",
+        "ko": "행사 운영",
+        "ja": "イベント運営"
+      }
+    },
+    {
+      "id": "skill:concept/excel",
+      "kind": "skill",
+      "source": [
+        "Excel"
+      ],
+      "labels": {
+        "en": "Excel",
+        "ko": "Excel",
+        "ja": "Excel"
+      }
+    },
+    {
+      "id": "skill:concept/excel-and-word",
+      "kind": "skill",
+      "source": [
+        "Excel・Word"
+      ],
+      "labels": {
+        "en": "Excel and Word",
+        "ko": "Excel·Word 활용",
+        "ja": "Excel・Word"
+      }
+    },
+    {
+      "id": "skill:concept/excel-data-aggregation",
+      "kind": "skill",
+      "source": [
+        "Excelデータ集計"
+      ],
+      "labels": {
+        "en": "Excel data aggregation",
+        "ko": "Excel 데이터 집계",
+        "ja": "Excelデータ集計"
+      }
+    },
+    {
+      "id": "skill:concept/excel-data-aggregation-and-analysis",
+      "kind": "skill",
+      "source": [
+        "Excelによるデータ集計・分析"
+      ],
+      "labels": {
+        "en": "Excel data aggregation and analysis",
+        "ko": "Excel 데이터 집계·분석",
+        "ja": "Excelによるデータ集計・分析"
+      }
+    },
+    {
+      "id": "skill:concept/excel-data-analysis",
+      "kind": "skill",
+      "source": [
+        "Excelデータ分析"
+      ],
+      "labels": {
+        "en": "Excel data analysis",
+        "ko": "Excel 데이터 분석",
+        "ja": "Excelデータ分析"
+      }
+    },
+    {
+      "id": "skill:concept/excel-inventory-sheet-preparation",
+      "kind": "skill",
+      "source": [
+        "Excelで在庫表作成"
+      ],
+      "labels": {
+        "en": "Excel inventory sheet preparation",
+        "ko": "Excel 재고표 작성",
+        "ja": "Excelで在庫表作成"
+      }
+    },
+    {
+      "id": "skill:concept/excel-report-preparation",
+      "kind": "skill",
+      "source": [
+        "Excelレポート作成"
+      ],
+      "labels": {
+        "en": "Excel report preparation",
+        "ko": "Excel 보고서 작성",
+        "ja": "Excelレポート作成"
+      }
+    },
+    {
+      "id": "skill:concept/excel-sales-analysis",
+      "kind": "skill",
+      "source": [
+        "Excelによる売上分析"
+      ],
+      "labels": {
+        "en": "Excel sales analysis",
+        "ko": "Excel 매출 분석",
+        "ja": "Excelによる売上分析"
+      }
+    },
+    {
+      "id": "skill:concept/excel-sales-report-preparation",
+      "kind": "skill",
+      "source": [
+        "Excelでの売上レポート作成"
+      ],
+      "labels": {
+        "en": "Excel sales report preparation",
+        "ko": "Excel 매출 보고서 작성",
+        "ja": "Excelでの売上レポート作成"
+      }
+    },
+    {
+      "id": "skill:concept/experimental-equipment-operation",
+      "kind": "skill",
+      "source": [
+        "実験装置操作"
+      ],
+      "labels": {
+        "en": "Experimental equipment operation",
+        "ko": "실험 장비 조작",
+        "ja": "実験装置操作"
+      }
+    },
+    {
+      "id": "skill:concept/family-support-counseling",
+      "kind": "skill",
+      "source": [
+        "家族支援カウンセリング"
+      ],
+      "labels": {
+        "en": "Family support counseling",
+        "ko": "가족 지원 상담",
+        "ja": "家族支援カウンセリング"
+      }
+    },
+    {
+      "id": "skill:concept/farm-equipment-maintenance",
+      "kind": "skill",
+      "source": [
+        "農機具保守"
+      ],
+      "labels": {
+        "en": "Farm equipment maintenance",
+        "ko": "농기구 유지보수",
+        "ja": "農機具保守"
+      }
+    },
+    {
+      "id": "skill:concept/farmland-protection-against-disasters",
+      "kind": "skill",
+      "source": [
+        "防災農地保護"
+      ],
+      "labels": {
+        "en": "Farmland protection against disasters",
+        "ko": "재해 대비 농지 보호",
+        "ja": "防災農地保護"
+      }
+    },
+    {
+      "id": "skill:concept/festival-setup",
+      "kind": "skill",
+      "source": [
+        "祭り設営"
+      ],
+      "labels": {
+        "en": "Festival setup",
+        "ko": "축제 행사장 설치",
+        "ja": "祭り設営"
+      }
+    },
+    {
+      "id": "skill:concept/financial-and-funding-planning",
+      "kind": "skill",
+      "source": [
+        "財務・資金計画"
+      ],
+      "labels": {
+        "en": "Financial and funding planning",
+        "ko": "재무·자금 계획",
+        "ja": "財務・資金計画"
+      }
+    },
+    {
+      "id": "skill:concept/financial-bookkeeping",
+      "kind": "skill",
+      "source": [
+        "財務簿記"
+      ],
+      "labels": {
+        "en": "Financial bookkeeping",
+        "ko": "재무 부기",
+        "ja": "財務簿記"
+      }
+    },
+    {
+      "id": "skill:concept/gaming-machine-equipment-maintenance",
+      "kind": "skill",
+      "source": [
+        "ゲーム機設備保守"
+      ],
+      "labels": {
+        "en": "Gaming machine equipment maintenance",
+        "ko": "게임 기기 설비 유지보수",
+        "ja": "ゲーム機設備保守"
+      }
+    },
+    {
+      "id": "skill:concept/general-long-term-care-work",
+      "kind": "skill",
+      "source": [
+        "介護業務全般"
+      ],
+      "labels": {
+        "en": "General long-term care work",
+        "ko": "요양 업무 전반",
+        "ja": "介護業務全般"
+      }
+    },
+    {
+      "id": "skill:concept/general-patient-care",
+      "kind": "skill",
+      "source": [
+        "患者ケア全般"
+      ],
+      "labels": {
+        "en": "General patient care",
+        "ko": "환자 돌봄 전반",
+        "ja": "患者ケア全般"
+      }
+    },
+    {
+      "id": "skill:concept/general-security-operations",
+      "kind": "skill",
+      "source": [
+        "警備業務全般"
+      ],
+      "labels": {
+        "en": "General security operations",
+        "ko": "경비 업무 전반",
+        "ja": "警備業務全般"
+      }
+    },
+    {
+      "id": "skill:concept/gis-information-management",
+      "kind": "skill",
+      "source": [
+        "GIS情報管理"
+      ],
+      "labels": {
+        "en": "GIS information management",
+        "ko": "GIS 정보 관리",
+        "ja": "GIS情報管理"
+      }
+    },
+    {
+      "id": "skill:concept/health-observation-and-basic-care",
+      "kind": "skill",
+      "source": [
+        "健康観察と簡易ケア"
+      ],
+      "labels": {
+        "en": "Health observation and basic care",
+        "ko": "건강 상태 관찰·기초 돌봄",
+        "ja": "健康観察と簡易ケア"
+      }
+    },
+    {
+      "id": "skill:concept/healthcare-quality-improvement",
+      "kind": "skill",
+      "source": [
+        "医療品質改善"
+      ],
+      "labels": {
+        "en": "Healthcare quality improvement",
+        "ko": "의료 품질 개선",
+        "ja": "医療品質改善"
+      }
+    },
+    {
+      "id": "skill:concept/healthcare-staff-scheduling",
+      "kind": "skill",
+      "source": [
+        "医療スタッフのスケジューリング"
+      ],
+      "labels": {
+        "en": "Healthcare staff scheduling",
+        "ko": "의료진 일정 편성",
+        "ja": "医療スタッフのスケジューリング"
+      }
+    },
+    {
+      "id": "skill:concept/human-resources-consulting",
+      "kind": "skill",
+      "source": [
+        "人事コンサルティング"
+      ],
+      "labels": {
+        "en": "Human resources consulting",
+        "ko": "인사 컨설팅",
+        "ja": "人事コンサルティング"
+      }
+    },
+    {
+      "id": "skill:concept/in-person-interview-facilitation",
+      "kind": "skill",
+      "source": [
+        "対面面談ファシリテーション"
+      ],
+      "labels": {
+        "en": "In-person interview facilitation",
+        "ko": "대면 면담 진행",
+        "ja": "対面面談ファシリテーション"
+      }
+    },
+    {
+      "id": "skill:concept/industry-knowledge",
+      "kind": "skill",
+      "source": [
+        "業界知識"
+      ],
+      "labels": {
+        "en": "Industry knowledge",
+        "ko": "업계 지식",
+        "ja": "業界知識"
+      }
+    },
+    {
+      "id": "skill:concept/infection-prevention-measures",
+      "kind": "skill",
+      "source": [
+        "感染防止対策"
+      ],
+      "labels": {
+        "en": "Infection prevention measures",
+        "ko": "감염 예방 대책",
+        "ja": "感染防止対策"
+      }
+    },
+    {
+      "id": "skill:concept/instructional-methods",
+      "kind": "skill",
+      "source": [
+        "指導法"
+      ],
+      "labels": {
+        "en": "Instructional methods",
+        "ko": "지도 방법",
+        "ja": "指導法"
+      }
+    },
+    {
+      "id": "skill:concept/insurance-agent-qualification-aspiration",
+      "kind": "skill",
+      "source": [
+        "保険募集人資格取得志向"
+      ],
+      "labels": {
+        "en": "Interest in insurance agent qualification",
+        "ko": "보험 모집인 자격 취득 희망",
+        "ja": "保険募集人資格取得志向"
+      }
+    },
+    {
+      "id": "skill:concept/insurance-product-explanation",
+      "kind": "skill",
+      "source": [
+        "保険商品説明"
+      ],
+      "labels": {
+        "en": "Insurance product explanation",
+        "ko": "보험 상품 설명",
+        "ja": "保険商品説明"
+      }
+    },
+    {
+      "id": "skill:concept/interpersonal-communication",
+      "kind": "skill",
+      "source": [
+        "対人コミュニケーション"
+      ],
+      "labels": {
+        "en": "Interpersonal communication",
+        "ko": "대인 소통",
+        "ja": "対人コミュニケーション"
+      }
+    },
+    {
+      "id": "skill:concept/interprofessional-collaboration-facilitation",
+      "kind": "skill",
+      "source": [
+        "多職種連携ファシリテーション"
+      ],
+      "labels": {
+        "en": "Interprofessional collaboration facilitation",
+        "ko": "다직종 협업 촉진",
+        "ja": "多職種連携ファシリテーション"
+      }
+    },
+    {
+      "id": "skill:concept/inventory-management",
+      "kind": "skill",
+      "source": [
+        "在庫管理"
+      ],
+      "labels": {
+        "en": "Inventory management",
+        "ko": "재고 관리",
+        "ja": "在庫管理"
+      }
+    },
+    {
+      "id": "skill:concept/inventory-management-system-operation",
+      "kind": "skill",
+      "source": [
+        "在庫管理システム運用"
+      ],
+      "labels": {
+        "en": "Inventory management system operation",
+        "ko": "재고 관리 시스템 운영",
+        "ja": "在庫管理システム運用"
+      }
+    },
+    {
+      "id": "skill:concept/inventory-optimization",
+      "kind": "skill",
+      "source": [
+        "在庫最適化"
+      ],
+      "labels": {
+        "en": "Inventory optimization",
+        "ko": "재고 최적화",
+        "ja": "在庫最適化"
+      }
+    },
+    {
+      "id": "skill:concept/japanese-document-writing",
+      "kind": "skill",
+      "source": [
+        "日本語文書作成"
+      ],
+      "labels": {
+        "en": "Japanese document writing",
+        "ko": "일본어 문서 작성",
+        "ja": "日本語文書作成"
+      }
+    },
+    {
+      "id": "skill:concept/japanese-home-helper-level-2-qualification",
+      "kind": "skill",
+      "source": [
+        "ヘルパー2級資格"
+      ],
+      "labels": {
+        "en": "Japanese home helper Level 2 qualification",
+        "ko": "일본 홈헬퍼 2급 자격",
+        "ja": "ヘルパー2級資格"
+      }
+    },
+    {
+      "id": "skill:concept/junior-colleague-guidance-and-mentorship",
+      "kind": "skill",
+      "source": [
+        "後進指導・メンターシップ"
+      ],
+      "labels": {
+        "en": "Junior colleague guidance and mentorship",
+        "ko": "후배 지도·멘토링",
+        "ja": "後進指導・メンターシップ"
+      }
+    },
+    {
+      "id": "skill:concept/labor-administration",
+      "kind": "skill",
+      "source": [
+        "労務管理"
+      ],
+      "labels": {
+        "en": "Labor administration",
+        "ko": "노무 관리",
+        "ja": "労務管理"
+      }
+    },
+    {
+      "id": "skill:concept/land-law-and-legal-basics",
+      "kind": "skill",
+      "source": [
+        "土地法・法務基礎"
+      ],
+      "labels": {
+        "en": "Land law and legal basics",
+        "ko": "토지법·법무 기초",
+        "ja": "土地法・法務基礎"
+      }
+    },
+    {
+      "id": "skill:concept/lean-manufacturing",
+      "kind": "skill",
+      "source": [
+        "リーン製造"
+      ],
+      "labels": {
+        "en": "Lean manufacturing",
+        "ko": "린 생산",
+        "ja": "リーン製造"
+      }
+    },
+    {
+      "id": "skill:concept/legal-compliance-handling",
+      "kind": "skill",
+      "source": [
+        "法令遵守対応"
+      ],
+      "labels": {
+        "en": "Legal compliance handling",
+        "ko": "법규 준수 대응",
+        "ja": "法令遵守対応"
+      }
+    },
+    {
+      "id": "skill:concept/loan-assessment",
+      "kind": "skill",
+      "source": [
+        "融資審査"
+      ],
+      "labels": {
+        "en": "Loan assessment",
+        "ko": "대출 심사",
+        "ja": "融資審査"
+      }
+    },
+    {
+      "id": "skill:concept/local-business-collaboration",
+      "kind": "skill",
+      "source": [
+        "地域企業連携"
+      ],
+      "labels": {
+        "en": "Local business collaboration",
+        "ko": "지역 기업 협력",
+        "ja": "地域企業連携"
+      }
+    },
+    {
+      "id": "skill:concept/local-collaboration",
+      "kind": "skill",
+      "source": [
+        "地域連携"
+      ],
+      "labels": {
+        "en": "Local collaboration",
+        "ko": "지역 연계",
+        "ja": "地域連携"
+      }
+    },
+    {
+      "id": "skill:concept/local-community-coordination",
+      "kind": "skill",
+      "source": [
+        "地域コミュニティ調整"
+      ],
+      "labels": {
+        "en": "Local community coordination",
+        "ko": "지역 공동체 조정",
+        "ja": "地域コミュニティ調整"
+      }
+    },
+    {
+      "id": "skill:concept/local-event-planning",
+      "kind": "skill",
+      "source": [
+        "地域イベント企画"
+      ],
+      "labels": {
+        "en": "Local event planning",
+        "ko": "지역 행사 기획",
+        "ja": "地域イベント企画"
+      }
+    },
+    {
+      "id": "skill:concept/local-event-support",
+      "kind": "skill",
+      "source": [
+        "地域イベントサポート"
+      ],
+      "labels": {
+        "en": "Local event support",
+        "ko": "지역 행사 지원",
+        "ja": "地域イベントサポート"
+      }
+    },
+    {
+      "id": "skill:concept/local-financial-services",
+      "kind": "skill",
+      "source": [
+        "地域金融サービス"
+      ],
+      "labels": {
+        "en": "Local financial services",
+        "ko": "지역 금융 서비스",
+        "ja": "地域金融サービス"
+      }
+    },
+    {
+      "id": "skill:concept/local-healthcare-provider-collaboration",
+      "kind": "skill",
+      "source": [
+        "区域医療機関との連携"
+      ],
+      "labels": {
+        "en": "Local healthcare provider collaboration",
+        "ko": "지역 의료기관 협력",
+        "ja": "区域医療機関との連携"
+      }
+    },
+    {
+      "id": "skill:concept/local-network-development",
+      "kind": "skill",
+      "source": [
+        "地域ネットワーク構築"
+      ],
+      "labels": {
+        "en": "Local network development",
+        "ko": "지역 네트워크 구축",
+        "ja": "地域ネットワーク構築"
+      }
+    },
+    {
+      "id": "skill:concept/local-procurement-negotiation",
+      "kind": "skill",
+      "source": [
+        "地域仕入れ交渉"
+      ],
+      "labels": {
+        "en": "Local procurement negotiation",
+        "ko": "지역 매입 협상",
+        "ja": "地域仕入れ交渉"
+      }
+    },
+    {
+      "id": "skill:concept/long-term-care-insurance-system-knowledge",
+      "kind": "skill",
+      "source": [
+        "介護保険制度知識"
+      ],
+      "labels": {
+        "en": "Knowledge of long-term care insurance",
+        "ko": "장기요양보험 제도 지식",
+        "ja": "介護保険制度知識"
+      }
+    },
+    {
+      "id": "skill:concept/long-term-care-plan-preparation",
+      "kind": "skill",
+      "source": [
+        "介護ケアプラン作成"
+      ],
+      "labels": {
+        "en": "Long-term care plan preparation",
+        "ko": "요양 돌봄 계획 작성",
+        "ja": "介護ケアプラン作成"
+      }
+    },
+    {
+      "id": "skill:concept/long-term-care-record-writing",
+      "kind": "skill",
+      "source": [
+        "介護記録作成"
+      ],
+      "labels": {
+        "en": "Care record writing",
+        "ko": "요양 기록 작성",
+        "ja": "介護記録作成"
+      }
+    },
+    {
+      "id": "skill:concept/lte-and-5g-fundamentals",
+      "kind": "skill",
+      "source": [
+        "LTE/5G基礎知識"
+      ],
+      "labels": {
+        "en": "LTE and 5G fundamentals",
+        "ko": "LTE·5G 기초 지식",
+        "ja": "LTE/5G基礎知識"
+      }
+    },
+    {
+      "id": "skill:concept/machinery-maintenance",
+      "kind": "skill",
+      "source": [
+        "機械メンテナンス"
+      ],
+      "labels": {
+        "en": "Machinery maintenance",
+        "ko": "기계 유지보수",
+        "ja": "機械メンテナンス"
+      }
+    },
+    {
+      "id": "skill:concept/manufacturing-data-analysis",
+      "kind": "skill",
+      "source": [
+        "製造データ分析"
+      ],
+      "labels": {
+        "en": "Manufacturing data analysis",
+        "ko": "제조 데이터 분석",
+        "ja": "製造データ分析"
+      }
+    },
+    {
+      "id": "skill:concept/manufacturing-process-optimization",
+      "kind": "skill",
+      "source": [
+        "製造プロセス最適化"
+      ],
+      "labels": {
+        "en": "Manufacturing process optimization",
+        "ko": "제조 공정 최적화",
+        "ja": "製造プロセス最適化"
+      }
+    },
+    {
+      "id": "skill:concept/master-craftsmanship",
+      "kind": "skill",
+      "source": [
+        "熟練職人技"
+      ],
+      "labels": {
+        "en": "Master craftsmanship",
+        "ko": "숙련 장인 기술",
+        "ja": "熟練職人技"
+      }
+    },
+    {
+      "id": "skill:concept/materials-management",
+      "kind": "skill",
+      "source": [
+        "資材管理"
+      ],
+      "labels": {
+        "en": "Materials management",
+        "ko": "자재 관리",
+        "ja": "資材管理"
+      }
+    },
+    {
+      "id": "skill:concept/mechanical-design",
+      "kind": "skill",
+      "source": [
+        "機械設計"
+      ],
+      "labels": {
+        "en": "Mechanical design",
+        "ko": "기계 설계",
+        "ja": "機械設計"
+      }
+    },
+    {
+      "id": "skill:concept/mechanical-parts-assembly-and-inspection",
+      "kind": "skill",
+      "source": [
+        "機械部品組立・検査"
+      ],
+      "labels": {
+        "en": "Mechanical parts assembly and inspection",
+        "ko": "기계 부품 조립·검사",
+        "ja": "機械部品組立・検査"
+      }
+    },
+    {
+      "id": "skill:concept/medical-equipment-maintenance",
+      "kind": "skill",
+      "source": [
+        "医療機器保守"
+      ],
+      "labels": {
+        "en": "Medical equipment maintenance",
+        "ko": "의료기기 유지보수",
+        "ja": "医療機器保守"
+      }
+    },
+    {
+      "id": "skill:concept/medication-management",
+      "kind": "skill",
+      "source": [
+        "服薬管理"
+      ],
+      "labels": {
+        "en": "Medication management",
+        "ko": "복약 관리",
+        "ja": "服薬管理"
+      }
+    },
+    {
+      "id": "skill:concept/menu-planning",
+      "kind": "skill",
+      "source": [
+        "メニュー企画"
+      ],
+      "labels": {
+        "en": "Menu planning",
+        "ko": "메뉴 기획",
+        "ja": "メニュー企画"
+      }
+    },
+    {
+      "id": "skill:concept/metalworking-knowledge",
+      "kind": "skill",
+      "source": [
+        "金属加工知識"
+      ],
+      "labels": {
+        "en": "Metalworking knowledge",
+        "ko": "금속 가공 지식",
+        "ja": "金属加工知識"
+      }
+    },
+    {
+      "id": "skill:concept/microsoft-office",
+      "kind": "skill",
+      "source": [
+        "MS Office"
+      ],
+      "labels": {
+        "en": "Microsoft Office",
+        "ko": "Microsoft Office",
+        "ja": "MS Office"
+      }
+    },
+    {
+      "id": "skill:concept/microsoft-office-workflow-efficiency",
+      "kind": "skill",
+      "source": [
+        "MS Office業務効率化"
+      ],
+      "labels": {
+        "en": "Workflow efficiency with Microsoft Office",
+        "ko": "Microsoft Office 업무 효율화",
+        "ja": "MS Office業務効率化"
+      }
+    },
+    {
+      "id": "skill:concept/negotiation-and-contracting",
+      "kind": "skill",
+      "source": [
+        "交渉・契約"
+      ],
+      "labels": {
+        "en": "Negotiation and contracting",
+        "ko": "협상·계약",
+        "ja": "交渉・契約"
+      }
+    },
+    {
+      "id": "skill:concept/networking",
+      "kind": "skill",
+      "source": [
+        "ネットワーキング"
+      ],
+      "labels": {
+        "en": "Networking",
+        "ko": "네트워킹",
+        "ja": "ネットワーキング"
+      }
+    },
+    {
+      "id": "skill:concept/new-employee-training",
+      "kind": "skill",
+      "source": [
+        "新人指導"
+      ],
+      "labels": {
+        "en": "New employee training",
+        "ko": "신입 직원 지도",
+        "ja": "新人指導"
+      }
+    },
+    {
+      "id": "skill:concept/notebook-based-route-management",
+      "kind": "skill",
+      "source": [
+        "手帳によるルート管理"
+      ],
+      "labels": {
+        "en": "Notebook-based route management",
+        "ko": "수첩 기반 경로 관리",
+        "ja": "手帳によるルート管理"
+      }
+    },
+    {
+      "id": "skill:concept/nutrition-counseling",
+      "kind": "skill",
+      "source": [
+        "栄養相談"
+      ],
+      "labels": {
+        "en": "Nutrition counseling",
+        "ko": "영양 상담",
+        "ja": "栄養相談"
+      }
+    },
+    {
+      "id": "skill:concept/occupational-safety-and-health",
+      "kind": "skill",
+      "source": [
+        "安全衛生"
+      ],
+      "labels": {
+        "en": "Occupational safety and health",
+        "ko": "산업 안전·보건",
+        "ja": "安全衛生"
+      }
+    },
+    {
+      "id": "skill:concept/older-adult-recreation-planning",
+      "kind": "skill",
+      "source": [
+        "高齢者向けレクリエーション企画"
+      ],
+      "labels": {
+        "en": "Older adult recreation planning",
+        "ko": "고령자 여가 활동 기획",
+        "ja": "高齢者向けレクリエーション企画"
+      }
+    },
+    {
+      "id": "skill:concept/online-training-operations",
+      "kind": "skill",
+      "source": [
+        "オンライン研修運営"
+      ],
+      "labels": {
+        "en": "Online training operations",
+        "ko": "온라인 교육 운영",
+        "ja": "オンライン研修運営"
+      }
+    },
+    {
+      "id": "skill:concept/oral-hygiene-education",
+      "kind": "skill",
+      "source": [
+        "口腔衛生教育"
+      ],
+      "labels": {
+        "en": "Oral hygiene education",
+        "ko": "구강 위생 교육",
+        "ja": "口腔衛生教育"
+      }
+    },
+    {
+      "id": "skill:concept/organizational-coordination",
+      "kind": "skill",
+      "source": [
+        "組織調整"
+      ],
+      "labels": {
+        "en": "Organizational coordination",
+        "ko": "조직 조정",
+        "ja": "組織調整"
+      }
+    },
+    {
+      "id": "skill:concept/paper-based-accounting-management",
+      "kind": "skill",
+      "source": [
+        "紙ベース会計管理"
+      ],
+      "labels": {
+        "en": "Paper-based accounting management",
+        "ko": "서류 기반 회계 관리",
+        "ja": "紙ベース会計管理"
+      }
+    },
+    {
+      "id": "skill:concept/paper-based-inventory-management",
+      "kind": "skill",
+      "source": [
+        "在庫管理(紙ベース)"
+      ],
+      "labels": {
+        "en": "Paper-based inventory management",
+        "ko": "서류 기반 재고 관리",
+        "ja": "在庫管理(紙ベース)"
+      }
+    },
+    {
+      "id": "skill:concept/paper-document-organization",
+      "kind": "skill",
+      "source": [
+        "紙書類整理"
+      ],
+      "labels": {
+        "en": "Paper document organization",
+        "ko": "종이 서류 정리",
+        "ja": "紙書類整理"
+      }
+    },
+    {
+      "id": "skill:concept/paper-resources-knowledge",
+      "kind": "skill",
+      "source": [
+        "紙資源知識"
+      ],
+      "labels": {
+        "en": "Paper resources knowledge",
+        "ko": "종이 자원 지식",
+        "ja": "紙資源知識"
+      }
+    },
+    {
+      "id": "skill:concept/paperwork-preparation",
+      "kind": "skill",
+      "source": [
+        "書類作成"
+      ],
+      "labels": {
+        "en": "Paperwork preparation",
+        "ko": "서류 작성",
+        "ja": "書類作成"
+      }
+    },
+    {
+      "id": "skill:concept/parent-and-guardian-communication",
+      "kind": "skill",
+      "source": [
+        "保護者コミュニケーション"
+      ],
+      "labels": {
+        "en": "Parent and guardian communication",
+        "ko": "학부모·보호자 소통",
+        "ja": "保護者コミュニケーション"
+      }
+    },
+    {
+      "id": "skill:concept/parent-and-guardian-support",
+      "kind": "skill",
+      "source": [
+        "保護者対応"
+      ],
+      "labels": {
+        "en": "Parent and guardian support",
+        "ko": "학부모·보호자 응대",
+        "ja": "保護者対応"
+      }
+    },
+    {
+      "id": "skill:concept/patient-assistance",
+      "kind": "skill",
+      "source": [
+        "患者対応"
+      ],
+      "labels": {
+        "en": "Patient assistance",
+        "ko": "환자 응대",
+        "ja": "患者対応"
+      }
+    },
+    {
+      "id": "skill:concept/patient-communication",
+      "kind": "skill",
+      "source": [
+        "患者コミュニケーション"
+      ],
+      "labels": {
+        "en": "Patient communication",
+        "ko": "환자 소통",
+        "ja": "患者コミュニケーション"
+      }
+    },
+    {
+      "id": "skill:concept/patrolling-and-monitoring",
+      "kind": "skill",
+      "source": [
+        "巡回・監視"
+      ],
+      "labels": {
+        "en": "Patrolling and monitoring",
+        "ko": "순찰·감시",
+        "ja": "巡回・監視"
+      }
+    },
+    {
+      "id": "skill:concept/pdf-editing",
+      "kind": "skill",
+      "source": [
+        "PDF編集"
+      ],
+      "labels": {
+        "en": "PDF editing",
+        "ko": "PDF 편집",
+        "ja": "PDF編集"
+      }
+    },
+    {
+      "id": "skill:concept/physical-care-assistance",
+      "kind": "skill",
+      "source": [
+        "身体介助"
+      ],
+      "labels": {
+        "en": "Physical care assistance",
+        "ko": "신체활동 보조",
+        "ja": "身体介助"
+      }
+    },
+    {
+      "id": "skill:concept/physical-fitness-management-and-risk-assessment",
+      "kind": "skill",
+      "source": [
+        "体力管理・リスク評価"
+      ],
+      "labels": {
+        "en": "Physical fitness management and risk assessment",
+        "ko": "체력 관리·위험 평가",
+        "ja": "体力管理・リスク評価"
+      }
+    },
+    {
+      "id": "skill:concept/physical-function-assessment",
+      "kind": "skill",
+      "source": [
+        "身体機能評価"
+      ],
+      "labels": {
+        "en": "Physical function assessment",
+        "ko": "신체 기능 평가",
+        "ja": "身体機能評価"
+      }
+    },
+    {
+      "id": "skill:concept/plc-programming",
+      "kind": "skill",
+      "source": [
+        "PLCプログラミング"
+      ],
+      "labels": {
+        "en": "PLC programming",
+        "ko": "PLC 프로그래밍",
+        "ja": "PLCプログラミング"
+      }
+    },
+    {
+      "id": "skill:concept/pos-cash-register-operation",
+      "kind": "skill",
+      "source": [
+        "POSレジ操作"
+      ],
+      "labels": {
+        "en": "POS cash register operation",
+        "ko": "POS 계산대 조작",
+        "ja": "POSレジ操作"
+      }
+    },
+    {
+      "id": "skill:concept/pos-system-administration",
+      "kind": "skill",
+      "source": [
+        "POSシステム運用"
+      ],
+      "labels": {
+        "en": "POS system administration",
+        "ko": "POS 시스템 운영",
+        "ja": "POSシステム運用"
+      }
+    },
+    {
+      "id": "skill:concept/pos-system-operation",
+      "kind": "skill",
+      "source": [
+        "POSシステム操作"
+      ],
+      "labels": {
+        "en": "POS system operation",
+        "ko": "POS 시스템 조작",
+        "ja": "POSシステム操作"
+      }
+    },
+    {
+      "id": "skill:concept/postal-delivery-operations",
+      "kind": "skill",
+      "source": [
+        "郵便配達業務"
+      ],
+      "labels": {
+        "en": "Postal delivery operations",
+        "ko": "우편 배달 업무",
+        "ja": "郵便配達業務"
+      }
+    },
+    {
+      "id": "skill:concept/powerpoint",
+      "kind": "skill",
+      "source": [
+        "PowerPoint"
+      ],
+      "labels": {
+        "en": "PowerPoint",
+        "ko": "PowerPoint",
+        "ja": "PowerPoint"
+      }
+    },
+    {
+      "id": "skill:concept/powerpoint-presentation-preparation",
+      "kind": "skill",
+      "source": [
+        "PowerPoint資料作成"
+      ],
+      "labels": {
+        "en": "PowerPoint presentation preparation",
+        "ko": "PowerPoint 자료 작성",
+        "ja": "PowerPoint資料作成"
+      }
+    },
+    {
+      "id": "skill:concept/powerpoint-report-material-preparation",
+      "kind": "skill",
+      "source": [
+        "PowerPointでの報告資料作成"
+      ],
+      "labels": {
+        "en": "PowerPoint report preparation",
+        "ko": "PowerPoint 보고 자료 작성",
+        "ja": "PowerPointでの報告資料作成"
+      }
+    },
+    {
+      "id": "skill:concept/precision-measurement-techniques",
+      "kind": "skill",
+      "source": [
+        "精密測定技術"
+      ],
+      "labels": {
+        "en": "Precision measurement techniques",
+        "ko": "정밀 측정 기술",
+        "ja": "精密測定技術"
+      }
+    },
+    {
+      "id": "skill:concept/preventive-healthcare",
+      "kind": "skill",
+      "source": [
+        "予防医療"
+      ],
+      "labels": {
+        "en": "Preventive healthcare",
+        "ko": "예방 의료",
+        "ja": "予防医療"
+      }
+    },
+    {
+      "id": "skill:concept/preventive-long-term-care-practice",
+      "kind": "skill",
+      "source": [
+        "予防介護実践"
+      ],
+      "labels": {
+        "en": "Preventive long-term care practice",
+        "ko": "예방적 돌봄 실천",
+        "ja": "予防介護実践"
+      }
+    },
+    {
+      "id": "skill:concept/primary-care",
+      "kind": "skill",
+      "source": [
+        "一次診療"
+      ],
+      "labels": {
+        "en": "Primary care",
+        "ko": "일차 진료",
+        "ja": "一次診療"
+      }
+    },
+    {
+      "id": "skill:concept/problem-solving",
+      "kind": "skill",
+      "source": [
+        "問題解決"
+      ],
+      "labels": {
+        "en": "Problem solving",
+        "ko": "문제 해결",
+        "ja": "問題解決"
+      }
+    },
+    {
+      "id": "skill:concept/process-improvement",
+      "kind": "skill",
+      "source": [
+        "工程改善"
+      ],
+      "labels": {
+        "en": "Process improvement",
+        "ko": "공정 개선",
+        "ja": "工程改善"
+      }
+    },
+    {
+      "id": "skill:concept/process-safety-management",
+      "kind": "skill",
+      "source": [
+        "プロセス安全管理"
+      ],
+      "labels": {
+        "en": "Process safety management",
+        "ko": "공정 안전 관리",
+        "ja": "プロセス安全管理"
+      }
+    },
+    {
+      "id": "skill:concept/product-merchandising",
+      "kind": "skill",
+      "source": [
+        "商品陳列"
+      ],
+      "labels": {
+        "en": "Product merchandising",
+        "ko": "상품 진열",
+        "ja": "商品陳列"
+      }
+    },
+    {
+      "id": "skill:concept/product-merchandising-and-display-planning",
+      "kind": "skill",
+      "source": [
+        "商品陳列・ディスプレイ企画"
+      ],
+      "labels": {
+        "en": "Product merchandising and display planning",
+        "ko": "상품 진열·디스플레이 기획",
+        "ja": "商品陳列・ディスプレイ企画"
+      }
+    },
+    {
+      "id": "skill:concept/product-merchandising-and-inventory-management",
+      "kind": "skill",
+      "source": [
+        "商品陳列・在庫管理"
+      ],
+      "labels": {
+        "en": "Product merchandising and inventory management",
+        "ko": "상품 진열·재고 관리",
+        "ja": "商品陳列・在庫管理"
+      }
+    },
+    {
+      "id": "skill:concept/production-line-improvement-experience",
+      "kind": "skill",
+      "source": [
+        "生産ライン改善経験"
+      ],
+      "labels": {
+        "en": "Production line improvement experience",
+        "ko": "생산 라인 개선 경험",
+        "ja": "生産ライン改善経験"
+      }
+    },
+    {
+      "id": "skill:concept/production-process-management",
+      "kind": "skill",
+      "source": [
+        "生産工程管理"
+      ],
+      "labels": {
+        "en": "Production process management",
+        "ko": "생산 공정 관리",
+        "ja": "生産工程管理"
+      }
+    },
+    {
+      "id": "skill:concept/project-coordination",
+      "kind": "skill",
+      "source": [
+        "プロジェクト調整"
+      ],
+      "labels": {
+        "en": "Project coordination",
+        "ko": "프로젝트 조정",
+        "ja": "プロジェクト調整"
+      }
+    },
+    {
+      "id": "skill:concept/project-leadership",
+      "kind": "skill",
+      "source": [
+        "プロジェクトリーダー"
+      ],
+      "labels": {
+        "en": "Project leadership",
+        "ko": "프로젝트 리더 역할",
+        "ja": "プロジェクトリーダー"
+      }
+    },
+    {
+      "id": "skill:concept/project-management",
+      "kind": "skill",
+      "source": [
+        "プロジェクトマネジメント",
+        "プロジェクト管理"
+      ],
+      "labels": {
+        "en": "Project management",
+        "ko": "프로젝트 관리",
+        "ja": "プロジェクト管理"
+      }
+    },
+    {
+      "id": "skill:concept/project-schedule-coordination",
+      "kind": "skill",
+      "source": [
+        "プロジェクトスケジュール調整"
+      ],
+      "labels": {
+        "en": "Project schedule coordination",
+        "ko": "프로젝트 일정 조정",
+        "ja": "プロジェクトスケジュール調整"
+      }
+    },
+    {
+      "id": "skill:concept/promotion",
+      "kind": "skill",
+      "source": [
+        "プロモーション"
+      ],
+      "labels": {
+        "en": "Promotion",
+        "ko": "홍보",
+        "ja": "プロモーション"
+      }
+    },
+    {
+      "id": "skill:concept/psychological-support",
+      "kind": "skill",
+      "source": [
+        "精神支援"
+      ],
+      "labels": {
+        "en": "Psychological support",
+        "ko": "심리 지원",
+        "ja": "精神支援"
+      }
+    },
+    {
+      "id": "skill:concept/purchase-order-planning",
+      "kind": "skill",
+      "source": [
+        "発注計画"
+      ],
+      "labels": {
+        "en": "Purchase order planning",
+        "ko": "발주 계획",
+        "ja": "発注計画"
+      }
+    },
+    {
+      "id": "skill:concept/python-data-analysis",
+      "kind": "skill",
+      "source": [
+        "Pythonデータ分析"
+      ],
+      "labels": {
+        "en": "Python data analysis",
+        "ko": "Python 데이터 분석",
+        "ja": "Pythonデータ分析"
+      }
+    },
+    {
+      "id": "skill:concept/python-work-automation",
+      "kind": "skill",
+      "source": [
+        "Python業務自動化"
+      ],
+      "labels": {
+        "en": "Work automation with Python",
+        "ko": "Python 업무 자동화",
+        "ja": "Python業務自動化"
+      }
+    },
+    {
+      "id": "skill:concept/quality-assurance",
+      "kind": "skill",
+      "source": [
+        "品質保証"
+      ],
+      "labels": {
+        "en": "Quality assurance",
+        "ko": "품질 보증",
+        "ja": "品質保証"
+      }
+    },
+    {
+      "id": "skill:concept/quality-control",
+      "kind": "skill",
+      "source": [
+        "品質管理"
+      ],
+      "labels": {
+        "en": "Quality control",
+        "ko": "품질 관리",
+        "ja": "品質管理"
+      }
+    },
+    {
+      "id": "skill:concept/quality-records-and-data-management",
+      "kind": "skill",
+      "source": [
+        "品質記録・データ管理"
+      ],
+      "labels": {
+        "en": "Quality records and data management",
+        "ko": "품질 기록·데이터 관리",
+        "ja": "品質記録・データ管理"
+      }
+    },
+    {
+      "id": "skill:concept/real-estate-business-management",
+      "kind": "skill",
+      "source": [
+        "不動産経営管理"
+      ],
+      "labels": {
+        "en": "Real estate business management",
+        "ko": "부동산 경영 관리",
+        "ja": "不動産経営管理"
+      }
+    },
+    {
+      "id": "skill:concept/real-estate-valuation",
+      "kind": "skill",
+      "source": [
+        "不動産価値査定"
+      ],
+      "labels": {
+        "en": "Real estate valuation",
+        "ko": "부동산 가치 평가",
+        "ja": "不動産価値査定"
+      }
+    },
+    {
+      "id": "skill:concept/recruitment-strategy",
+      "kind": "skill",
+      "source": [
+        "リクルートメント戦略"
+      ],
+      "labels": {
+        "en": "Recruitment strategy",
+        "ko": "채용 전략",
+        "ja": "リクルートメント戦略"
+      }
+    },
+    {
+      "id": "skill:concept/regular-correspondence-and-invitation-writing",
+      "kind": "skill",
+      "source": [
+        "筆まめ・案内状作成"
+      ],
+      "labels": {
+        "en": "Regular correspondence and invitation writing",
+        "ko": "꾸준한 서신·안내장 작성",
+        "ja": "筆まめ・案内状作成"
+      }
+    },
+    {
+      "id": "skill:concept/religious-ceremony-planning",
+      "kind": "skill",
+      "source": [
+        "宗教儀式企画"
+      ],
+      "labels": {
+        "en": "Religious ceremony planning",
+        "ko": "종교 의식 기획",
+        "ja": "宗教儀式企画"
+      }
+    },
+    {
+      "id": "skill:concept/remote-rehabilitation-implementation",
+      "kind": "skill",
+      "source": [
+        "遠隔リハビリ導入"
+      ],
+      "labels": {
+        "en": "Remote rehabilitation implementation",
+        "ko": "원격 재활 도입",
+        "ja": "遠隔リハビリ導入"
+      }
+    },
+    {
+      "id": "skill:concept/report-writing",
+      "kind": "skill",
+      "source": [
+        "報告書作成"
+      ],
+      "labels": {
+        "en": "Report writing",
+        "ko": "보고서 작성",
+        "ja": "報告書作成"
+      }
+    },
+    {
+      "id": "skill:concept/reservation-system-operation",
+      "kind": "skill",
+      "source": [
+        "予約システム操作"
+      ],
+      "labels": {
+        "en": "Reservation system operation",
+        "ko": "예약 시스템 조작",
+        "ja": "予約システム操作"
+      }
+    },
+    {
+      "id": "skill:concept/risk-management",
+      "kind": "skill",
+      "source": [
+        "リスクマネジメント",
+        "リスク管理"
+      ],
+      "labels": {
+        "en": "Risk management",
+        "ko": "위험 관리",
+        "ja": "リスク管理"
+      }
+    },
+    {
+      "id": "skill:concept/room-entry-and-exit-management",
+      "kind": "skill",
+      "source": [
+        "入退室管理"
+      ],
+      "labels": {
+        "en": "Room entry and exit management",
+        "ko": "출입 관리",
+        "ja": "入退室管理"
+      }
+    },
+    {
+      "id": "skill:concept/route-planning-and-time-management",
+      "kind": "skill",
+      "source": [
+        "ルート計画と時間管理"
+      ],
+      "labels": {
+        "en": "Route planning and time management",
+        "ko": "경로 계획·시간 관리",
+        "ja": "ルート計画と時間管理"
+      }
+    },
+    {
+      "id": "skill:concept/safety-management",
+      "kind": "skill",
+      "source": [
+        "安全管理"
+      ],
+      "labels": {
+        "en": "Safety management",
+        "ko": "안전 관리",
+        "ja": "安全管理"
+      }
+    },
+    {
+      "id": "skill:concept/safety-standards-compliance",
+      "kind": "skill",
+      "source": [
+        "安全基準遵守"
+      ],
+      "labels": {
+        "en": "Safety standards compliance",
+        "ko": "안전 기준 준수",
+        "ja": "安全基準遵守"
+      }
+    },
+    {
+      "id": "skill:concept/safety-standards-coordination",
+      "kind": "skill",
+      "source": [
+        "安全基準調整"
+      ],
+      "labels": {
+        "en": "Safety standards coordination",
+        "ko": "안전 기준 조정",
+        "ja": "安全基準調整"
+      }
+    },
+    {
+      "id": "skill:concept/sales-and-customer-service",
+      "kind": "skill",
+      "source": [
+        "販売・接客"
+      ],
+      "labels": {
+        "en": "Sales and customer service",
+        "ko": "판매·고객 응대",
+        "ja": "販売・接客"
+      }
+    },
+    {
+      "id": "skill:concept/sales-data-analysis",
+      "kind": "skill",
+      "source": [
+        "販売データ分析"
+      ],
+      "labels": {
+        "en": "Sales data analysis",
+        "ko": "판매 데이터 분석",
+        "ja": "販売データ分析"
+      }
+    },
+    {
+      "id": "skill:concept/sales-revenue-data-aggregation-and-analysis",
+      "kind": "skill",
+      "source": [
+        "売上データ集計と分析"
+      ],
+      "labels": {
+        "en": "Sales revenue data aggregation and analysis",
+        "ko": "매출 데이터 집계·분석",
+        "ja": "売上データ集計と分析"
+      }
+    },
+    {
+      "id": "skill:concept/scada-systems",
+      "kind": "skill",
+      "source": [
+        "SCADAシステム"
+      ],
+      "labels": {
+        "en": "SCADA systems",
+        "ko": "SCADA 시스템",
+        "ja": "SCADAシステム"
+      }
+    },
+    {
+      "id": "skill:concept/school-event-operation",
+      "kind": "skill",
+      "source": [
+        "校内行事運営"
+      ],
+      "labels": {
+        "en": "School event operation",
+        "ko": "교내 행사 운영",
+        "ja": "校内行事運営"
+      }
+    },
+    {
+      "id": "skill:concept/school-subject-instruction",
+      "kind": "skill",
+      "source": [
+        "教科指導"
+      ],
+      "labels": {
+        "en": "School subject instruction",
+        "ko": "교과 지도",
+        "ja": "教科指導"
+      }
+    },
+    {
+      "id": "skill:concept/seasonal-event-planning",
+      "kind": "skill",
+      "source": [
+        "季節イベント企画"
+      ],
+      "labels": {
+        "en": "Seasonal event planning",
+        "ko": "계절 행사 기획",
+        "ja": "季節イベント企画"
+      }
+    },
+    {
+      "id": "skill:concept/seasonal-work-planning",
+      "kind": "skill",
+      "source": [
+        "季節作業計画"
+      ],
+      "labels": {
+        "en": "Seasonal work planning",
+        "ko": "계절별 작업 계획",
+        "ja": "季節作業計画"
+      }
+    },
+    {
+      "id": "skill:concept/service-user-physical-assessment",
+      "kind": "skill",
+      "source": [
+        "利用者身体評価"
+      ],
+      "labels": {
+        "en": "Service user physical assessment",
+        "ko": "이용자 신체 평가",
+        "ja": "利用者身体評価"
+      }
+    },
+    {
+      "id": "skill:concept/service-user-psychological-observation",
+      "kind": "skill",
+      "source": [
+        "利用者心理観察"
+      ],
+      "labels": {
+        "en": "Service user psychological observation",
+        "ko": "이용자 심리 관찰",
+        "ja": "利用者心理観察"
+      }
+    },
+    {
+      "id": "skill:concept/shift-coordination",
+      "kind": "skill",
+      "source": [
+        "シフト調整"
+      ],
+      "labels": {
+        "en": "Shift coordination",
+        "ko": "근무 교대 조정",
+        "ja": "シフト調整"
+      }
+    },
+    {
+      "id": "skill:concept/shift-planning-and-coordination",
+      "kind": "skill",
+      "source": [
+        "シフト作成・調整"
+      ],
+      "labels": {
+        "en": "Shift planning and coordination",
+        "ko": "교대 근무표 작성·조정",
+        "ja": "シフト作成・調整"
+      }
+    },
+    {
+      "id": "skill:concept/sightseeing-route-planning",
+      "kind": "skill",
+      "source": [
+        "観光ルート企画"
+      ],
+      "labels": {
+        "en": "Sightseeing route planning",
+        "ko": "관광 경로 기획",
+        "ja": "観光ルート企画"
+      }
+    },
+    {
+      "id": "skill:concept/soil-management",
+      "kind": "skill",
+      "source": [
+        "土壌管理"
+      ],
+      "labels": {
+        "en": "Soil management",
+        "ko": "토양 관리",
+        "ja": "土壌管理"
+      }
+    },
+    {
+      "id": "skill:concept/sorting-workflow-optimization",
+      "kind": "skill",
+      "source": [
+        "仕分け業務最適化"
+      ],
+      "labels": {
+        "en": "Sorting workflow optimization",
+        "ko": "분류 업무 최적화",
+        "ja": "仕分け業務最適化"
+      }
+    },
+    {
+      "id": "skill:concept/spreadsheets",
+      "kind": "skill",
+      "source": [
+        "表計算"
+      ],
+      "labels": {
+        "en": "Spreadsheets",
+        "ko": "스프레드시트 활용",
+        "ja": "表計算"
+      }
+    },
+    {
+      "id": "skill:concept/store-operations-management",
+      "kind": "skill",
+      "source": [
+        "店舗運営管理"
+      ],
+      "labels": {
+        "en": "Store operations management",
+        "ko": "매장 운영 관리",
+        "ja": "店舗運営管理"
+      }
+    },
+    {
+      "id": "skill:concept/subordinate-development",
+      "kind": "skill",
+      "source": [
+        "部下育成"
+      ],
+      "labels": {
+        "en": "Subordinate development",
+        "ko": "부하 직원 육성",
+        "ja": "部下育成"
+      }
+    },
+    {
+      "id": "skill:concept/tablet-record-management",
+      "kind": "skill",
+      "source": [
+        "タブレット記録管理"
+      ],
+      "labels": {
+        "en": "Record management on tablets",
+        "ko": "태블릿 기록 관리",
+        "ja": "タブレット記録管理"
+      }
+    },
+    {
+      "id": "skill:concept/team-and-interdepartmental-coordination",
+      "kind": "skill",
+      "source": [
+        "チーム内調整と他部署連携"
+      ],
+      "labels": {
+        "en": "Team and interdepartmental coordination",
+        "ko": "팀 내 조정·타 부서 협업",
+        "ja": "チーム内調整と他部署連携"
+      }
+    },
+    {
+      "id": "skill:concept/team-care-coordination",
+      "kind": "skill",
+      "source": [
+        "チームケア調整"
+      ],
+      "labels": {
+        "en": "Team care coordination",
+        "ko": "팀 돌봄 조정",
+        "ja": "チームケア調整"
+      }
+    },
+    {
+      "id": "skill:concept/team-coaching",
+      "kind": "skill",
+      "source": [
+        "チーム指導"
+      ],
+      "labels": {
+        "en": "Team coaching",
+        "ko": "팀 지도",
+        "ja": "チーム指導"
+      }
+    },
+    {
+      "id": "skill:concept/team-cooperation",
+      "kind": "skill",
+      "source": [
+        "チーム協調"
+      ],
+      "labels": {
+        "en": "Team cooperation",
+        "ko": "팀 협력",
+        "ja": "チーム協調"
+      }
+    },
+    {
+      "id": "skill:concept/team-coordination-and-information-sharing",
+      "kind": "skill",
+      "source": [
+        "チーム調整・情報共有"
+      ],
+      "labels": {
+        "en": "Team coordination and information sharing",
+        "ko": "팀 조정·정보 공유",
+        "ja": "チーム調整・情報共有"
+      }
+    },
+    {
+      "id": "skill:concept/team-leadership",
+      "kind": "skill",
+      "source": [
+        "チームリーダーシップ"
+      ],
+      "labels": {
+        "en": "Team leadership",
+        "ko": "팀 리더십",
+        "ja": "チームリーダーシップ"
+      }
+    },
+    {
+      "id": "skill:concept/team-management",
+      "kind": "skill",
+      "source": [
+        "チームマネジメント"
+      ],
+      "labels": {
+        "en": "Team management",
+        "ko": "팀 관리",
+        "ja": "チームマネジメント"
+      }
+    },
+    {
+      "id": "skill:concept/team-workflow-improvement",
+      "kind": "skill",
+      "source": [
+        "チーム業務フロー改善"
+      ],
+      "labels": {
+        "en": "Team workflow improvement",
+        "ko": "팀 업무 흐름 개선",
+        "ja": "チーム業務フロー改善"
+      }
+    },
+    {
+      "id": "skill:concept/telephone-call-handling",
+      "kind": "skill",
+      "source": [
+        "電話応対"
+      ],
+      "labels": {
+        "en": "Telephone call handling",
+        "ko": "전화 응대",
+        "ja": "電話応対"
+      }
+    },
+    {
+      "id": "skill:concept/training-materials-preparation",
+      "kind": "skill",
+      "source": [
+        "研修資料作成"
+      ],
+      "labels": {
+        "en": "Training materials preparation",
+        "ko": "연수 자료 작성",
+        "ja": "研修資料作成"
+      }
+    },
+    {
+      "id": "skill:concept/transport-regulations-compliance-and-safety-training",
+      "kind": "skill",
+      "source": [
+        "運輸法規遵守と安全教育"
+      ],
+      "labels": {
+        "en": "Transport regulations compliance and safety training",
+        "ko": "운송 법규 준수·안전 교육",
+        "ja": "運輸法規遵守と安全教育"
+      }
+    },
+    {
+      "id": "skill:concept/travel-consulting",
+      "kind": "skill",
+      "source": [
+        "旅行コンサルティング"
+      ],
+      "labels": {
+        "en": "Travel consulting",
+        "ko": "여행 상담",
+        "ja": "旅行コンサルティング"
+      }
+    },
+    {
+      "id": "skill:concept/truck-inspection",
+      "kind": "skill",
+      "source": [
+        "トラック点検"
+      ],
+      "labels": {
+        "en": "Truck inspection",
+        "ko": "트럭 점검",
+        "ja": "トラック点検"
+      }
+    },
+    {
+      "id": "skill:concept/trust-building",
+      "kind": "skill",
+      "source": [
+        "信頼関係構築"
+      ],
+      "labels": {
+        "en": "Trust building",
+        "ko": "신뢰 관계 구축",
+        "ja": "信頼関係構築"
+      }
+    },
+    {
+      "id": "skill:concept/vehicle-fuel-efficiency-improvement-project-promotion",
+      "kind": "skill",
+      "source": [
+        "車両燃費改善プロジェクト推進"
+      ],
+      "labels": {
+        "en": "Vehicle fuel efficiency improvement projects",
+        "ko": "차량 연비 개선 사업 추진",
+        "ja": "車両燃費改善プロジェクト推進"
+      }
+    },
+    {
+      "id": "skill:concept/vendor-negotiation",
+      "kind": "skill",
+      "source": [
+        "ベンダー交渉"
+      ],
+      "labels": {
+        "en": "Vendor negotiation",
+        "ko": "공급업체 협상",
+        "ja": "ベンダー交渉"
+      }
+    },
+    {
+      "id": "skill:concept/vendor-network-development",
+      "kind": "skill",
+      "source": [
+        "業者ネットワーク構築"
+      ],
+      "labels": {
+        "en": "Vendor network development",
+        "ko": "업체 네트워크 구축",
+        "ja": "業者ネットワーク構築"
+      }
+    },
+    {
+      "id": "skill:concept/warehouse-management-system-use",
+      "kind": "skill",
+      "source": [
+        "物流管理システム(WMS)利用"
+      ],
+      "labels": {
+        "en": "Warehouse management system use",
+        "ko": "물류 관리 시스템(WMS) 사용",
+        "ja": "物流管理システム(WMS)利用"
+      }
+    },
+    {
+      "id": "skill:concept/wood-processing",
+      "kind": "skill",
+      "source": [
+        "木材加工"
+      ],
+      "labels": {
+        "en": "Wood processing",
+        "ko": "목재 가공",
+        "ja": "木材加工"
+      }
+    },
+    {
+      "id": "skill:concept/word-document-writing",
+      "kind": "skill",
+      "source": [
+        "ワード文書作成"
+      ],
+      "labels": {
+        "en": "Word document writing",
+        "ko": "Word 문서 작성",
+        "ja": "ワード文書作成"
+      }
+    },
+    {
+      "id": "skill:concept/work-efficiency-system-design",
+      "kind": "skill",
+      "source": [
+        "業務効率化システム設計"
+      ],
+      "labels": {
+        "en": "Work efficiency system design",
+        "ko": "업무 효율화 시스템 설계",
+        "ja": "業務効率化システム設計"
+      }
+    },
+    {
+      "id": "skill:concept/work-improvement-document-writing",
+      "kind": "skill",
+      "source": [
+        "業務改善文書作成"
+      ],
+      "labels": {
+        "en": "Work improvement document writing",
+        "ko": "업무 개선 문서 작성",
+        "ja": "業務改善文書作成"
+      }
+    },
+    {
+      "id": "skill:concept/work-schedule-management",
+      "kind": "skill",
+      "source": [
+        "業務スケジュール管理"
+      ],
+      "labels": {
+        "en": "Work schedule management",
+        "ko": "업무 일정 관리",
+        "ja": "業務スケジュール管理"
+      }
+    },
+    {
+      "id": "skill:concept/workflow-improvement",
+      "kind": "skill",
+      "source": [
+        "業務フロー改善"
+      ],
+      "labels": {
+        "en": "Workflow improvement",
+        "ko": "업무 흐름 개선",
+        "ja": "業務フロー改善"
+      }
+    }
+  ]
+}

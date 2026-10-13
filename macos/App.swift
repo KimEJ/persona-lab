@@ -164,7 +164,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         let fileItem=NSMenuItem();menu.addItem(fileItem)
         let fileMenu=NSMenu(title:"파일");fileItem.submenu=fileMenu
         fileMenu.addItem(withTitle:"새 실험",action:#selector(newExperiment),keyEquivalent:"n")
-        fileMenu.addItem(withTitle:"문서 가져오기…",action:#selector(importDocument),keyEquivalent:"o")
+        fileMenu.addItem(withTitle:"설정 가져오기…",action:#selector(importSettings),keyEquivalent:"o")
         fileMenu.addItem(withTitle:"저장",action:#selector(save),keyEquivalent:"s")
         fileMenu.addItem(.separator())
         fileMenu.addItem(withTitle:"창 닫기",action:#selector(NSWindow.performClose(_:)),keyEquivalent:"w")
@@ -183,7 +183,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
 
     func command(_ name: String) { webView.evaluateJavaScript("window.appCommands?.\(name)()",completionHandler:nil) }
     @objc func newExperiment(){command("newExperiment")}
-    @objc func importDocument(){command("importDocument")}
+    @objc func importSettings(){command("importSettings")}
     @objc func save(){command("save")}
     @objc func undo(){command("undo")}
     @objc func redo(){command("redo")}

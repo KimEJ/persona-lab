@@ -1,0 +1,26 @@
+const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
+const {JSDOM}=require(process.env.PERSONA_LAB_JSDOM||path.join(__dirname,'../node_modules/jsdom'));
+const dom=new JSDOM('<div id="editor" tabindex="0"></div>',{runScripts:'outside-only'}),w=dom.window;
+w.eval(fs.readFileSync(path.join(__dirname,'../web/editor.js'),'utf8'));
+const node=w.document.getElementById('editor'),changes=[];
+const editor=new w.MarkdownEditor.Editor(node,(markdown,error)=>changes.push({markdown,error}));
+function caret(offset){const range=w.document.createRange();range.setStart(node.firstChild.firstChild,offset);range.collapse(true);w.getSelection().removeAllRanges();w.getSelection().addRange(range);editor.rememberSelection();}
+const original='# Before\n\n- one\n  - two\n',edited=original.replace('Before','Edited');
+const imported='\r\n# Imported\r\n\r\n~~~ js title="raw"\r\na\r\n\r\n\r\nb\r\n~~~\r\n';
+editor.setMarkdown(original);caret(3);node.querySelector('h1').textContent='Edited';caret(3);node.dispatchEvent(new w.InputEvent('input',{bubbles:true,inputType:'insertText'}));
+assert.equal(editor.getMarkdown(),edited);assert.equal(editor.history.length,1);
+assert.equal(editor.replaceMarkdown(imported),true);assert.equal(editor.getMarkdown(),imported);assert.equal(editor.history.length,2);assert.equal(editor.future.length,0);assert.equal(changes.at(-1).markdown,imported);
+assert.equal(editor.selectionOffsets().focus,0);assert.ok(node.contains(editor.savedRange.commonAncestorContainer));
+editor.undo();assert.equal(editor.getMarkdown(),edited);assert.equal(editor.selectionOffsets().focus,3);assert.equal(changes.at(-1).markdown,edited);
+editor.undo();assert.equal(editor.getMarkdown(),original);editor.redo();assert.equal(editor.getMarkdown(),edited);editor.redo();assert.equal(editor.getMarkdown(),imported);
+editor.undo();const existingFuture=editor.future.slice(),count=changes.length;
+assert.equal(editor.replaceMarkdown(edited),false);assert.equal(editor.history.length,1);assert.deepEqual(editor.future,existingFuture);assert.equal(changes.length,count);
+assert.equal(editor.replaceMarkdown('# Different'),true);assert.equal(editor.future.length,0);editor.undo();assert.equal(editor.getMarkdown(),edited);
+editor.setEditable(false);const readOnlyHistory=editor.history.length;
+assert.equal(editor.replaceMarkdown('# Read-only import'),false);assert.equal(editor.getMarkdown(),edited);assert.equal(editor.history.length,readOnlyHistory);
+editor.setEditable(true);const priorHistory=editor.history.length,priorFuture=editor.future.slice();
+assert.equal(editor.replaceMarkdown('😀'.repeat(20001)),false);assert.equal(editor.getMarkdown(),edited);assert.equal(editor.history.length,priorHistory);assert.deepEqual(editor.future,priorFuture);assert.match(changes.at(-1).error,/20,000/);
+const maxUnicode='😀'.repeat(20000);assert.equal(editor.replaceMarkdown(maxUnicode),true);assert.equal(editor.getMarkdown(),maxUnicode);editor.undo();assert.equal(editor.getMarkdown(),edited);editor.redo();assert.equal(editor.getMarkdown(),maxUnicode);
+editor.setMarkdown('# Before');node.querySelector('h1').textContent='Pending';editor.dirty=true;
+assert.equal(editor.replaceMarkdown('# Imported'),true);editor.undo();assert.equal(editor.getMarkdown(),'# Pending');editor.undo();assert.equal(editor.getMarkdown(),'# Before');
+dom.window.close();console.log('Document import passed: single-step undo/redo, earlier edit history, autosave callbacks, caret safety, no-op/read-only guards, and Unicode limits.');

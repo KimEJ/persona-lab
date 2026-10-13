@@ -9,6 +9,7 @@ from html import escape
 
 from persona_lab.contracts import CURRENCIES, require
 from persona_lab.responses import SURVEY_V2_SCENARIO_ID
+from persona_lab.tags import tag_metadata
 
 
 STATE_LABELS = {'unknown': '판단 불가', 'error': '오류', 'pending': '대기', 'not_run': '미실시', 'not_applicable': '해당 없음'}
@@ -56,6 +57,21 @@ def display_name(response, product):
         index = next(index for index, item in enumerate(response['products']) if item['id'] == product['id'])
         return f'{index + 1} · {product["name"]}'
     return product['name']
+
+
+def tag_condition(panel, tag_labels=None, locale='ko'):
+    tags = panel.get('tags', [])
+    if not tags:
+        return ''
+    metadata = tag_labels or {}
+    labels = ' · '.join('#' + (metadata.get(tag, {}).get(locale) or
+                              tag_metadata(tag, locale=locale)['label']) for tag in tags)
+    return labels + ' · ' + ('모두' if panel.get('tag_mode') == 'all' else '하나 이상')
+
+
+def panel_conditions(panel):
+    return {key: value for key, value in panel.items()
+            if key not in {'selected_uuids', 'tags', 'tag_mode'}}
 
 
 def datetime_label(value):
@@ -283,7 +299,8 @@ def _html(report):
     if points:
         fragments.append('<section class="page"><h2>제시가격별 선택</h2>' + points + '<p class="note">상품 정보와 조건이 같고 가격만 다른 항목입니다. 측정한 점만 표시합니다.</p></section>')
     source, model = context['source'], context['model']
-    conditions = {key: value for key, value in context['panel'].items() if key != 'selected_uuids'}
+    conditions = panel_conditions(context['panel'])
+    tags = tag_condition(context['panel'], context.get('tag_labels'), context.get('tag_locale', 'ko'))
     fragments += ['<section class="page"><h2>실행 조건</h2><table class="methods"><tbody>',
                   f'<tr><th>실험</th><td>{escape(context["experiment_id"])}</td></tr><tr><th>실행일·상태</th><td>{escape(context["created_at"])} · {escape(response["status"])}</td></tr><tr><th>질문 버전</th><td>{escape(str(context["scenario_id"]))}</td></tr>',
                   f'<tr><th>대상</th><td>{response["count"]}명 · 회차 {response["repeat"] + 1}/{response["repeats"]}</td></tr><tr><th>모델</th><td>{escape(model["backend_id"])}</td></tr>',
@@ -292,6 +309,7 @@ def _html(report):
                   f'<tr><th>원천 인원·귀속</th><td>{escape(str(source.get("record_count", "미기록")))}명<br>{escape(source.get("attribution", ""))}</td></tr>',
                   f'<tr><th>원천 SHA256</th><td>{escape(source.get("local_sha256", "미기록"))}</td></tr>',
                   f'<tr><th>추출 조건</th><td>{escape(json.dumps(conditions, ensure_ascii=False, sort_keys=True))}</td></tr>',
+                  f'<tr><th>대상 태그</th><td>{escape(tags)}</td></tr>' if tags else '',
                   ''.join(f'<tr><th>적정가격</th><td>{escape(display_name(response, product))} · {escape(valuation_condition(response, product))}</td></tr>' for product in response['products']),
                   '</tbody></table>',
                   '<p class="note">질문별 분모는 전체 대상 인원입니다. 판단 불가·해당 없음·미실시·오류·대기를 각각 보존합니다. 반복 회차는 합산하지 않습니다. 교차표는 응답의 조합이며 인과 설명이 아닙니다.</p>',
@@ -382,7 +400,10 @@ def _markdown(report):
                 cell = item[question['domain']]
                 detail = cell.get('reason', '') if cell['choice'] in {'error', 'not_run'} else '; '.join(cell.get('missing_information') or [])
                 lines.append(f'| {esc(person["name"])} | {esc(display_name(response, product))} | {esc(question["title"])} | {esc(label(response, product, question["domain"], cell["choice"]))} | {esc(detail)} |')
-    lines += ['', '## 실행 조건', '', f'- 실험: {esc(context["experiment_id"])}', f'- 실행일·상태 원문: {esc(context["created_at"])} · {esc(response["status"])}', f'- 질문 버전: {esc(context["scenario_id"])}', f'- 모델: {esc(context["model"]["backend_id"])}', f'- 원천: {esc(context["source"]["source_id"])} @ {esc(context["source"]["version"])}', f'- 원천 URL: {esc(context["source"].get("url", ""))}', f'- 라이선스: {esc(context["source"].get("license_id", ""))}', f'- 추출 조건: {esc(json.dumps({key: value for key, value in context["panel"].items() if key != "selected_uuids"}, ensure_ascii=False, sort_keys=True))}']
+    lines += ['', '## 실행 조건', '', f'- 실험: {esc(context["experiment_id"])}', f'- 실행일·상태 원문: {esc(context["created_at"])} · {esc(response["status"])}', f'- 질문 버전: {esc(context["scenario_id"])}', f'- 모델: {esc(context["model"]["backend_id"])}', f'- 원천: {esc(context["source"]["source_id"])} @ {esc(context["source"]["version"])}', f'- 원천 URL: {esc(context["source"].get("url", ""))}', f'- 라이선스: {esc(context["source"].get("license_id", ""))}', f'- 추출 조건: {esc(json.dumps(panel_conditions(context["panel"]), ensure_ascii=False, sort_keys=True))}']
+    tags = tag_condition(context['panel'], context.get('tag_labels'), context.get('tag_locale', 'ko'))
+    if tags:
+        lines.append('- 대상 태그: ' + esc(tags))
     lines += ['- 적정가격: ' + esc(display_name(response, product)) + ' · ' + esc(valuation_condition(response, product)) for product in response['products']]
     lines += ['', '비율의 분모는 선택한 회차의 전체 대상입니다. 판단 불가·해당 없음·미실시·오류·대기를 구분합니다. 반복 회차를 합산하지 않습니다. 합성 인물의 응답은 실제 구매 확률로 검증되지 않았습니다.', '', '## 질문', '']
     for question in response['questions']:
