@@ -92,7 +92,7 @@ class ResponseTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError,'확인 항목'):validate_decision(Decision('unknown','insufficient_information',('missing_context',),(),reason='정보 부족',evidence_semantics='supplied_input_only',option_probabilities={key:float(key=='unknown') for key in job.question['choices']},probability_semantics='model_option_distribution'),job)
 
     def test_new_model_request_contains_only_supplied_price_context(self):
-        spec=self.configure('paid');spec['scenario']['id']='product-response-v1';spec['questions']=QUESTIONS
+        spec=self.configure('paid');spec.pop('inference_protocol',None);spec['scenario']['id']='product-response-v1';spec['questions']=QUESTIONS
         planned=list(jobs(self.app.data_path,self.source,spec));requests=[]
         def reply(request,**kwargs):
             body=json.loads(request.data);requests.append(body)
@@ -161,7 +161,7 @@ class ResponseTests(unittest.TestCase):
         self.assertEqual(self.app.snapshot(reopened['id'])['spec']['products'][0]['price']['amount_minor'],2000)
 
     def test_structured_unknown_names_gaps_and_invalid_reason_is_an_error(self):
-        spec=self.configure('paid');spec['scenario']['id']='product-response-v1';spec['questions']=QUESTIONS;job=next(j for j in jobs(self.app.data_path,self.source,spec) if j.question['domain']=='fair_price')
+        spec=self.configure('paid');spec.pop('inference_protocol',None);spec['scenario']['id']='product-response-v1';spec['questions']=QUESTIONS;job=next(j for j in jobs(self.app.data_path,self.source,spec) if j.question['domain']=='fair_price')
         answer={'choice':'unknown','reason_code':'missing_context','evidence_refs':[],'missing_information':['license_scope','current_method']}
         def reply(request,**kwargs):return io.BytesIO(json.dumps({'choices':[{'finish_reason':'stop','message':{'content':json.dumps(answer)}}]}).encode())
         with patch('urllib.request.urlopen',side_effect=reply):

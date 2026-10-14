@@ -1,6 +1,12 @@
 """Versioned finite questions for a pre-purchase product survey."""
 
-from .responses import SURVEY_V2_SCENARIO_ID, choice_meanings
+from copy import deepcopy
+
+from .responses import SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID, choice_meanings
+
+
+STAGED_PROTOCOL = 'survey-staged-v1'
+SURVEY_HISTORY_PROTOCOL = 'survey-history-v1'
 
 
 QUESTION_INFO = {
@@ -167,12 +173,102 @@ SURVEY_V2_QUESTIONS = [
     for domain, prompt in zip(SURVEY_V2_DOMAINS, SURVEY_V2_PROMPTS)
 ]
 
+# The new price response is a maximum willingness-to-pay interval. Older
+# catalogs keep their fair-price interpretation and final-choice question.
+SURVEY_V3_INFO = deepcopy({domain: info for domain, info in SURVEY_V2_INFO.items() if domain != 'purchase'})
+SURVEY_V3_INFO['fair_price']['title'] = '최대 지불 의향 가격대'
+SURVEY_V3_DOMAINS = tuple(SURVEY_V3_INFO)
+SURVEY_V3_PROMPTS = (*SURVEY_V2_PROMPTS[:8],
+    '이 인물이 이 상품에 지불할 의향이 있는 최대 가격이 속한 구간을 선택하세요. '
+    '명시된 통화와 결제 주기를 그대로 사용하세요. 합리적이라고 생각하는 가격이나 판매가격을 평가하는 질문이 아닙니다. '
+    '판매가격 없이 인물에게 제공된 활용 목적, 현재 방법, 상품의 추가 가치와 도입 부담으로 판단하세요. '
+    '인물의 소득, 예산, 구매 이력이나 선호를 만들지 말고 지불상한을 판단할 근거가 부족하면 판단 불가를 선택하세요. '
+    '선택한 구간은 최대 지불 의향 가격의 범위이며 정확한 금액을 생성하지 마세요.')
+SURVEY_V3_QUESTIONS = [
+    {'id': f'{domain.replace("_", "-")}-survey-v3', 'domain': domain,
+     'prompt': prompt, 'choices': list(SURVEY_V3_INFO[domain]['choices'])}
+    for domain, prompt in zip(SURVEY_V3_DOMAINS, SURVEY_V3_PROMPTS)
+]
+
+# Only the two summary judgments receive actual predecessor responses. The
+# seven base questions remain a single independent, price-blind schema.
+SURVEY_V4_INFO = deepcopy(SURVEY_V3_INFO)
+SURVEY_V4_DOMAINS = tuple(SURVEY_V4_INFO)
+STAGED_BASE_DOMAINS = SURVEY_V4_DOMAINS[:7]
+SURVEY_V4_PROMPTS = (*SURVEY_V3_PROMPTS[:7],
+    '제공된 사용 기회와 환경, 같은 인물·상품·회차의 일곱 선행 평가를 함께 보고 이 인물이 상품을 사용할 의향을 선택하세요. '
+    '선행 평가는 모델의 판단이며 인물의 사실이 아닙니다. 판단 불가를 부정이나 중간 응답으로 바꾸지 말고 원문과 함께 평가하세요. '
+    '판매가격, 실제 사용 경험이나 제공되지 않은 사실을 가정하지 마세요.',
+    '같은 인물·상품·회차의 일곱 기본 평가와 사용 의향을 원문 정보와 함께 보고, 이 인물이 지불할 의향이 있는 최대 가격이 속한 구간을 선택하세요. '
+    '선행 평가는 모델의 판단이며 인물의 사실이 아닙니다. 사용 의향을 임의로 바꾸거나 판단 불가를 확정된 긍정이나 부정으로 바꾸지 마세요. '
+    '명시된 통화와 결제 주기를 그대로 사용하세요. 합리적인 시장가격이나 판매가격을 평가하는 질문이 아닙니다. '
+    '인물의 소득, 예산, 구매 이력이나 선호를 만들지 말고 지불상한을 판단할 근거가 부족하면 판단 불가를 선택하세요. '
+    '선택한 구간은 최대 지불 의향 가격의 범위이며 정확한 금액을 생성하지 마세요.')
+SURVEY_V4_QUESTIONS = [
+    {'id': f'{domain.replace("_", "-")}-survey-v4', 'domain': domain,
+     'prompt': prompt, 'choices': list(SURVEY_V4_INFO[domain]['choices'])}
+    for domain, prompt in zip(SURVEY_V4_DOMAINS, SURVEY_V4_PROMPTS)
+]
+
+
+def survey_decision_history(job):
+    """Validate the frozen dependency payload and strip journal identity on wire."""
+    from .contracts import DependencyError, require
+    history = job.survey_history
+    domain = job.question.get('domain')
+    if job.scenario.get('id') != SURVEY_V4_SCENARIO_ID:
+        require(history is None, 'survey history requires the staged v4 survey')
+        return None
+    calibration = job.assumptions.get('evaluation_phase') == 'price_calibration'
+    if calibration:
+        require(domain == 'fair_price' and history is None, 'price calibration cannot consume main survey history')
+        return None
+    if domain in STAGED_BASE_DOMAINS:
+        require(history is None, 'base survey questions cannot consume predecessor history')
+        return None
+    expected = STAGED_BASE_DOMAINS if domain == 'usage' else (*STAGED_BASE_DOMAINS, 'usage') if domain == 'fair_price' else ()
+    require(bool(expected), 'unsupported staged survey domain')
+    require(isinstance(history, dict)
+            and set(history) == {'protocol', 'persona_id', 'product_id', 'repeat', 'records'}
+            and history['protocol'] == SURVEY_HISTORY_PROTOCOL, 'invalid survey history protocol')
+    require(history['persona_id'] == job.persona.persona_id and history['product_id'] == job.product['id']
+            and type(history['repeat']) is int and history['repeat'] == job.repeat,
+            'survey history belongs to a different persona, product or repeat')
+    records = history['records']
+    require(isinstance(records, list) and len(records) == len(expected), 'survey history requires every ordered predecessor')
+    supplied = []
+    for predecessor, record in zip(expected, records):
+        require(isinstance(record, dict) and set(record) == {'domain', 'job_id', 'choice', 'status', 'missing_information'}
+                and record['domain'] == predecessor, 'survey history predecessor order is invalid')
+        require(isinstance(record['job_id'], str) and bool(record['job_id'].strip()), 'survey history requires the predecessor job ID')
+        choice, status, missing = record['choice'], record['status'], record['missing_information']
+        meanings = SURVEY_V4_INFO[predecessor]['choices']
+        require(isinstance(choice, str) and choice in {*meanings, 'error'}, 'invalid predecessor survey choice')
+        expected_status = 'backend_error' if choice == 'error' else 'insufficient_information' if choice == 'unknown' else 'ok'
+        require(status == expected_status, 'predecessor choice and status differ')
+        require(isinstance(missing, list) and len(missing) <= 3
+                and all(isinstance(value, str) and bool(value.strip()) for value in missing)
+                and (choice == 'unknown' or not missing), 'invalid predecessor missing information')
+        supplied.append({'domain': predecessor, 'choice': choice, 'label': meanings.get(choice, '오류'),
+                         'status': status, 'missing_information': deepcopy(missing)})
+    require(len({record['job_id'] for record in records}) == len(records), 'duplicate predecessor survey job IDs')
+    if any(record['status'] == 'backend_error' for record in records):
+        raise DependencyError('선행 평가 오류가 있습니다. 선행 단계를 재시도하세요.')
+    return {'protocol': SURVEY_HISTORY_PROTOCOL, 'records': supplied}
+
 
 def question_info(domain, scenario_id=None):
-    return (SURVEY_V2_INFO if scenario_id == SURVEY_V2_SCENARIO_ID else QUESTION_INFO)[domain]
+    info = SURVEY_V4_INFO if scenario_id == SURVEY_V4_SCENARIO_ID else SURVEY_V3_INFO if scenario_id == SURVEY_V3_SCENARIO_ID else SURVEY_V2_INFO if scenario_id == SURVEY_V2_SCENARIO_ID else QUESTION_INFO
+    return info[domain]
 
 
 def survey_meanings(job):
+    if job.scenario.get('id') in {SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID}:
+        if job.question['domain'] == 'fair_price':
+            meanings = choice_meanings(job)
+            return {choice: '최대 지불 의향 가격: ' + label for choice, label in meanings.items() if choice != 'unknown'} | {
+                'unknown': '최대 지불 의향 가격을 판단할 근거가 부족함', 'not_run': '미실시'}
+        return dict(question_info(job.question['domain'], job.scenario['id'])['choices'])
     if job.scenario.get('id') == SURVEY_V2_SCENARIO_ID:
         if job.question['domain'] in {'fair_price', 'purchase'}:
             return {**choice_meanings(job), 'not_run': '미실시'}

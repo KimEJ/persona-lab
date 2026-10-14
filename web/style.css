@@ -72,10 +72,7 @@ progress:indeterminate::-webkit-progress-bar{background:transparent}
 .import-notice{padding:10px 12px;margin:0 0 16px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:13px}
 .document-actions{flex-wrap:wrap}.money-fields{align-items:start}
 .panel-tags{padding:14px 0 4px}
-.tag-locale-field{display:flex;align-items:center;gap:6px;font-size:11px;white-space:nowrap}
-.tag-locale-field select{width:auto;height:30px;min-width:82px;padding:3px 6px;font-size:12px}
-.header-tag-locale{color:var(--muted)}
-.report-export-actions{display:flex;align-items:center;gap:8px}
+.report-export-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
 .results-view .empty-state{padding:24px 0}
 .results-view .empty-state h2{font-size:18px;font-weight:500;margin:0 0 10px;color:var(--ink)}
 .results-view .empty-state>p{font-size:13px;line-height:1.6;margin:0}

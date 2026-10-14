@@ -17,8 +17,8 @@ class EvaluationTests(unittest.TestCase):
         item.update(name='메모 도구',document='## 주요 기능\n\n검색과 태그로 메모를 정리합니다.\n\n가격: 900 JPY',pricing={'state':'paid','amount':'2000','currency':'JPY','billing':'one_time'})
         draft['items']=[{**copy.deepcopy(item),'id':format(i+10,'032x')} for i in range(items)]
         draft['settings']['repeats']=repeats;draft=self.app.save(draft['id'],draft)
+        draft={**draft,'workflow':LINKED_SCENARIO_ID}
         spec=self.app.make_spec(draft)
-        spec['scenario']['id']=LINKED_SCENARIO_ID;spec['questions']=copy.deepcopy(LINKED_QUESTIONS)
         return draft,spec
 
     def answer(self,job,choice='unknown',amount=None):

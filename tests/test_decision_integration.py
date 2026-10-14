@@ -22,6 +22,7 @@ class DecisionIntegrationTests(unittest.TestCase):
         spec = self.configure('paid', items=2, repeats=2)
         # Preserve the shipped three-stage finite contract and its raw audit.
         spec['scenario']['id'] = DECISION_SCENARIO_ID
+        spec.pop('inference_protocol', None)
         spec['questions'] = copy.deepcopy(DECISION_QUESTIONS)
         directory = self.app.directory(self.draft['id'])
         frozen = dict(self.draft)
@@ -123,6 +124,7 @@ class DecisionIntegrationTests(unittest.TestCase):
             with self.subTest(scenario=scenario):
                 spec = self.configure('paid')
                 spec['scenario']['id'] = scenario
+                spec.pop('inference_protocol', None)
                 spec['questions'] = copy.deepcopy(questions)
                 frozen = {**self.draft, 'workflow': scenario}
                 frozen.pop('run', None)

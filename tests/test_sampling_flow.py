@@ -10,7 +10,7 @@ from pathlib import Path
 
 from persona_desktop.application import Application, atomic_json
 from persona_lab.backends import FixtureBackend
-from persona_lab.responses import SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID
+from persona_lab.responses import SURVEY_SCENARIO_ID, SURVEY_V3_SCENARIO_ID
 from persona_lab.runner import matches, run, selected_personas
 from persona_lab.survey import PREDECESSOR_DOMAINS, SURVEY_DOMAINS
 
@@ -86,7 +86,7 @@ class SamplingFlowTests(unittest.TestCase):
 
     def test_random_defaults_and_frozen_eight_stage_cohort_link_on_resume(self):
         draft = self.app.create()
-        self.assertEqual(draft['workflow'], SURVEY_V2_SCENARIO_ID)
+        self.assertEqual(draft['workflow'], SURVEY_V3_SCENARIO_ID)
         self.assertEqual((draft['panel']['selection'], draft['panel']['sample_size']), ('random', 100))
         self.assertIs(type(draft['panel']['sample_seed']), int)
         preview = self.app.panel(draft['panel'])

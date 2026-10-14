@@ -137,10 +137,19 @@ class PanelTagTests(unittest.TestCase):
         self.assertEqual(result['selected'][0]['id'], selected['id'])
         self.assertEqual(result['selected'][0]['label'], '도구 1')
 
-    def test_preferences_survive_app_restart_validate_http_and_preserve_other_preferences(self):
+    def test_legacy_language_preferences_are_ignored_and_preserved_after_restart(self):
         path = self.app.home/'ui-preferences.json'
         self.assertEqual(self.app.state()['tag_locale'], 'ko')
-        atomic_json(path, {'tag_locale': 'ko', 'sidebar_width': 245})
+        atomic_json(path, {'tag_locale': 'en', 'sidebar_width': 245})
+        before = path.read_bytes()
+        root, home = self.app.root, self.app.home
+        self.app.close()
+        self.app = Application(root, home, FixtureBackend())
+        self.assertEqual(self.app.state()['tag_locale'], 'ko')
+        tags = self.app.panel_tags(self.panel(), query='文書作成')
+        self.assertEqual(tags['tag_locale'], 'ko')
+        self.assertEqual(tags['tags'][0]['label'], tags['tags'][0]['labels']['ko'])
+        self.assertEqual(path.read_bytes(), before)
         server = make_server(self.app)
         thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
         base = f'http://127.0.0.1:{server.server_address[1]}'
@@ -149,33 +158,19 @@ class PanelTagTests(unittest.TestCase):
                 headers={'X-Persona-Token': server.token, 'Content-Type': 'application/json'})
             return urllib.request.urlopen(request, timeout=5)
         try:
-            with call({'tag_locale': 'en'}) as response:
-                self.assertEqual(json.load(response), {'tag_locale': 'en'})
-            before = path.read_bytes()
             with self.assertRaises(urllib.error.HTTPError) as caught:
-                call({'tag_locale': 'fr'})
-            self.assertEqual(caught.exception.code, 400)
+                call({'tag_locale': 'ja'})
+            self.assertEqual(caught.exception.code, 404)
             self.assertEqual(path.read_bytes(), before)
         finally:
             server.shutdown(); server.server_close(); thread.join(2)
-        root, home = self.app.root, self.app.home
-        self.app.close()
-        self.app = Application(root, home, FixtureBackend())
-        self.assertEqual(self.app.state()['tag_locale'], 'en')
-        self.assertEqual(json.loads(path.read_text())['sidebar_width'], 245)
-        for malformed in ('not-json', '[]', '{"tag_locale":[]}', '{"tag_locale":"fr"}'):
-            path.write_text(malformed)
-            self.assertEqual(self.app.state()['tag_locale'], 'ko')
-        for invalid in ({}, {'tag_locale': None}, {'tag_locale': []}, {'tag_locale': 'ja', 'panel': {}}, []):
-            with self.subTest(invalid=invalid), self.assertRaises(ContractError):
-                self.app.update_preferences(invalid)
 
-    def test_report_and_responses_use_display_preference_without_changing_frozen_fingerprint(self):
+    def test_report_and_responses_use_app_language_without_changing_frozen_fingerprint(self):
         draft = self.app.create()
         draft['items'][0].update(name='메모 도구', document='검색과 태그로 문서를 정리합니다.')
         draft['items'][0]['pricing'].update(state='paid', amount='2000')
         draft['items'][0]['valuation'].update(mode='manual', boundaries=['500', '1000', '2000'])
-        draft['panel'].update(sample_size=1, tags=[canonical_tag_id('skill:python')])
+        draft['panel'].update(sample_size=1, tags=[canonical_tag_id('skill:文書作成')])
         draft = self.app.save(draft['id'], draft)
         self.app.start(draft['id'])
         self.app.workers[draft['id']][0].join(3)
@@ -184,13 +179,20 @@ class PanelTagTests(unittest.TestCase):
         manifest = (directory/'run.json').read_bytes()
         with sqlite3.connect(directory/'run.sqlite') as db:
             fingerprint = db.execute('SELECT fingerprint FROM run').fetchone()[0]
-        self.app.update_preferences({'tag_locale': 'ja'})
+        preferences = self.app.home/'ui-preferences.json'
+        atomic_json(preferences, {'tag_locale': 'en', 'sidebar_width': 245})
+        before = preferences.read_bytes()
         response = self.app.responses(draft['id'])
         report = self.app.report(draft['id'])
         for context in (response['report_context'], response['context'], report['report_context'],
                         report['responses']['report_context'], report['responses']['context']):
-            self.assertEqual(context['tag_locale'], 'ja')
+            self.assertEqual(context['tag_locale'], 'ko')
             self.assertEqual(context['panel']['tags'], draft['panel']['tags'])
+        tag = draft['panel']['tags'][0]
+        body, _ = self.app.export(draft['id'], 'md')
+        self.assertIn('#' + report['report_context']['tag_labels'][tag]['ko'], body)
+        self.assertNotIn('#' + report['report_context']['tag_labels'][tag]['en'], body)
+        self.assertEqual(preferences.read_bytes(), before)
         self.assertEqual((directory/'run.json').read_bytes(), manifest)
         with sqlite3.connect(directory/'run.sqlite') as db:
             self.assertEqual(db.execute('SELECT fingerprint FROM run').fetchone()[0], fingerprint)

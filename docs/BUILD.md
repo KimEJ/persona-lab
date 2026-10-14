@@ -71,6 +71,11 @@ Cloudflare 원본 리비전과 GGUF 리비전은 별도로 기록합니다. 원�
 Clef 전용 `/v1/systemone` 경로가 있는 버전이 필요합니다.
 준비·다운로드·소스 컴파일은 `tools/build.py`가 수행하지 않습니다.
 
+현재 명세의 `runtime_policy: metal-fusion-off-v1`을 유지하세요. 앱은 모델 자식 프로세스에 `GGML_METAL_FUSION_DISABLE=1`을 설정합니다.
+b11429의 Metal 행렬곱·덧셈 결합이 Clef의 점수를 잘못 계산하는 문제를 피합니다. GPU 실행은 유지합니다.
+원인과 upstream 수정은 [llama.cpp #30100](https://github.com/ggml-org/llama.cpp/pull/30100)에 있습니다.
+실행 지문에 이 정책을 포함하므로 수정 전 결과와 새 추론을 섞어 재개하지 않습니다.
+
 ## 4. 인물 데이터를 준비한다
 
 현재 활성 명세는 [`assets/data/nemotron-japan-sample.json`](../assets/data/nemotron-japan-sample.json)입니다.

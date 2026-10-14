@@ -1,9 +1,11 @@
 import json
+import hashlib
+import os
 import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from persona_desktop.model import BundledModel
 from persona_lab.contracts import ContractError
@@ -11,6 +13,45 @@ from persona_lab.responses import SURVEY_V2_SCENARIO_ID
 
 
 class ModelDispatchTests(unittest.TestCase):
+    def test_corrected_metal_policy_starts_child_with_fusion_disabled(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            assets=Path(temporary);(assets/'models').mkdir()
+            data=b'model fixture';(assets/'models/test.gguf').write_bytes(data)
+            info={'model_id':'clef','file':'test.gguf','sha256':hashlib.sha256(data).hexdigest(),
+                  'runtime':'llama.cpp b11429','endpoint':'/v1/systemone','model_architecture':'clef',
+                  'gpu_layers':99,'parallel':1,'runtime_policy':'metal-fusion-off-v1'}
+            model=BundledModel(assets,assets,info=info);model.origin='http://127.0.0.1:32000'
+            self.addCleanup(model.close)
+            process=Mock();process.poll.return_value=None
+            with patch.dict(os.environ,{'GGML_METAL_FUSION_DISABLE':'0'}), \
+                 patch('persona_desktop.model.socket.socket') as socket, \
+                 patch('persona_desktop.model.subprocess.Popen',return_value=process) as spawn, \
+                 patch('persona_desktop.model.urllib.request.urlopen') as health:
+                socket.return_value.__enter__.return_value.getsockname.return_value=('127.0.0.1',32000)
+                health.return_value.__enter__.return_value.status=200
+                model._start()
+                self.assertEqual(model.phase,'ready')
+                self.assertEqual(spawn.call_args.kwargs['env']['GGML_METAL_FUSION_DISABLE'],'1')
+                self.assertEqual(os.environ['GGML_METAL_FUSION_DISABLE'],'0')
+                command=spawn.call_args.args[0]
+                self.assertEqual(command[command.index('--n-gpu-layers')+1],'99')
+
+    def test_corrected_runtime_fingerprint_cannot_match_previous_metal_results(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            assets=Path(temporary)
+            info={'model_id':'clef','sha256':'model-sha','runtime':'llama.cpp b11429',
+                  'endpoint':'/v1/systemone','model_architecture':'clef'}
+            model=BundledModel(assets,assets,info=info)
+            model.port=32000;model.phase='ready';model.process=SimpleNamespace(poll=lambda:None)
+            original=model.backend(survey_version=SURVEY_V2_SCENARIO_ID).backend_id
+            model.info={**info,'runtime_policy':'metal-fusion-off-v1'}
+            corrected=model.backend(survey_version=SURVEY_V2_SCENARIO_ID).backend_id
+            self.assertNotEqual(original,corrected)
+            self.assertIn('llama.cpp b11429+metal-fusion-off-v1',corrected)
+            model.info={**info,'runtime_policy':'unsupported'}
+            with self.assertRaisesRegex(ContractError,'런타임 설정'):
+                model.backend(survey_version=SURVEY_V2_SCENARIO_ID)
+
     def test_finite_versions_keep_the_clef_backend_and_require_the_head(self):
         with tempfile.TemporaryDirectory() as temporary:
             assets=Path(temporary)

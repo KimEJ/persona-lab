@@ -16,16 +16,20 @@ from pathlib import Path
 
 from persona_lab.adapter import read_personas
 from persona_lab.contracts import canonical, require, validate_experiment, digest
-from persona_lab.runner import matches, selected_personas, run, read_status, jobs
+from persona_lab.runner import matches, selected_personas, run, read_status, jobs, preflight_jobs
 from persona_lab.reports import summarize, export, result_page
 from persona_lab.scenarios import SCENARIO_ID
-from persona_lab.responses import SURVEY_V2_SCENARIO_ID as RESPONSE_SCENARIO_ID, SURVEY_SCENARIO_ID, DECISION_SCENARIO_ID, FINITE_SCENARIO_IDS, LINKED_SCENARIO_ID, LINKED_SCENARIO_IDS, RESPONSE_SCENARIO_IDS, QUESTIONS, LINKED_QUESTIONS, DECISION_QUESTIONS, price_bands, input_product
-from persona_lab.survey import SURVEY_QUESTIONS, SURVEY_V2_QUESTIONS, question_info
+from persona_lab.responses import SURVEY_V4_SCENARIO_ID as RESPONSE_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, SURVEY_SCENARIO_ID, DECISION_SCENARIO_ID, FINITE_SCENARIO_IDS, LINKED_SCENARIO_ID, LINKED_SCENARIO_IDS, RESPONSE_SCENARIO_IDS, QUESTIONS, LINKED_QUESTIONS, DECISION_QUESTIONS, price_bands, input_product
+from persona_lab.survey import SURVEY_QUESTIONS, SURVEY_V2_QUESTIONS, SURVEY_V3_QUESTIONS, SURVEY_V4_QUESTIONS, STAGED_PROTOCOL, question_info
 from .results import response_report, experiment_report
 from .documents import product_from_item, DOCUMENT_TEMPLATE, item_name, price_from_document, money_from_fields, pricing_fields, valuation_fields, valuation_from_fields
 from .model import BundledModel
 from .valuation import calibrate
 from .importing import normalize_settings
+
+
+APP_LOCALE = 'ko'
+SURVEY_WORKFLOWS = {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, RESPONSE_SCENARIO_ID}
 
 
 def now(): return datetime.now(timezone.utc).isoformat()
@@ -94,7 +98,7 @@ class Application:
         snapshot = self.snapshot(identifier) if status else None
         if snapshot: draft = snapshot['draft']
         if not status:
-            if draft.get('workflow') in {None,'product-response-v1','product-response-v2',DECISION_SCENARIO_ID,SURVEY_SCENARIO_ID,'independent-choice-v1',SCENARIO_ID}:draft['workflow']=RESPONSE_SCENARIO_ID
+            if draft.get('workflow') in {None,'product-response-v1','product-response-v2',DECISION_SCENARIO_ID,SURVEY_SCENARIO_ID,SURVEY_V2_SCENARIO_ID,SURVEY_V3_SCENARIO_ID,'independent-choice-v1',SCENARIO_ID}:draft['workflow']=RESPONSE_SCENARIO_ID
             for item in draft['items']:
                 if not item['document'].strip():
                     item['document']=DOCUMENT_TEMPLATE
@@ -109,7 +113,7 @@ class Application:
         if snapshot and snapshot['spec']['scenario'].get('id') in RESPONSE_SCENARIO_IDS:
             draft['question_catalog']=question_catalog(snapshot['spec']['questions'],snapshot['spec']['scenario']['id'])
         elif not status and draft.get('workflow')==RESPONSE_SCENARIO_ID:
-            draft['question_catalog']=question_catalog(SURVEY_V2_QUESTIONS,RESPONSE_SCENARIO_ID)
+            draft['question_catalog']=question_catalog(SURVEY_V4_QUESTIONS,RESPONSE_SCENARIO_ID)
         fixed = {product['id']:product for product in snapshot['spec']['products']} if snapshot else {}
         draft['legacy_items']={item['id']:{'name':fixed[item['id']]['name'] if item['id'] in fixed else item_name(item['document']),'pricing':pricing_fields(fixed[item['id']]['price'] if item['id'] in fixed else price_from_document(item['document']))} for item in draft['items'] if 'pricing' not in item}
         return draft
@@ -121,27 +125,9 @@ class Application:
     def model_status(self):
         return self.model.status() if self.model else {'phase':'ready','error':None,'info':{'name':'Mock · 테스트 전용','model_id':self.test_backend.backend_id,'license':'project fixture','url':''}}
 
-    def ui_preferences(self):
-        try:
-            value = json.loads((self.home/'ui-preferences.json').read_text())
-            require(isinstance(value, dict), 'invalid UI preferences')
-            canonical(value)
-        except (OSError, ValueError, TypeError):
-            value = {}
-        locale = value.get('tag_locale', 'ko')
-        return {**value, 'tag_locale': locale if isinstance(locale, str) and locale in {'ko', 'en', 'ja'} else 'ko'}
-
-    def update_preferences(self, data):
-        require(isinstance(data, dict) and set(data) == {'tag_locale'}, '표시 언어 설정 형식을 확인하세요.')
-        locale = data['tag_locale']
-        require(isinstance(locale, str) and locale in {'ko', 'en', 'ja'}, '태그 언어는 한국어·영어·일본어 중에서 선택하세요.')
-        with self.lock:
-            atomic_json(self.home/'ui-preferences.json', {**self.ui_preferences(), 'tag_locale': locale})
-        return {'tag_locale': locale}
-
     def state(self):
         deleted=[{'id':path.parent.name,'title':json.loads(path.read_text())['title']} for path in sorted((self.home/'deleted-experiments').glob('*/draft.json'),key=lambda p:p.parent.stat().st_mtime,reverse=True)]
-        return {'version':'0.8.1','history':self.history(),'deleted':deleted,'source':self.source,'model':self.model_status(),'document_template':DOCUMENT_TEMPLATE,'max_items':5,'home':str(self.home),'prefectures':sorted({p.raw['prefecture'] for p in self.people if p.raw.get('prefecture')}),'survey_questions':question_catalog(SURVEY_V2_QUESTIONS,RESPONSE_SCENARIO_ID),'tag_locale':self.ui_preferences()['tag_locale']}
+        return {'version':'0.8.1','history':self.history(),'deleted':deleted,'source':self.source,'model':self.model_status(),'document_template':DOCUMENT_TEMPLATE,'max_items':5,'home':str(self.home),'prefectures':sorted({p.raw['prefecture'] for p in self.people if p.raw.get('prefecture')}),'survey_questions':question_catalog(SURVEY_V4_QUESTIONS,RESPONSE_SCENARIO_ID),'tag_locale':APP_LOCALE}
 
     def create(self, copy_from=None):
         with self.lock:
@@ -162,6 +148,7 @@ class Application:
     def import_settings(self, value):
         with self.lock:
             fields = normalize_settings(value)
+            fields['workflow'] = RESPONSE_SCENARIO_ID
             identifier = uuid.uuid4().hex
             draft = {'id': identifier, **fields, 'revision': 0, 'updated_at': now()}
             self.make_spec(draft, allow_empty=True)
@@ -224,7 +211,7 @@ class Application:
             candidate=dict(item)
             if allow_empty and not candidate['document'].strip(): candidate['document']='미작성 문서'
             product=product_from_item(candidate,index,allow_empty)
-            if draft.get('workflow')==RESPONSE_SCENARIO_ID:
+            if draft.get('workflow') in SURVEY_WORKFLOWS:
                 value=candidate.get('valuation',valuation_fields({**product,'valuation_bands':[]}))
                 product['valuation_unit'],product['valuation_bands']=valuation_from_fields(value)
                 if value.get('mode')=='auto':product['valuation_mode']='auto'
@@ -237,10 +224,13 @@ class Application:
             require('selected_uuids' not in draft['panel'], '실행 전에는 고정된 추출 인물을 지정할 수 없습니다.')
             for product in products:
                 product.setdefault('valuation_unit',{'currency':(product.get('price') or {}).get('currency','JPY'),'billing':(product.get('price') or {}).get('billing','one_time')})
-                if draft['workflow']!=RESPONSE_SCENARIO_ID:product['valuation_bands']=price_bands(product['valuation_unit']['currency'])
+                if draft['workflow'] not in SURVEY_WORKFLOWS:product['valuation_bands']=price_bands(product['valuation_unit']['currency'])
             linked=draft['workflow'] in LINKED_SCENARIO_IDS
-            questions=SURVEY_V2_QUESTIONS if draft['workflow']==RESPONSE_SCENARIO_ID else SURVEY_QUESTIONS if draft['workflow']==SURVEY_SCENARIO_ID else DECISION_QUESTIONS if draft['workflow']==DECISION_SCENARIO_ID else LINKED_QUESTIONS if linked else QUESTIONS
-            return validate_experiment({'schema_version':'0.1','experiment_id':draft['id'],'mode':'independent_comparison','panel':draft['panel'],'seed':settings['seed'],'repeats':settings['repeats'],'batch_size':1 if linked else 8,'products':products,'questions':questions,'scenario':{'id':draft['workflow'],'initial_state_id':'initial-v1','events':[]},'assumptions':{}})
+            questions=SURVEY_V4_QUESTIONS if draft['workflow']==RESPONSE_SCENARIO_ID else SURVEY_V3_QUESTIONS if draft['workflow']==SURVEY_V3_SCENARIO_ID else SURVEY_V2_QUESTIONS if draft['workflow']==SURVEY_V2_SCENARIO_ID else SURVEY_QUESTIONS if draft['workflow']==SURVEY_SCENARIO_ID else DECISION_QUESTIONS if draft['workflow']==DECISION_SCENARIO_ID else LINKED_QUESTIONS if linked else QUESTIONS
+            grouped=draft['workflow'] in SURVEY_WORKFLOWS
+            spec={'schema_version':'0.1','experiment_id':draft['id'],'mode':'independent_comparison','panel':draft['panel'],'seed':settings['seed'],'repeats':settings['repeats'],'batch_size':7 if draft['workflow']==RESPONSE_SCENARIO_ID else len(questions) if grouped else 1 if linked else 8,'products':products,'questions':questions,'scenario':{'id':draft['workflow'],'initial_state_id':'initial-v1','events':[]},'assumptions':{}}
+            if grouped:spec['inference_protocol']=STAGED_PROTOCOL if draft['workflow']==RESPONSE_SCENARIO_ID else 'survey-grouped-v2' if draft['workflow']==SURVEY_V3_SCENARIO_ID else 'survey-grouped-v1'
+            return validate_experiment(spec)
         budget=settings.get('budget')
         structured=any('pricing' in item for item in draft['items']) or isinstance(budget,dict)
         if budget is not None:
@@ -268,7 +258,7 @@ class Application:
         if panel['selection']!='random':value['items']=[{'uuid':p.uuid,'raw':p.raw,'missing':p.missing} for p in selected[:20]]
         return value
 
-    def panel_tags(self, panel, identifier=None, query='', locale='ko'):
+    def panel_tags(self, panel, identifier=None, query='', locale=APP_LOCALE):
         from persona_lab.tags import canonical_tag_id, tag_catalog, tag_metadata, valid_tag_id
         require(isinstance(query, str) and len(query) <= 120, '태그 검색어는 120자까지 입력하세요.')
         require(isinstance(locale, str) and locale in {'ko', 'en', 'ja'}, '태그 언어는 한국어·영어·일본어 중에서 선택하세요.')
@@ -373,9 +363,14 @@ class Application:
                 frozen_draft['panel']=spec['panel']
                 snapshot={'draft':frozen_draft,'spec':spec,'source':self.source,'created_at':now()}
             source=snapshot['source'];data_path,_=self.source_pack(source)
-            backend=self.test_backend if self.test_backend is not None else self.model.backend(structured=spec['scenario'].get('id')==SCENARIO_ID,response=spec['scenario'].get('id')=='product-response-v1',linked=spec['scenario'].get('id')==LINKED_SCENARIO_ID,finite=spec['scenario'].get('id') in FINITE_SCENARIO_IDS,survey=spec['scenario'].get('id')==SURVEY_SCENARIO_ID,survey_version=RESPONSE_SCENARIO_ID if spec['scenario'].get('id')==RESPONSE_SCENARIO_ID else None)
-            if not manifest.exists() and callable(getattr(backend,'preflight',None)):
-                for job in jobs(data_path,source,{**spec,'repeats':1}):backend.preflight(job)
+            backend=self.test_backend if self.test_backend is not None else self.model.backend(structured=spec['scenario'].get('id')==SCENARIO_ID,response=spec['scenario'].get('id')=='product-response-v1',linked=spec['scenario'].get('id')==LINKED_SCENARIO_ID,finite=spec['scenario'].get('id') in FINITE_SCENARIO_IDS,survey=spec['scenario'].get('id')==SURVEY_SCENARIO_ID,survey_version=spec['scenario']['id'] if spec['scenario'].get('id') in SURVEY_WORKFLOWS else None,inference_protocol=spec.get('inference_protocol'),survey_questions=spec['questions'] if spec.get('inference_protocol') else None)
+            if backend.kind == 'dedicated_local_decision':
+                saved_backend = (read_status(directory/'run.sqlite')['backend_id'] if (directory/'run.sqlite').is_file()
+                                 else snapshot.get('price_calibration', {}).get('backend_id'))
+                require(saved_backend is None or saved_backend == backend.backend_id,
+                        '추론 런타임이 변경되어 이전 결과와 섞어 재개할 수 없습니다. 실험을 복제한 뒤 새로 실행하세요.')
+            if not manifest.exists():
+                preflight_jobs(backend,jobs(data_path,source,{**spec,'repeats':1}))
             calibrating=not manifest.exists() and any(product.get('valuation_mode')=='auto' for product in spec['products'])
             if not manifest.exists():atomic_json(preparation if calibrating else manifest,snapshot)
             if retry:
@@ -402,16 +397,13 @@ class Application:
                             if hasattr(backend,'audit'):backend.audit=audit
                             try:
                                 products,state,complete=calibrate(spec['products'],people,spec['panel'],backend,identifier,spec['seed'],
-                                                                 state=snapshot.get('price_calibration'),cancelled=event.is_set,checkpoint=checkpoint)
+                                                                 state=snapshot.get('price_calibration'),cancelled=event.is_set,checkpoint=checkpoint,scenario_id=spec['scenario']['id'])
                             finally:
                                 if hasattr(backend,'audit'):backend.audit=previous_audit
                         checkpoint(state)
                         if not complete or event.is_set():return
                         main_spec=validate_experiment({**spec,'products':products})
-                        if callable(getattr(backend,'preflight',None)):
-                            for job in jobs(data_path,source,{**main_spec,'repeats':1}):
-                                if event.is_set():return
-                                backend.preflight(job)
+                        if not preflight_jobs(backend,jobs(data_path,source,{**main_spec,'repeats':1}),cancelled=event.is_set):return
                         snapshot['spec']=main_spec
                         with self.lock:
                             atomic_json(manifest,snapshot)
@@ -429,12 +421,11 @@ class Application:
         return self.status(identifier)
 
     def tag_report_locale(self, report):
-        locale = self.ui_preferences()['tag_locale']
         responses = report.get('responses', {})
         for context in (report.get('report_context'), report.get('context'),
                         responses.get('report_context'), responses.get('context')):
             if isinstance(context, dict):
-                context['tag_locale'] = locale
+                context['tag_locale'] = APP_LOCALE
         return report
 
     def report(self,identifier,repeat=0,include_calls=False):
@@ -540,7 +531,7 @@ class Application:
         require(person is not None and person.content_hash==record['persona_content_hash'] and snapshot['source']['source_id']==record['source_id'] and snapshot['source']['version']==record['source_version'] and snapshot['source']['license_id']==record['license_id'],'당시 인물 원문을 확인할 수 없습니다.')
         product=next(p for p in snapshot['spec']['products'] if p['id']==record['product_id'])
         scenario=snapshot['spec']['scenario'].get('id')
-        domain='usage' if scenario in {RESPONSE_SCENARIO_ID,SURVEY_SCENARIO_ID} and record['domain']!='purchase' else record['domain']
+        domain='usage' if scenario in {*SURVEY_WORKFLOWS,SURVEY_SCENARIO_ID} and record['domain']!='purchase' else record['domain']
         supplied=input_product(product,domain) if scenario in RESPONSE_SCENARIO_IDS else product
         return {'record':record,'model_calls':traces,'review':self.review(identifier,job),'persona':{'raw':person.raw,'missing':person.missing},'product':supplied,'offered_product':product,'question':next(q for q in snapshot['spec']['questions'] if q['id']==record['question_id']),'conditions':{'assumptions':snapshot['spec']['assumptions'],'scenario':snapshot['spec']['scenario']}}
 
@@ -551,7 +542,13 @@ class Application:
             with sqlite3.connect(directory/filename) as connection:return Application.model_calls(directory,job,connection)
         if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='model_calls'").fetchone():return []
         keys=('id','job_id','started_at','request','response','error','finished_at')
-        return [dict(zip(keys,row)) for row in db.execute('SELECT '+','.join(keys)+' FROM model_calls'+(' WHERE job_id=?' if job else '')+' ORDER BY id',(job,) if job else ())]
+        where,parameters='',()
+        if job:
+            where,parameters=' WHERE job_id=?',(job,)
+            if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='model_call_jobs'").fetchone():
+                where+=' OR id IN (SELECT call_id FROM model_call_jobs WHERE job_id=?)'
+                parameters=(job,job)
+        return [dict(zip(keys,row)) for row in db.execute('SELECT '+','.join(keys)+' FROM model_calls'+where+' ORDER BY id',parameters)]
 
     def export(self,identifier,format,repeat=0):
         directory=self.directory(identifier)

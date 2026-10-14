@@ -12,7 +12,7 @@ from persona_desktop.application import atomic_json
 from persona_desktop.documents import valuation_from_fields
 from persona_desktop.server import make_server
 from persona_lab.contracts import ContractError
-from persona_lab.responses import SURVEY_V2_SCENARIO_ID
+from persona_lab.responses import SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID
 from persona_lab.runner import selected_personas
 from persona_lab.tags import canonical_tag_id
 
@@ -38,7 +38,7 @@ class SettingsImportTests(unittest.TestCase):
                       'pricing': {'state': 'free', 'amount': '0', 'currency': 'JPY', 'billing': 'one_time'},
                       'valuation': {'mode': 'manual', 'currency': 'JPY', 'billing': 'one_time',
                                     'boundaries': ['', '', '']}})
-        return {'id': 'a'*32, 'title': '가격 비교 · 日本語', 'workflow': SURVEY_V2_SCENARIO_ID,
+        return {'id': 'a'*32, 'title': '가격 비교 · 日本語', 'workflow': SURVEY_V4_SCENARIO_ID,
                 'items': items, 'panel': {'selection': 'random', 'sample_size': 2,
                 'sample_seed': 481, 'sampling_version': 'hash-rank-v1', 'sex': 'female',
                 'age_min': 24, 'age_max': 36, 'prefecture': '東京都', 'query': '작가'},
@@ -70,6 +70,17 @@ class SettingsImportTests(unittest.TestCase):
         imported['title'] = '가져온 뒤 수정'
         saved = self.app.save(imported['id'], imported)
         self.assertEqual((saved['title'], saved['revision']), ('가져온 뒤 수정', 1))
+
+    def test_prior_survey_settings_import_as_a_new_staged_draft(self):
+        for workflow in (SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID):
+            original = self.settings()
+            original['workflow'] = workflow
+            imported = self.app.import_settings(original)
+            self.assert_fresh(imported, original)
+            self.assertEqual(imported['workflow'], SURVEY_V4_SCENARIO_ID)
+            spec = self.app.make_spec(imported)
+            self.assertEqual(spec['inference_protocol'], 'survey-staged-v1')
+            self.assertEqual((spec['batch_size'], len(spec['questions'])), (7, 9))
 
     def test_exported_replay_prefers_original_auto_settings_and_discards_run_resources(self):
         original = self.app.import_settings(self.settings())
@@ -137,7 +148,7 @@ class SettingsImportTests(unittest.TestCase):
         imported = self.app.import_settings(value)
         self.assertIsNone(imported['run'])
         self.assertEqual(imported['items'][0]['pricing']['currency'], 'USD')
-        self.assertEqual(imported['workflow'], SURVEY_V2_SCENARIO_ID)
+        self.assertEqual(imported['workflow'], SURVEY_V4_SCENARIO_ID)
 
     def test_tags_and_match_mode_survive_editable_replay_spec_and_copy(self):
         for person in self.app.people:

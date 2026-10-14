@@ -1,6 +1,7 @@
 """Only start and stop this application's bundled, loopback inference process."""
 import hashlib
 import json
+import os
 import socket
 import subprocess
 import threading
@@ -9,6 +10,8 @@ import urllib.request
 from pathlib import Path
 
 from persona_lab.contracts import require
+
+METAL_FUSION_OFF_POLICY = 'metal-fusion-off-v1'
 
 class BundledModel:
     def __init__(self, assets: Path, home: Path, info=None):
@@ -42,7 +45,8 @@ class BundledModel:
             self.log = (self.home/'model.log').open('ab')
             with self.lock:
                 if self.stopped.is_set(): return
-                self.process = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=self.log, stderr=self.log)
+                self.process = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=self.log, stderr=self.log,
+                                                env=self._runtime_environment())
             deadline = time.monotonic()+60
             while not self.stopped.wait(.25) and time.monotonic() < deadline:
                 require(self.process.poll() is None, '기본 모델을 시작하지 못했습니다. 모델 로그를 확인하세요.')
@@ -66,13 +70,26 @@ class BundledModel:
             self.phase, self.error = 'failed', '모델이 종료되었습니다. 다시 불러오세요.'
         return {'phase': self.phase, 'error': self.error, 'info': self.info}
 
-    def backend(self, structured=False, response=False, linked=False, finite=False, survey=False, survey_version=None):
+    def _runtime_environment(self):
+        environment = dict(os.environ)
+        policy = self.info.get('runtime_policy')
+        require(policy in {None, METAL_FUSION_OFF_POLICY}, '지원하지 않는 추론 런타임 설정입니다.')
+        if policy == METAL_FUSION_OFF_POLICY:
+            # b11429 selects the wrong residual in Clef's matmul + matmul head.
+            # Upstream fix: ggml-org/llama.cpp#30100. Keep GPU execution and
+            # disable the affected Metal fusion path until the runtime is updated.
+            environment['GGML_METAL_FUSION_DISABLE'] = '1'
+        return environment
+
+    def backend(self, structured=False, response=False, linked=False, finite=False, survey=False, survey_version=None, inference_protocol=None, survey_questions=None):
         finite=finite or survey or survey_version is not None
         require(finite, '이전 모델은 제거되었습니다. 저장된 결과는 열람하거나 복사할 수 있지만 이전 실행은 재개할 수 없습니다.')
         require(self.status()['phase'] == 'ready', self.error or '모델을 불러오는 중입니다.')
         from persona_lab.finite_decision import ClefBackend
         require(self.info.get('endpoint')=='/v1/systemone' and self.info.get('model_architecture')=='clef', '전용 결정 모델이 준비되지 않았습니다.')
-        return ClefBackend(endpoint=f'http://127.0.0.1:{self.port}',model_id=self.info['model_id'],revision=self.info['sha256'],runtime_revision=self.info['runtime'],context_tokens=self.info.get('context_size',8192),survey=survey,survey_version=survey_version)
+        self._runtime_environment()  # Validate the same policy that starts the child.
+        runtime_revision=self.info['runtime'] + ('+' + self.info['runtime_policy'] if self.info.get('runtime_policy') else '')
+        return ClefBackend(endpoint=f'http://127.0.0.1:{self.port}',model_id=self.info['model_id'],revision=self.info['sha256'],runtime_revision=runtime_revision,context_tokens=self.info.get('context_size',8192),survey=survey,survey_version=survey_version,inference_protocol=inference_protocol,survey_questions=survey_questions)
 
     def _stop_process(self):
         with self.lock:

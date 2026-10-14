@@ -118,6 +118,13 @@ def validate_experiment(spec: dict) -> dict:
     require(spec["batch_size"] <= 1024, "v0.1 batch_size must be at most 1024; this is not a panel size cap")
     require(isinstance(spec.get("scenario"), dict), "scenario must be an object")
     scenario = spec["scenario"]
+    if scenario.get('id') == 'product-survey-v4':
+        require(spec.get('inference_protocol') == 'survey-staged-v1', 'v4 surveys require the staged inference protocol')
+    if 'inference_protocol' in spec:
+        require((scenario.get('id'), spec['inference_protocol']) in {
+            ('product-survey-v2', 'survey-grouped-v1'), ('product-survey-v3', 'survey-grouped-v2'),
+            ('product-survey-v4', 'survey-staged-v1')},
+            'unsupported survey inference protocol')
     text_id(scenario.get("initial_state_id"), "initial_state_id")
     require(isinstance(scenario.get("events"), list), "events must be explicit, possibly empty")
     for event in scenario["events"]:
@@ -149,7 +156,7 @@ def validate_experiment(spec: dict) -> dict:
             text_id(product.get(key), f"product.{key}")
         require(isinstance(product.get("features"), list) and all(isinstance(f, str) for f in product["features"]), "features must be strings")
         price = product.get("price")
-        if scenario.get('id') == 'product-survey-v2' and price is not None:
+        if scenario.get('id') in {'product-survey-v2', 'product-survey-v3', 'product-survey-v4'} and price is not None:
             validate_money(price, '판매가격')
         if price is None and isinstance(product.get("document"), str):
             text_id(product["document"], "product.document")
@@ -193,6 +200,8 @@ class Job:
     scenario: dict
     assumptions: dict
     assessments: dict | None = None
+    calibration_history: dict | None = None
+    survey_history: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -221,7 +230,7 @@ def validate_decision(decision: Decision, job: Job) -> None:
     require((decision.choice == 'not_run') == (decision.status == 'not_run'), 'not-run status must be explicit')
     if decision.status == 'not_run':
         require(job.question['domain']=='purchase' and job.product.get('price') is None
-                or job.scenario.get('id') == 'product-survey-v2' and job.question['domain']=='fair_price'
+                or job.scenario.get('id') in {'product-survey-v2', 'product-survey-v3', 'product-survey-v4'} and job.question['domain']=='fair_price'
                 and job.product.get('valuation_bands') == [], 'only an unset measurement condition can skip a question')
     if job.scenario.get('id') == 'product-response-v1':
         from .responses import REASON_PATTERN, MISSING_PATTERN
@@ -234,7 +243,7 @@ def validate_decision(decision: Decision, job: Job) -> None:
         if decision.valuation is not None:
             validate_money(decision.valuation,'추정 가격')
             require(job.question['domain']=='fair_price' and decision.choice.startswith('price_'),'가격 추정이 아닌 판단에 금액을 생성할 수 없습니다.')
-    if job.scenario.get('id') in {'product-decision-v1','product-survey-v1','product-survey-v2'}:
+    if job.scenario.get('id') in {'product-decision-v1','product-survey-v1','product-survey-v2','product-survey-v3','product-survey-v4'}:
         require(decision.valuation is None, '유한 선택 평가에는 임의의 금액을 생성할 수 없습니다.')
         require(decision.choice!='unknown' or bool(decision.missing_information) or decision.diagnostic_error is not None, '판단 불가의 확인 항목이 필요합니다.')
         if decision.diagnostic_error is not None:
@@ -255,6 +264,10 @@ def validate_decision(decision: Decision, job: Job) -> None:
     if decision.choice not in {"unknown", "not_run"}:
         require(bool(decision.evidence_refs), "known choices need input evidence refs")
     roots = {"persona": {"raw": job.persona.raw}, "product": job.product, "scenario": job.scenario, "assumptions": job.assumptions, "assessments":job.assessments or {}}
+    if job.calibration_history is not None:
+        roots['calibration_history'] = job.calibration_history
+    if job.survey_history is not None:
+        roots['survey_history'] = job.survey_history
     for ref in decision.evidence_refs:
         value = roots
         for part in ref.split("."):
@@ -266,4 +279,4 @@ def validate_decision(decision: Decision, job: Job) -> None:
     require(decision.score is None, "v0.1 does not accept uncalibrated numeric scores")
     require(decision.score_semantics == "not_provided", "unexpected score semantics")
     require(decision.evidence_semantics in {"backend_cited_input", "supplied_input_only"}, "unexpected evidence semantics")
-    require(job.scenario.get('id') in {'product-decision-v1','product-survey-v1','product-survey-v2'} or decision.diagnostic_error is None, '이전 판단 계약에 후속 분류 오류를 추가할 수 없습니다.')
+    require(job.scenario.get('id') in {'product-decision-v1','product-survey-v1','product-survey-v2','product-survey-v3','product-survey-v4'} or decision.diagnostic_error is None, '이전 판단 계약에 후속 분류 오류를 추가할 수 없습니다.')

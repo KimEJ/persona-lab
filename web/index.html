@@ -25,7 +25,6 @@
    <button id="delete-experiment" class="quiet delete-experiment" hidden>실험 삭제</button>
    <button id="undo-experiment" class="quiet undo-experiment" hidden>삭제 되돌리기</button>
    <button id="previous-step" class="quiet" hidden>돌아가기</button>
-   <label id="tag-locale-field" class="tag-locale-field header-tag-locale" for="tag-locale" hidden>태그 언어 <select id="tag-locale" aria-label="태그 표시 언어"><option value="ko">한국어</option><option value="en">English</option><option value="ja">日本語</option></select></label>
    <button id="primary-action" class="primary" hidden>실험 시작</button>
   </header>
   <section id="run-monitor" class="run-monitor" aria-label="실험 실행 상태" hidden>
@@ -85,7 +84,7 @@
     <div class="budget-fields"><label>구매 상한<input id="budget" type="number" min="0" step="1" placeholder="미입력" aria-describedby="budget-error"><span id="budget-error" class="field-error" hidden></span></label><label>통화<select id="budget-currency"><option>JPY</option><option>KRW</option><option>USD</option><option>EUR</option></select></label><label>기준 기간<select id="budget-billing"><option value="one_time">일시불</option><option value="monthly">월간</option><option value="annual">연간</option></select></label></div>
     <label>사용 후 사건<select id="event"><option value="">미제공</option><option value="repeated_crash">반복 오류</option><option value="unexpected_permission">예상하지 못한 권한 요청</option><option value="price_increase">가격 인상</option></select></label>
    </div></details>
-   <details id="valuation-settings" hidden><summary>평가 가격대</summary><div id="valuation-items" class="valuation-items"></div><p id="valuation-error" class="run-error" role="alert" hidden></p></details>
+   <details id="valuation-settings" hidden><summary id="valuation-heading">최대 지불 가격대</summary><div id="valuation-items" class="valuation-items"></div><p id="valuation-error" class="run-error" role="alert" hidden></p></details>
    <details id="advanced-settings"><summary>고급 설정</summary><div class="fields"><label>반복 횟수<input id="repeats" type="number" min="1" step="1" required aria-describedby="repeats-error"><span id="repeats-error" class="field-error" hidden></span></label><label>Seed<input id="seed" type="number" step="1" required aria-describedby="seed-error"><span id="seed-error" class="field-error" hidden></span></label></div></details>
    <div id="job-count" class="job-count"></div>
   </section>

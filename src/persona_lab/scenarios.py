@@ -1,7 +1,7 @@
 """Versioned, one-step scenarios. No generated cognition or agent actions."""
 
 from .contracts import Decision, Job, require, validate_valuation_bands
-from .responses import RESPONSE_SCENARIO_IDS, FINITE_SCENARIO_IDS, SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, price_bands
+from .responses import RESPONSE_SCENARIO_IDS, FINITE_SCENARIO_IDS, SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID, price_bands
 
 SCENARIO_ID = "independent-choice-v2"
 SCENARIO_IDS = {"independent-choice-v1", SCENARIO_ID, *RESPONSE_SCENARIO_IDS}
@@ -31,14 +31,14 @@ def validate_scenario(spec: dict) -> None:
     if scenario['id'] in RESPONSE_SCENARIO_IDS:
         from .contracts import CURRENCIES, BILLINGS
         require(spec['assumptions']=={} and scenario['events']==[], 'response questions do not accept a shared budget or post-use events')
-        from .survey import SURVEY_DOMAINS, SURVEY_V2_DOMAINS
-        expected=list(SURVEY_V2_DOMAINS) if scenario['id']==SURVEY_V2_SCENARIO_ID else list(SURVEY_DOMAINS) if scenario['id']==SURVEY_SCENARIO_ID else ['usage','fair_price','purchase']
+        from .survey import SURVEY_DOMAINS, SURVEY_V2_DOMAINS, SURVEY_V3_DOMAINS, SURVEY_V4_DOMAINS
+        expected=list(SURVEY_V4_DOMAINS) if scenario['id']==SURVEY_V4_SCENARIO_ID else list(SURVEY_V3_DOMAINS) if scenario['id']==SURVEY_V3_SCENARIO_ID else list(SURVEY_V2_DOMAINS) if scenario['id']==SURVEY_V2_SCENARIO_ID else list(SURVEY_DOMAINS) if scenario['id']==SURVEY_SCENARIO_ID else ['usage','fair_price','purchase']
         require([q['domain'] for q in spec['questions']]==expected, 'response questions must retain their ordered stages')
         for product in spec['products']:
             unit=product.get('valuation_unit')
             require(isinstance(unit,dict) and set(unit)=={'currency','billing'} and isinstance(unit['currency'],str)
                     and unit['currency'] in CURRENCIES and isinstance(unit['billing'],str) and unit['billing'] in BILLINGS, 'invalid valuation unit')
-            if scenario['id']==SURVEY_V2_SCENARIO_ID:
+            if scenario['id'] in {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID}:
                 validate_valuation_bands(product.get('valuation_bands'))
             else:
                 require(product.get('valuation_bands')==price_bands(unit['currency']), 'invalid valuation bands')
@@ -50,9 +50,9 @@ def validate_scenario(spec: dict) -> None:
     require(len(codes) == len(set(codes)), "duplicate scenario event")
     for question in spec["questions"]:
         if scenario['id'] not in RESPONSE_SCENARIO_IDS:require(question['domain'] not in {'usage','fair_price'}, 'legacy scenarios retain the original domains')
-        if scenario['id']==SURVEY_V2_SCENARIO_ID:
+        if scenario['id'] in {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID}:
             from .survey import question_info
-            allowed=set(question_info(question['domain'], SURVEY_V2_SCENARIO_ID)['choices'])
+            allowed=set(question_info(question['domain'], scenario['id'])['choices'])
             require(set(question['choices']) == allowed, 'survey questions must retain their versioned choices')
         else:
             require(question['domain'] in CHOICES, 'unsupported question domain for this scenario')
@@ -70,7 +70,7 @@ def budget_context(assumptions, uuid, scenario):
 
 def context_gate(job: Job) -> Decision | None:
     if job.scenario.get('id') in RESPONSE_SCENARIO_IDS:
-        if job.scenario.get('id')==SURVEY_V2_SCENARIO_ID and job.question['domain']=='fair_price' and job.product.get('valuation_bands')==[]:
+        if job.scenario.get('id') in {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID} and job.question['domain']=='fair_price' and job.product.get('valuation_bands')==[]:
             calibration=job.product.get('valuation_calibration',{})
             if calibration.get('status')=='unavailable':
                 return Decision('not_run','not_run',('auto_price_unavailable',),(),reason=calibration.get('reason') or '자동 가격대를 확정할 근거가 부족합니다.',evidence_semantics='supplied_input_only')

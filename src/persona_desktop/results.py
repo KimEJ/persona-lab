@@ -5,9 +5,10 @@ import sqlite3
 from collections import Counter
 from itertools import combinations
 
+from persona_lab.acceptance import ACCEPTANCE_QUESTION, derive_acceptance
 from persona_lab.contracts import require
 from persona_lab.reports import summarize
-from persona_lab.responses import RESPONSE_SCENARIO_IDS, SURVEY_V2_SCENARIO_ID
+from persona_lab.responses import RESPONSE_SCENARIO_IDS, SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID
 from persona_lab.runner import selected_personas, sex_code
 from persona_lab.survey import question_info
 from persona_lab.tags import tag_metadata, tag_source_labels
@@ -60,7 +61,7 @@ def _context(spec, source, backend_id, backend_kind, count, status, repeat, snap
 
 
 def _empty_cell(domain, product, scenario_id):
-    missing = '판매가격' if domain == 'purchase' and product.get('price') is None else '평가 가격대' if domain == 'fair_price' and scenario_id == SURVEY_V2_SCENARIO_ID and not product.get('valuation_bands') else None
+    missing = '판매가격' if domain == 'purchase' and product.get('price') is None else '평가 가격대' if domain == 'fair_price' and scenario_id in {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID} and not product.get('valuation_bands') else None
     calibration = product.get('valuation_calibration', {})
     automatic_unavailable = missing == '평가 가격대' and calibration.get('mode') == 'auto'
     reason = (calibration.get('reason') or '가격대 탐색에서 평가 구간을 확정하지 못했습니다.') if automatic_unavailable else missing + '이 입력되지 않았습니다.' if missing else ''
@@ -96,6 +97,7 @@ def _response_report(db, people, repeat=0, reviews=None, snapshot=None):
                 'probability_semantics': decision.get('probability_semantics', 'not_provided') if decision else 'not_provided',
                 'valuation': decision.get('valuation') if decision else None, 'error': error,
                 'review': (reviews or {}).get(record['job_id'], {'marked': False, 'note': '', 'revision': 0})}
+        cell.update({key: record[key] for key in ('survey_history', 'survey_history_hash', 'logical_job_id', 'stage', 'inference_protocol', 'invalidated', 'execution') if key in record})
         cells[person, product, domain] = cell
     selected = list(selected_personas(people, spec['panel']))
     domains = [question['domain'] for question in spec['questions']]
@@ -110,6 +112,12 @@ def _response_report(db, people, repeat=0, reviews=None, snapshot=None):
         product['description'] = product['summary']
     questions = [{**question, 'title': question_info(question['domain'], scenario_id)['title'],
                   'labels': question_info(question['domain'], scenario_id)['choices']} for question in spec['questions']]
+    if scenario_id in {SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID}:
+        questions.append(dict(ACCEPTANCE_QUESTION))
+        for person in cases:
+            for item in person['items']:
+                product = next(product for product in products if product['id'] == item['product_id'])
+                item['acceptance'] = derive_acceptance(product, item['usage'], item['fair_price'])
     count = len(cases)
     context = _context(spec, json.loads(row[4]), row[5], row[6], count, row[3], repeat, snapshot, people)
     response = {'workflow': scenario_id, 'questions': questions, 'repeat': repeat, 'repeats': spec['repeats'],
@@ -129,9 +137,16 @@ def _statistics(response):
             counts = Counter(by_person[person['persona_id']][product['id']][domain]['choice'] for person in people)
             counts = {choice: counts.get(choice, 0) for choice in dict.fromkeys([*question['choices'], *EXCLUDED, *counts])}
             excluded = {choice: counts[choice] for choice in EXCLUDED}
+            if question.get('derived'):
+                excluded['uncertain'] = counts.get('uncertain', 0)
             statistics.append({'product_id': product['id'], 'domain': domain, 'denominator': n,
                                'counts': counts, 'shares': {choice: value / n if n else 0 for choice, value in counts.items()},
                                'evaluated': n - sum(excluded.values()), 'excluded': excluded})
+            if question.get('derived'):
+                cells = [by_person[person['persona_id']][product['id']][domain] for person in people]
+                statistics[-1].update(derived=True, calculation_semantics=question['calculation_semantics'],
+                                      reason_counts=dict(Counter(cell['reason_code'] for cell in cells)),
+                                      input_job_ids=list(dict.fromkeys(job for cell in cells for job in cell['input_job_ids'])))
     paired = []
     invalid = {'error', 'pending', 'not_run', 'not_applicable'}
     for first, second in combinations(products, 2):
@@ -166,16 +181,20 @@ def _statistics(response):
         groups.setdefault(key, []).append(product)
     price_points = []
     stats = {(item['product_id'], item['domain']): item for item in statistics}
+    price_domain, price_choice = ('acceptance', 'accept') if 'acceptance' in domains else ('purchase', 'buy')
     for group in groups.values():
         units = {(p['price']['currency'], p['price']['billing']) for p in group}
         if len(group) < 2 or len(units) != 1 or len({p['price']['amount_minor'] for p in group}) < 2:
             continue
         currency, billing = next(iter(units))
+        if price_domain not in domains:
+            continue
         price_points.append({'name': group[0]['name'], 'currency': currency, 'billing': billing,
+                             **({'domain': price_domain, 'calculation_semantics': ACCEPTANCE_QUESTION['calculation_semantics']} if price_domain == 'acceptance' else {}),
                              'points': [{'product_id': p['id'], 'amount_minor': p['price']['amount_minor'],
-                                         'count': stats[(p['id'], 'purchase')]['counts'].get('buy', 0),
-                                         'denominator': n, 'share': stats[(p['id'], 'purchase')]['shares'].get('buy', 0),
-                                         'excluded': stats[(p['id'], 'purchase')]['excluded']} for p in sorted(group, key=lambda p: p['price']['amount_minor'])]})
+                                         'count': stats[(p['id'], price_domain)]['counts'].get(price_choice, 0),
+                                         'denominator': n, 'share': stats[(p['id'], price_domain)]['shares'].get(price_choice, 0),
+                                         'excluded': stats[(p['id'], price_domain)]['excluded']} for p in sorted(group, key=lambda p: p['price']['amount_minor'])]})
     return {'statistics': statistics, 'paired_comparisons': paired, 'usage_purchase': joint, 'price_points': price_points,
             'denominator_semantics': 'frozen_selected_people_in_one_repeat_including_all_response_states'}
 
@@ -196,4 +215,13 @@ def experiment_report(path, people, repeat=0, reviews=None, snapshot=None, inclu
         if include_calls:
             keys = ('id', 'job_id', 'started_at', 'request', 'response', 'error', 'finished_at')
             report['model_calls'] = [dict(zip(keys, row)) for row in db.execute('SELECT ' + ','.join(keys) + ' FROM model_calls ORDER BY id')] if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='model_calls'").fetchone() else []
+            if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='model_call_jobs'").fetchone():
+                report['model_call_jobs'] = [{'call_id': call_id, 'job_id': job_id} for call_id, job_id in
+                                            db.execute('SELECT call_id,job_id FROM model_call_jobs ORDER BY call_id,job_id')]
+            if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='result_revisions'").fetchone():
+                report['result_revisions'] = [{'id': identifier, 'ordinal': ordinal, 'job_id': job_id,
+                                              'choice': choice, 'status': status, 'record': json.loads(payload),
+                                              'reason': reason, 'saved_at': saved_at}
+                                             for identifier, ordinal, job_id, choice, status, payload, reason, saved_at in
+                                             db.execute('SELECT id,ordinal,job_id,choice,status,payload,reason,saved_at FROM result_revisions ORDER BY id')]
         return report

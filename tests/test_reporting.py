@@ -12,9 +12,9 @@ from unittest.mock import patch
 from persona_desktop.reporting import render_report
 from persona_desktop.results import experiment_report, response_report
 from persona_lab.contracts import Persona
-from persona_lab.responses import SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, price_bands
+from persona_lab.responses import SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, SURVEY_V4_SCENARIO_ID, price_bands
 from persona_lab.runner import open_store
-from persona_lab.survey import SURVEY_QUESTIONS, SURVEY_V2_QUESTIONS
+from persona_lab.survey import SURVEY_QUESTIONS, SURVEY_V2_QUESTIONS, SURVEY_V4_QUESTIONS
 
 
 class ReportingTests(unittest.TestCase):
@@ -105,18 +105,26 @@ class ReportingTests(unittest.TestCase):
         self.assertIn('해당 없음', html)
         self.assertNotIn('<script src=', html)
         self.assertNotIn('<link ', html)
-        self.assertIn('확인할 사례', html)
+        self.assertIn('확인할 응답', html)
         self.assertNotIn('eyebrow', html)
-        self.assertEqual(html.count('<pre>'), 1)
+        self.assertEqual(html.count('<h1>=메모 &lt;script&gt;alert(1)&lt;/script&gt;</h1>'), 1)
+        self.assertEqual(html.count('&lt;img src=x onerror=alert(1)&gt;'), 1)
         self.assertIn('1 · =메모', html)
         self.assertIn('2 · =메모', html)
         self.assertIn('<table class="joint">', html)
-        self.assertIn('<table class="methods">', html)
-        header = html.split('<p class="meta">', 1)[1].split('</p>', 1)[0]
-        self.assertIn('2026년 10월 7일 12:00', header)
-        self.assertIn('중단', header)
-        self.assertNotIn('paused', header)
-        self.assertNotIn('<section class="page"><h2>같은 인물의 선택 비교', html)
+        cover = html.split('<section class="page first product-page">', 1)[1].split('</section>', 1)[0]
+        self.assertIn('<div class="document"><h1>도구</h1><p>검색', cover)
+        self.assertNotIn('<svg', cover)
+        self.assertLess(html.index('product-page'), html.index('overview-page'))
+        self.assertLess(html.index('overview-page'), html.index('evaluation-page'))
+        self.assertIn('회차 1/2', html)
+        self.assertIn('일부 응답', html)
+        for removed in ('class="meta"', 'class="facts"', 'class="product-summary"', 'class="methods"',
+                        '한국시간', '실행일·상태', '질문 버전', '원천 SHA256', '질문과 선택지', '상품 원문'):
+            self.assertNotIn(removed, html)
+        self.assertIn('LicenseRef-Test', html)
+        self.assertIn('local:license', html)
+        self.assertIn('같은 인물의 선택 비교', html)
         csv_body, _ = render_report(report, 'csv')
         rows = list(csv.DictReader(io.StringIO(csv_body)))
         row = next(row for row in rows if row['product_id'] == 'a' and row['domain'] == 'usage' and row['choice'] == 'use')
@@ -167,8 +175,8 @@ class ReportingTests(unittest.TestCase):
         self.assertEqual(response['people'][0]['items'][1]['usage']['choice'], 'consider')
         self.assertEqual(response['people'][0]['items'][1]['purchase']['choice'], 'buy')
         html, _ = render_report(report, 'html')
-        self.assertIn('자동 · 1,000 JPY 미만', html)
-        self.assertIn('자동 · 미실시 · 유효한 탐색 응답이 부족합니다.', html)
+        self.assertNotIn('자동 · 1,000 JPY 미만', html)
+        self.assertIn('유효한 탐색 응답이 부족합니다.', html)
         self.assertIn('&lt;script&gt;미실시&lt;/script&gt;', html)
         self.assertNotIn('<script>', html)
         markdown, _ = render_report(report, 'md')
@@ -179,6 +187,55 @@ class ReportingTests(unittest.TestCase):
         self.assertEqual((band['valuation_mode'], band['valuation_currency'], band['band_low_minor'], band['band_high_minor']), ('auto', 'JPY', '1000', '1999'))
         unavailable = next(row for row in rows if row['product_id'] == 'b' and row['domain'] == 'fair_price' and row['choice'] == 'not_run')
         self.assertEqual((unavailable['valuation_status'], unavailable['valuation_reason']), ('unavailable', reason))
+
+    def test_current_survey_has_product_overview_then_graphs_without_internal_metadata(self):
+        spec = copy.deepcopy(self.spec)
+        spec['scenario']['id'] = SURVEY_V4_SCENARIO_ID
+        spec['questions'] = SURVEY_V4_QUESTIONS
+        spec['repeats'] = 1
+        spec['products'] = [spec['products'][0]]
+        spec['products'][0].update(name='메모 도구', document='# 메모 도구\n\n## 주요 기능\n\n- **검색**\n- 분류', price=None)
+        spec['panel'] = {'selection': 'random', 'sample_size': 4, 'sample_seed': 17,
+                         'selected_uuids': [person.uuid for person in self.people]}
+        with sqlite3.connect(self.path) as db:
+            db.execute('DELETE FROM results WHERE product_id=?', ('b',))
+            db.execute('UPDATE run SET spec=?,status=?', (json.dumps(spec), 'completed'))
+        report = self.report()
+        frozen = copy.deepcopy(report)
+        html, _ = render_report(report, 'html')
+        self.assertEqual(report, frozen)
+        cover = html.split('product-page">', 1)[1].split('</section>', 1)[0]
+        self.assertEqual(cover.count('<h1>'), 1)
+        self.assertIn('<h2>주요 기능</h2><ul><li><strong>검색</strong>', cover)
+        self.assertIn('<h2>개요</h2>', html)
+        self.assertIn('<h2>기본 평가</h2>', html)
+        self.assertIn('<h2>사용·가격</h2>', html)
+        self.assertIn('<h2>연령·성별</h2>', html)
+        self.assertIn('최대 지불 의향 가격대', html)
+        self.assertIn('n=4', html)
+        self.assertIn('25.0%', html)
+        self.assertIn('JPY', html)
+        for removed in ('회차 1/1', '완료', '최종 선택', '가격 수용', '판매가격 미입력',
+                        'report-test', 'clef-test', 'sample_seed', 'selected_uuids', 'product-survey-v4'):
+            self.assertNotIn(removed, html)
+
+    def test_unpriced_product_has_no_offer_comparison_and_unavailable_title_is_not_repeated(self):
+        spec = copy.deepcopy(self.spec)
+        spec['scenario']['id'] = SURVEY_V4_SCENARIO_ID
+        spec['questions'] = SURVEY_V4_QUESTIONS
+        spec['products'][0].update(price=None, valuation_bands=[],
+                                  valuation_calibration={'mode': 'auto', 'status': 'unavailable', 'reason': '구간 미확정'})
+        with sqlite3.connect(self.path) as db:
+            db.execute('UPDATE run SET spec=?', (json.dumps(spec),))
+        report = self.report()
+        html, _ = render_report(report, 'html')
+        overview = html.split('<table class="overview">', 1)[1].split('</table>', 1)[0]
+        first_row = overview.split('<tbody><tr>', 1)[1].split('</tr>', 1)[0]
+        self.assertTrue(first_row.endswith('<td>-</td>'))
+        self.assertNotIn('같은 인물의 가격 수용 비교', html)
+        page = html.split('price-page">', 1)[1].split('</section>', 1)[0]
+        self.assertEqual(page.count('<h3>최대 지불 의향 가격대'), 1)
+        self.assertIn('구간 미확정', page)
 
     def test_price_comparisons_keep_effective_grid_and_ignore_calibration_provenance(self):
         spec = copy.deepcopy(self.spec)

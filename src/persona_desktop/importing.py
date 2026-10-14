@@ -3,7 +3,7 @@ import copy
 import uuid
 
 from persona_lab.contracts import require, validate_experiment
-from persona_lab.responses import SURVEY_V2_SCENARIO_ID
+from persona_lab.responses import SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID
 from .documents import (
     MAX_DOCUMENT_CHARS, item_name, price_from_document, pricing_fields,
     validate_pricing, valuation_fields, valuation_from_fields,
@@ -14,7 +14,7 @@ UNSUPPORTED_WORKFLOW = '이전 버전의 실험 방식은 설정을 가져올 �
 
 
 def _workflow(value):
-    require(isinstance(value, str) and value == SURVEY_V2_SCENARIO_ID, UNSUPPORTED_WORKFLOW)
+    require(isinstance(value, str) and value in {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID}, UNSUPPORTED_WORKFLOW)
     return value
 
 
@@ -62,7 +62,7 @@ def _item(value, ordinal):
 
 def _draft(value, workflow=None, frozen=False):
     require(isinstance(value, dict), '실험 설정은 JSON 객체여야 합니다.')
-    workflow = _workflow(value.get('workflow', workflow or SURVEY_V2_SCENARIO_ID))
+    workflow = _workflow(value.get('workflow', workflow or SURVEY_V4_SCENARIO_ID))
     items, settings = value.get('items'), value.get('settings')
     require(isinstance(items, list) and 1 <= len(items) <= 5, '아이템은 1~5개까지 가져올 수 있습니다.')
     require(isinstance(settings, dict) and set(settings) == {'seed', 'repeats'}

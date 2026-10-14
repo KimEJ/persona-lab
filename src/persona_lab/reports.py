@@ -4,11 +4,45 @@ import csv
 import io
 import json
 import sqlite3
+from collections import Counter
 from itertools import combinations
 from pathlib import Path
 
 from .contracts import require
+from .acceptance import ACCEPTANCE_QUESTION, derive_acceptance, response_cell
+from .responses import SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID
 from .scenarios import budget_context
+
+
+def _derived_acceptance(db, spec):
+    """Keep computed outcomes separate from stored jobs and model validity counts."""
+    answers, identities = {}, {}
+    for persona, uuid, product, repeat, domain, payload in db.execute('SELECT persona_id,uuid,product_id,repeat,domain,payload FROM results ORDER BY ordinal'):
+        identities[persona, repeat] = uuid
+        if domain in {'usage', 'fair_price'}:
+            answers[persona, product, repeat, domain] = response_cell(json.loads(payload))
+    records, groups = [], []
+    pending = {'job_id': None, 'choice': 'pending', 'status': 'pending'}
+    for product in spec['products']:
+        cells = []
+        for (persona, repeat), uuid in identities.items():
+            willingness = answers.get((persona, product['id'], repeat, 'fair_price'))
+            if willingness is None:
+                willingness = pending if product.get('valuation_bands') else {'job_id': None, 'choice': 'not_run', 'status': 'not_run'}
+            cell = derive_acceptance(product, answers.get((persona, product['id'], repeat, 'usage'), pending), willingness)
+            records.append({'persona_id': persona, 'uuid': uuid, 'product_id': product['id'], 'repeat': repeat,
+                            'domain': 'acceptance', 'question_id': ACCEPTANCE_QUESTION['id'], **cell})
+            cells.append(cell)
+        counts = dict(Counter(cell['choice'] for cell in cells))
+        groups.append({'product_id': product['id'], 'question_id': ACCEPTANCE_QUESTION['id'], 'domain': 'acceptance',
+                       'processed': len(cells), 'completed': len(cells), 'backend_errors': 0,
+                       'unknown': counts.get('unknown', 0), 'choice_counts': counts,
+                       'choice_shares': {choice: count / len(cells) for choice, count in counts.items()} if cells else {},
+                       'derived': True, 'calculation_semantics': ACCEPTANCE_QUESTION['calculation_semantics'],
+                       'denominator_semantics': 'observed_persona_repeat_pairs_including_all_response_states',
+                       'reason_counts': dict(Counter(cell['reason_code'] for cell in cells)),
+                       'input_job_ids': list(dict.fromkeys(job for cell in cells for job in cell['input_job_ids']))})
+    return groups, records
 
 
 def result_page(path: Path, *, mode="all", baseline=None, domain=None, query="", offset=0, limit=25, reviews: Path | None = None) -> dict:
@@ -85,9 +119,12 @@ def summarize(path: Path, connection=None) -> dict:
         group["choice_counts"][choice] = count
     for group in groups.values():
         group["choice_shares"] = {choice: count / group["completed"] for choice, count in group["choice_counts"].items()} if group["completed"] else {}
+    model_valid_decisions = sum(group['completed'] for group in groups.values())
+    model_backend_errors = sum(group['backend_errors'] for group in groups.values())
+    derived_groups, derived_results = _derived_acceptance(db, spec) if spec['scenario'].get('id') in {SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID} else ([], [])
     transitions = []
     comparisons = []
-    if len(spec["products"]) >= 2:
+    if len(spec["products"]) >= 2 and not derived_groups:
         for first, second in combinations(spec["products"], 2):
             a, b = first["id"], second["id"]
             pairs = [{"from": old, "to": new, "count": count} for old, new, count in db.execute("""SELECT a.choice,b.choice,COUNT(*) FROM results a JOIN results b
@@ -112,7 +149,7 @@ def summarize(path: Path, connection=None) -> dict:
             if len(warning_examples) < 28:
                 warning_examples.append({"code": "purchase_above_explicit_budget", "job_id": job_id, "uuid": persona_id, "product_id": product_id, "amount_minor": price["amount_minor"], "budget_minor": budget['amount_minor'],'currency':budget['currency'],'billing':budget['billing']})
     warnings = {"purchase_above_explicit_budget": budget_conflicts, "examples": warning_examples, "policy": "Preserve decisions and denominators; flag contradictions with a budget in the same currency and billing period. This is an input-consistency check, not behavior validation."}
-    return {"schema_version": "0.1", "experiment_id": spec["experiment_id"], "status": status, "completed_jobs": cursor, "valid_decisions": sum(g["completed"] for g in groups.values()), "validity_semantics": "schema_contract_only_not_behavior_accuracy", "backend_errors": sum(g["backend_errors"] for g in groups.values()), "planned_jobs": total, "observed_personas": observed, "backend_id": backend_id, "backend_kind": backend_kind, "source": json.loads(source_json), "assumptions": spec["assumptions"], "scenario": spec["scenario"], "input_condition": "with_explicit_assumptions" if spec["assumptions"] or spec["scenario"]["events"] else "source_only", "consistency_warnings": warnings, "groups": list(groups.values()), "products": spec["products"], "panel": spec["panel"], "comparisons": comparisons, "paired_purchase_transitions": transitions, "paired_transition_count": sum(t["count"] for t in transitions), "examples": examples, "error": error, "limitations": ["This is a virtual choice experiment; actual purchase prediction is unvalidated. Synthetic choice shares are not real probabilities or revenue forecasts.", "Initial contrasts showed option-order sensitivity and unknown outputs in both local models; a dedicated architecture does not establish behavior accuracy.", "Unknown decisions remain in the valid-decision denominator; backend errors are counted separately.", "Partial-run results may be biased toward earlier input records.", "Reason codes are backend output; evidence paths require semantic review.", "Independent variants use the same initial state; no longitudinal behavior is invented."]}
+    return {"schema_version": "0.1", "experiment_id": spec["experiment_id"], "status": status, "completed_jobs": cursor, "valid_decisions": model_valid_decisions, "validity_semantics": "schema_contract_only_not_behavior_accuracy", "backend_errors": model_backend_errors, "planned_jobs": total, "observed_personas": observed, "backend_id": backend_id, "backend_kind": backend_kind, "source": json.loads(source_json), "assumptions": spec["assumptions"], "scenario": spec["scenario"], "input_condition": "with_explicit_assumptions" if spec["assumptions"] or spec["scenario"]["events"] else "source_only", "consistency_warnings": warnings, "groups": [*groups.values(), *derived_groups], **({'derived_results': derived_results} if derived_groups else {}), "products": spec["products"], "panel": spec["panel"], "comparisons": comparisons, "paired_purchase_transitions": transitions, "paired_transition_count": sum(t["count"] for t in transitions), "examples": examples, "error": error, "limitations": ["This is a virtual choice experiment; actual purchase prediction is unvalidated. Synthetic choice shares are not real probabilities or revenue forecasts.", "Initial contrasts showed option-order sensitivity and unknown outputs in both local models; a dedicated architecture does not establish behavior accuracy.", "Unknown decisions remain in the valid-decision denominator; backend errors are counted separately.", "Partial-run results may be biased toward earlier input records.", "Reason codes are backend output; evidence paths require semantic review.", "Independent variants use the same initial state; no longitudinal behavior is invented."]}
 
 def export(path: Path, format: str) -> tuple[str, str]:
     report = summarize(path)
@@ -121,12 +158,20 @@ def export(path: Path, format: str) -> tuple[str, str]:
     if format == "csv":
         output = io.StringIO()
         writer = csv.writer(output)
-        writer.writerow(["product_id", "question_id", "domain", "choice", "count", "completed_denominator", "synthetic_choice_share", "result_status", "group_backend_errors", "backend_kind", "source_id", "source_version", "run_budget_conflicts", "input_condition", "assumptions_json", "scenario_json", "license_id", "license_url", "source_url", "attribution","product_name","price_amount_minor","price_currency","price_billing","price_state"])
+        writer.writerow(["product_id", "question_id", "domain", "choice", "count", "completed_denominator", "synthetic_choice_share", "result_status", "group_backend_errors", "backend_kind", "source_id", "source_version", "run_budget_conflicts", "input_condition", "assumptions_json", "scenario_json", "license_id", "license_url", "source_url", "attribution","product_name","price_amount_minor","price_currency","price_billing","price_state", "derived", "calculation_semantics", "reason_counts_json", "input_job_ids_json"])
         for group in report["groups"]:
             for choice, count in list(group["choice_counts"].items()) + ([("", group["backend_errors"])] if group["backend_errors"] else []):
                 values = [group["product_id"], group["question_id"], group["domain"], choice, count, group["completed"], group["choice_shares"].get(choice, ""), ("backend_error" if choice == "" else "insufficient_information" if choice == "unknown" else "not_run" if choice=='not_run' else "ok"), group["backend_errors"], report["backend_kind"], report["source"]["source_id"], report["source"]["version"], report["consistency_warnings"]["purchase_above_explicit_budget"], report["input_condition"], json.dumps(report["assumptions"], ensure_ascii=False), json.dumps(report["scenario"], ensure_ascii=False), report["source"]["license_id"], report["source"]["license_url"], report["source"]["url"], report["source"].get("attribution", "Project-authored synthetic fixture")]
                 product=next(p for p in report['products'] if p['id']==group['product_id']);price=product['price'] or {}
                 values.extend([product['name'],price.get('amount_minor',''),price.get('currency',''),price.get('billing',''),product.get('price_state','legacy')])
+                if group.get('derived'):
+                    values[7] = choice
+                    cells = [cell for cell in report['derived_results'] if cell['product_id'] == group['product_id'] and cell['choice'] == choice]
+                    values.extend([True, group['calculation_semantics'],
+                                   json.dumps(dict(Counter(cell['reason_code'] for cell in cells)), ensure_ascii=False),
+                                   json.dumps(list(dict.fromkeys(job for cell in cells for job in cell['input_job_ids'])), ensure_ascii=False)])
+                else:
+                    values.extend([False, '', '', ''])
                 # Spreadsheet formula injection protection for user-defined identifiers.
                 writer.writerow(["'" + value if isinstance(value, str) and value.startswith(("=", "+", "-", "@", "\t", "\r")) else value for value in values])
         return output.getvalue(), "text/csv; charset=utf-8"
@@ -143,7 +188,15 @@ def export(path: Path, format: str) -> tuple[str, str]:
             lines.append(f"| {escape(group['product_id'])} | {escape(group['question_id'])} | {escape(choice)} | {count} / {group['completed']} |")
         if group["backend_errors"]:
             lines.append(f"| {escape(group['product_id'])} | {escape(group['question_id'])} | backend_error (separate) | {group['backend_errors']} / {group['processed']} processed |")
-    lines += ["", "## Input consistency warnings", "", f"Purchase above explicit budget: {report['consistency_warnings']['purchase_above_explicit_budget']} decisions. Compared only within the same currency and billing period; original choices and denominators are preserved.", "", "## Paired purchase changes", ""]
+    if spec_is_willingness(report):
+        lines += ['', '## Price acceptance calculation', '',
+                  'Price acceptance compares usage intention, the maximum willingness-to-pay interval and the selling price. It is computed in code, is not a model answer, and is excluded from planned jobs and model validity counts.', '',
+                  '| Person | Product | Repeat | Acceptance | Reason code | Input job IDs |',
+                  '| --- | --- | --- | --- | --- | --- |']
+        for cell in report.get('derived_results', []):
+            lines.append('| ' + ' | '.join(escape(value) for value in [cell['uuid'], cell['product_id'], cell['repeat'], cell['choice'], cell['reason_code'], ', '.join(cell['input_job_ids'])]) + ' |')
+    else:
+        lines += ["", "## Input consistency warnings", "", f"Purchase above explicit budget: {report['consistency_warnings']['purchase_above_explicit_budget']} decisions. Compared only within the same currency and billing period; original choices and denominators are preserved.", "", "## Paired purchase changes", ""]
     products = {product["id"]: product["name"] for product in report["products"]}
     for pair in report["comparisons"]:
         lines += [f"### {escape(products[pair['from_product']])} ({escape(pair['from_product'])}) → {escape(products[pair['to_product']])} ({escape(pair['to_product'])})", "", "| From choice | To choice | Paired judgments |", "| --- | --- | --- |"]
@@ -152,3 +205,7 @@ def export(path: Path, format: str) -> tuple[str, str]:
     lines += ["## Explicit assumptions and scenario", "", "```json", json.dumps({"assumptions": report["assumptions"], "scenario": report["scenario"]}, ensure_ascii=False, indent=2), "```", "", "## Limits", ""]
     lines += [f"- {limit}" for limit in report["limitations"]]
     return "\n".join(lines) + "\n", "text/markdown; charset=utf-8"
+
+
+def spec_is_willingness(report):
+    return report['scenario'].get('id') in {SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID}

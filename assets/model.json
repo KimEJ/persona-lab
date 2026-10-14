@@ -9,6 +9,7 @@
   "upstream_url": "https://huggingface.co/Cloudflare/clef-flash",
   "upstream_revision": "17f0b0ad64efb65d273590632833508766b2aae6",
   "runtime": "llama.cpp b11429",
+  "runtime_policy": "metal-fusion-off-v1",
   "architecture": "arm64",
   "model_architecture": "clef",
   "endpoint": "/v1/systemone",

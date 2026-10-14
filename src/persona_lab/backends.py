@@ -9,7 +9,7 @@ from typing import Protocol
 
 from .contracts import ContractError, DependencyError, Decision, Job, canonical, require, digest
 from .scenarios import context_gate, budget_context
-from .responses import SCENARIO_ID as RESPONSE_SCENARIO_ID, LINKED_SCENARIO_ID, LINKED_SCENARIO_IDS, FINITE_SCENARIO_IDS, SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, RESPONSE_SCENARIO_IDS, reason_options, choice_meanings, money_label, explain, MISSING_FIELDS, DOMAIN_MISSING
+from .responses import SCENARIO_ID as RESPONSE_SCENARIO_ID, LINKED_SCENARIO_ID, LINKED_SCENARIO_IDS, FINITE_SCENARIO_IDS, SURVEY_SCENARIO_ID, SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID, SURVEY_V4_SCENARIO_ID, RESPONSE_SCENARIO_IDS, reason_options, choice_meanings, money_label, explain, MISSING_FIELDS, DOMAIN_MISSING
 
 
 class DecisionBackend(Protocol):
@@ -195,7 +195,11 @@ class LocalLLMBackend:
 
 
 def check_dependencies(job):
-    if job.scenario.get('id') == SURVEY_V2_SCENARIO_ID:
+    if job.scenario.get('id') == SURVEY_V4_SCENARIO_ID:
+        from .survey import survey_decision_history
+        survey_decision_history(job)
+        return
+    if job.scenario.get('id') in {SURVEY_V2_SCENARIO_ID, SURVEY_V3_SCENARIO_ID}:
         return
     from .survey import PREDECESSOR_DOMAINS
     domains=PREDECESSOR_DOMAINS if job.scenario.get('id')==SURVEY_SCENARIO_ID else ('usage','fair_price')
